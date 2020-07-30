@@ -1,0 +1,59 @@
+<div class="grid-container">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-8">
+            <div class="grid-container">
+                <div class="grid-x grid-margin-x">
+                    <div class="cell small-12">
+                        <h3>Latest Habbo Guides</h3>
+                    </div>
+                    <div class="cell small-4" *ngFor="let article of articles">
+                        <app-article [article]="article"></app-article>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-container">
+                <div class="grid-x grid-margin-x">
+                    <div class="cell small-12">
+                        <h3>Latest Habbo News</h3>
+                    </div>
+                    <div class="cell small-4" *ngFor="let article of articles">
+                        <app-article [article]="article"></app-article>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-container">
+                <div class="grid-x grid-margin-x">
+                    <div class="cell small-12">
+                        <h3>Latest Site News</h3>
+                    </div>
+                    <div class="cell small-4" *ngFor="let article of articles">
+                        <app-article [article]="article"></app-article>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cell small-4">
+            <div class="grid-container">
+                <div class="grid-x grid-margin-x">
+                    <div class="cell small-12">
+                        <h3>Todays Events</h3>
+                    </div>
+                    <div class="cell small-12">
+                        <h3>Latest Badges</h3>
+                    </div>
+                    <div class="cell small-12">
+                        <h3>Wish Staff Starlight</h3>
+                    </div>
+                    <div class="cell small-12">
+                        <h3>Wish Twitter</h3>
+                    </div>
+                    <div class="cell small-12">
+                        <h3>Activity Feed</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

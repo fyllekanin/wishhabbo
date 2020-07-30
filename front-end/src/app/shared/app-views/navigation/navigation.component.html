@@ -1,0 +1,24 @@
+<nav>
+    <div class="grid-container">
+        <div class="grid-x">
+            <div class="cell small-8">
+                <div class="main-navigation-item" *ngFor="let mainItem of items">
+                    <span>
+                        <i *ngIf="mainItem.icon" class="fa" aria-hidden="true" [ngClass]="mainItem.icon"></i>
+                        {{mainItem.title}}
+                    </span>
+                </div>
+            </div>
+            <div class="cell small-3 small-offset-1 welcome">
+                Hello, Welcome to WhishHabbo!
+                <br/>
+                <a class="register">Register</a>
+                or
+                <a class="login">Login</a>
+                <div class="avatar">
+                    <img src="./assets/images/avatar.png"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

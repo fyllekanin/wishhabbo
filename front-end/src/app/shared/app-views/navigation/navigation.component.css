@@ -1,0 +1,39 @@
+:host {
+    position: fixed;
+    background-color: #000000bd;
+    height: 3rem;
+    width: 100%;
+    display: block;
+
+    top: 0;
+    left: 0;
+}
+
+.main-navigation-item {
+    display: inline-block;
+    color: #ffffff;
+    margin: 0.75rem;
+}
+
+.welcome {
+    font-size: 0.75rem;
+    color: #ffffff;
+    margin-top: 6px;
+    position: relative;
+}
+
+.avatar {
+    position: absolute;
+    overflow: hidden;
+    height: 2.59rem;
+    width: 6rem;
+    top: 0;
+    right: 0;
+}
+
+.avatar img {
+    position: absolute;
+    top: -20px;
+    right: 20px;
+    filter: brightness(0) drop-shadow(1px 1px 0 white) drop-shadow(-1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white);
+}

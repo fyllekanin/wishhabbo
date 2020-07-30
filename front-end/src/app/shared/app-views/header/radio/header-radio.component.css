@@ -1,0 +1,52 @@
+.radio {
+    width: 100%;
+    height: 8.5rem;
+    background-color: #ffffffad;
+    margin-top: 2rem;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.row {
+    background-color: #ffffff6b;
+    border-radius: 3px;
+    padding: 2px 9px;
+    margin-bottom: 5px;
+}
+
+.avatar {
+    max-height: 100px;
+}
+
+button {
+    margin-right: 10px;
+}
+
+.actions {
+    margin-left: 7px;
+}
+
+.marquee {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.marquee span {
+    display: inline-block;
+    padding-left: 100%;
+    will-change: transform;
+    animation: marquee 15s linear infinite;
+}
+
+.marquee span:hover {
+    animation-play-state: paused
+}
+
+@keyframes marquee {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(-100%, 0);
+    }
+}

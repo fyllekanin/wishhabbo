@@ -1,0 +1,26 @@
+{
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "root",
+    "password": "",
+    "database": "wishhabbo",
+    "synchronize": true,
+    "logging": false,
+    "name": "default",
+    "entities": [
+        "dist/persistance/entities/**/*.js"
+    ],
+    "migrationsTableName": "migrations",
+    "migrations": [
+        "dist/database/migrations/**/*.js"
+    ],
+    "subscribers": [
+        "dist/persistance/subscribers/**/*.js"
+    ],
+    "cli": {
+        "entitiesDir": "src/persistance/entities",
+        "migrationsDir": "src/database/migrations",
+        "subscribersDir": "src/persistance/subscriber"
+    }
+}

@@ -1,0 +1,86 @@
+/** General styles **/
+@font-face {
+    font-family: Roboto;
+    src: url('./assets/fonts/Roboto-Regular.ttf');
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Roboto, serif;
+}
+
+body {
+    background-color: #eaeae6;
+}
+
+.dark-bottom-shadow {
+    -webkit-box-shadow: 0 5px 5px 0 rgba(64, 64, 64, 0.75);
+    -moz-box-shadow: 0 5px 5px 0 rgba(64, 64, 64, 0.75);
+    box-shadow: 0 5px 5px 0 rgba(64, 64, 64, 0.75);
+}
+
+.gray-bottom-shadow {
+    -webkit-box-shadow: 0 5px 5px 0 rgba(177, 177, 177, 0.75);
+    -moz-box-shadow: 0 5px 5px 0 rgba(177, 177, 177, 0.75);
+    box-shadow: 0 5px 5px 0 rgba(177, 177, 177, 0.75);
+}
+
+
+a {
+    color: #9a7993;
+    font-weight: bold;
+}
+
+span {
+    font-size: 0.75rem;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+/** Button Styles **/
+button {
+    display: inline-block;
+    background-color: #eee;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+    padding: 5px 15px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border: 1px solid rgba(95, 95, 95, 0.3);
+    border-bottom-width: 2px;
+    margin-right: 10px;
+
+    color: #ffffff;
+    cursor: pointer;
+    transition: 0.5s;
+    outline: none;
+}
+
+button.blue {
+    background-color: #758eb3;
+}
+
+button.blue:hover {
+    background-color: #7a93b9;
+}
+
+button.red {
+    background-color: #b37575;
+}
+
+button.red:hover {
+    background-color: #ce8787;
+}
+
+button.green {
+    background-color: #75b37b;
+}
+
+button.green:hover {
+    background-color: #7fbf85;
+}
