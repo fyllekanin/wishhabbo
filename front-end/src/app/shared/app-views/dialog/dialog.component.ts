@@ -6,7 +6,7 @@ import {
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
-import { DialogService } from '../../../core/services/dialog/dialog.service';
+import { DialogService } from '../../../core/common-services/dialog.service';
 
 @Component({
     selector: 'app-dialog',

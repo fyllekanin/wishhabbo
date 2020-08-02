@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DialogButton, DialogConfiguration } from '../../../shared/app-views/dialog/dialog.model';
+import { DialogButton, DialogConfiguration } from '../../shared/app-views/dialog/dialog.model';
 import { Subject } from 'rxjs';
 
 @Injectable()

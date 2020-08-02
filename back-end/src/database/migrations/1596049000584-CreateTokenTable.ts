@@ -16,10 +16,6 @@ export class CreateTokenTable1596049000584 implements MigrationInterface {
                     type: 'int'
                 },
                 {
-                    name: 'ip',
-                    type: 'varchar'
-                },
-                {
                     name: 'access',
                     type: 'varchar',
                     isUnique: true

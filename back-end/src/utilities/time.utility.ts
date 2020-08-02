@@ -1,6 +1,6 @@
 export class TimeUtility {
 
     static getCurrent (): number {
-        return new Date().getTime() / 1000;
+        return Math.floor(new Date().getTime() / 1000);
     }
 }

@@ -11,6 +11,7 @@ import { LoginPayload } from '../../rest-service-views/payloads/auth/login.paylo
 import { ValidationError } from '../../validation/validation.error';
 import { ErrorCodes } from '../../validation/error.codes';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
+import { AuthUserView } from '../../rest-service-views/respond-views/user/auth-user.view';
 
 @Controller('api/auth')
 export class AuthenticationController {
@@ -45,7 +46,14 @@ export class AuthenticationController {
             return;
         }
 
-        res.status(OK).json(await this.tokenRepository.getToken(user, req.ip));
+        const token = await this.tokenRepository.getToken(user);
+        res.status(OK).json(AuthUserView.newBuilder()
+            .withUserId(user.userId)
+            .withUsername(user.username)
+            .withHabbo(user.habbo)
+            .withAccessToken(token.access)
+            .withRefreshToken(token.refresh)
+            .build());
     }
 
     @Post('logout')
@@ -62,8 +70,7 @@ export class AuthenticationController {
 
     @Post('token-refresh')
     private async doTokenRefresh (req: Request, res: Response): Promise<void> {
-        const refreshToken = req.body.refreshToken;
-        const entity = await this.tokenRepository.getTokenWithIPAndRefreshToken(req.ip, refreshToken);
+        const entity = await this.tokenRepository.getTokenWithAccessAndRefreshToken(req);
         if (!entity) {
             res.status(401).json({ isTokenExisting: false });
             return;
@@ -78,8 +85,14 @@ export class AuthenticationController {
         }
 
         const user = await this.userRepository.getUserById(entity.userId);
-        const token = await this.tokenRepository.getToken(user, req.ip);
-        res.status(OK).json(token);
+        const token = await this.tokenRepository.getToken(user);
+        res.status(OK).json(AuthUserView.newBuilder()
+            .withUserId(user.userId)
+            .withUsername(user.username)
+            .withHabbo(user.habbo)
+            .withAccessToken(token.access)
+            .withRefreshToken(token.refresh)
+            .build());
     }
 
     @Post('register')

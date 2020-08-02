@@ -8,8 +8,6 @@ export class TokenEntity extends CreatedUpdatedAtEntity {
     @Column()
     userId: number;
     @Column()
-    ip: string;
-    @Column()
     access: string;
     @Column()
     refresh: string;
