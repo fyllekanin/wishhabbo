@@ -9,6 +9,8 @@ export class CreateTokenTable1596049000584 implements MigrationInterface {
                 {
                     name: 'tokenId',
                     type: 'int',
+                    isGenerated: true,
+                    generationStrategy: 'increment',
                     isPrimary: true
                 },
                 {

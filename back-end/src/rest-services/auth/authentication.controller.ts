@@ -1,4 +1,4 @@
-import { Controller, Middleware, Post } from '@overnightjs/core';
+import { Controller, Get, Middleware, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 import { RegisterPayload } from '../../rest-service-views/payloads/auth/register.payload';
 import { ValidationValidators } from '../../validation/validation.validators';
@@ -12,6 +12,7 @@ import { ValidationError } from '../../validation/validation.error';
 import { ErrorCodes } from '../../validation/error.codes';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
 import { AuthUserView } from '../../rest-service-views/respond-views/user/auth-user.view';
+import { InitialView } from '../../rest-service-views/respond-views/user/initial.view';
 
 @Controller('api/auth')
 export class AuthenticationController {
@@ -24,6 +25,27 @@ export class AuthenticationController {
         this.tokenRepository = tokenRepository || new TokenRepository();
     }
 
+    @Get('initial')
+    private async getInitial (req: Request, res: Response): Promise<void> {
+        const builder = InitialView.newBuilder();
+
+        const token = await this.tokenRepository.getTokenFromRequest(req);
+        const user = this.tokenRepository.isAccessTokenAlive(token) || this.tokenRepository.isRefreshTokenAlive(token) ?
+            await this.userRepository.getUserById(token.userId) : null;
+
+        if (user) {
+            builder.withAuthUser(AuthUserView.newBuilder()
+                .withUserId(user.userId)
+                .withUsername(user.username)
+                .withHabbo(user.habbo)
+                .withAccessToken(token.access)
+                .withRefreshToken(token.refresh)
+                .build());
+        }
+
+        res.status(OK).json(builder.build());
+    }
+
     @Post('login')
     private async doLogin (req: Request, res: Response): Promise<void> {
         const payload = LoginPayload.of(req);
@@ -34,7 +56,7 @@ export class AuthenticationController {
         }
 
         const user = await this.userRepository.getUserWithUsername(payload.getUsername());
-        const isCorrectPassword = await HasherUtility.compare(payload.getPassword(), user.password);
+        const isCorrectPassword = user && await HasherUtility.compare(payload.getPassword(), user.password);
         if (!isCorrectPassword) {
             res.status(NOT_FOUND).json([
                 ValidationError.newBuilder()

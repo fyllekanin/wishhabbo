@@ -1,4 +1,4 @@
-import { DeleteResult, getConnection, Repository } from 'typeorm';
+import { DeleteResult, getConnection, MoreThan, Repository } from 'typeorm';
 import { TokenEntity } from '../../entities/user/token.entity';
 import { UserEntity } from '../../entities/user/user.entity';
 import { IdHelper } from '../../../helpers/id.helper';
@@ -48,6 +48,10 @@ export class TokenRepository {
 
     isRefreshTokenAlive (entity: TokenEntity): boolean {
         return Boolean(entity && (entity.updatedAt + TokenRepository.REFRESH_TOKEN_LIFE_TIME) > TimeUtility.getCurrent());
+    }
+
+    async getTokens (): Promise<Array<TokenEntity>> {
+        return await this.repository.find({ tokenId: MoreThan(0) });
     }
 
     async getToken (user: UserEntity): Promise<TokenEntity> {

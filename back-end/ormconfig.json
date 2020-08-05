@@ -13,7 +13,8 @@
     ],
     "migrationsTableName": "migrations",
     "migrations": [
-        "dist/database/migrations/**/*.js"
+        "dist/database/migrations/**/*.js",
+        "dist/database/seeds/**/*.js"
     ],
     "subscribers": [
         "dist/persistance/subscribers/**/*.js"

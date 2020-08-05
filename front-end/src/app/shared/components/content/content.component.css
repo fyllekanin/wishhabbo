@@ -1,0 +1,21 @@
+:host {
+    background-color: #ffffff;
+    display: block;
+    padding: 5px;
+    border-radius: 2px;
+    margin-bottom: 15px;
+}
+
+.title {
+    padding: 7px 10px;
+    border: 1px solid #737373;
+    background-color: #9a7993;
+    -moz-box-shadow: inset 0 0 1px #ffffff;
+    -webkit-box-shadow: inset 0 0 1px #ffffff;
+    box-shadow: inset 0 0 1px #ffffff;
+    color: #ffffff;
+}
+
+.content {
+    margin-top: 10px;
+}

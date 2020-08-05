@@ -5,6 +5,7 @@ import { DialogService } from './common-services/dialog.service';
 import { HttpService } from './http/http.service';
 import { HttpRequestInterceptor } from './http/http.interceptor';
 import { AuthService } from './auth/auth.service';
+import { SiteNotificationService } from './common-services/site-notification.service';
 
 @NgModule({
     imports: [
@@ -24,7 +25,8 @@ export class CoreModule {
                 { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
                 AuthService,
                 RadioService,
-                DialogService
+                DialogService,
+                SiteNotificationService
             ]
         };
     }

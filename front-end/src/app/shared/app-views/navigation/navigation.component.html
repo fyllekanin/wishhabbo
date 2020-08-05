@@ -10,13 +10,20 @@
                 </div>
             </div>
             <div class="cell small-3 small-offset-1 welcome">
-                Hello, Welcome to WhishHabbo!
-                <br/>
-                <a class="register">Register</a>
-                or
-                <a class="login">Login</a>
-                <div class="avatar">
-                    <img src="./assets/images/avatar.png"/>
+                <div *ngIf="!data.isLoggedIn; else isLoggedIn">
+                    Hello, Welcome to WhishHabbo!
+                    <br/>
+                    <a class="register">Register</a>
+                    or
+                    <a class="login" routerLink="/auth/login">Login</a>
+                </div>
+                <ng-template #isLoggedIn>
+                    Hello, Welcome {{data.username}}!
+                    <br/>
+                    <a class="login" (click)="onLogout()">Logout</a>
+                </ng-template>
+                <div class="avatar" [ngClass]="data.isLoggedIn ? '' : 'logged-out-avatar'">
+                    <img [src]="data.avatar"/>
                 </div>
             </div>
         </div>

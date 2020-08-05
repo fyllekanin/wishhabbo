@@ -35,5 +35,8 @@
     position: absolute;
     top: -20px;
     right: 20px;
+}
+
+.logged-out-avatar img {
     filter: brightness(0) drop-shadow(1px 1px 0 white) drop-shadow(-1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white);
 }

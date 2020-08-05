@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
 import { AuthUser } from './auth-user.model';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { HttpService } from '../http/http.service';
 import { catchError, map } from 'rxjs/operators';
 import { LocalStorageKeys } from '../../shared/constants/local-storage.constants';
+import { SiteNotificationService } from '../common-services/site-notification.service';
+import { SiteNotificationType } from '../../shared/app-views/site-notification/site-notification.interface';
 
 @Injectable()
 export class AuthService {
     private authUser: AuthUser;
+    private onAuthChangeSubject: Subject<void> = new Subject<void>();
+    onAuthChange = this.onAuthChangeSubject.asObservable();
 
-    constructor (private httpService: HttpService) {
+    constructor (private httpService: HttpService, private siteNotificationService: SiteNotificationService) {
+        this.authUser = this.getStoredAuthUser();
     }
 
     isLoggedIn (): boolean {
@@ -36,8 +41,12 @@ export class AuthService {
         return new Promise(res => {
             this.httpService.post('/auth/login', { username: username, password: password })
                 .subscribe(user => {
-                    this.authUser = new AuthUser(user);
-                    this.updateStoredAuthUser(this.authUser);
+                    this.setAuthUser(<AuthUser>user);
+                    this.siteNotificationService.create({
+                        title: 'Success',
+                        message: 'You are logged in!',
+                        type: SiteNotificationType.SUCCESS
+                    });
                     res(true);
                 }, () => {
                     res(false);
@@ -46,7 +55,17 @@ export class AuthService {
     }
 
     logout (): void {
-        // Do logout
+        this.httpService.post('/auth/logout', null)
+            .subscribe(() => {
+                this.authUser = null;
+                this.updateStoredAuthUser(this.authUser);
+                this.siteNotificationService.create({
+                    title: 'Success',
+                    message: 'You have logged out',
+                    type: SiteNotificationType.SUCCESS
+                });
+                this.onAuthChangeSubject.next();
+            });
     }
 
     getAccessToken (): string {
@@ -57,6 +76,16 @@ export class AuthService {
         return this.isLoggedIn() ? this.authUser.refreshToken : null;
     }
 
+    getAuthUser (): AuthUser {
+        return this.authUser;
+    }
+
+    setAuthUser (authUser: AuthUser): void {
+        this.authUser = new AuthUser(authUser);
+        this.updateStoredAuthUser(this.authUser);
+        this.onAuthChangeSubject.next();
+    }
+
     private updateStoredAuthUser (authUser: AuthUser): void {
         localStorage.setItem(LocalStorageKeys.AUTH_USER, JSON.stringify(authUser));
     }
@@ -64,7 +93,8 @@ export class AuthService {
     private getStoredAuthUser (): AuthUser {
         const json = localStorage.getItem(LocalStorageKeys.AUTH_USER);
         try {
-            return JSON.parse(json);
+            const parsed = JSON.parse(json);
+            return parsed ? new AuthUser(JSON.parse(json)) : null;
         } catch (e) {
             return null;
         }
