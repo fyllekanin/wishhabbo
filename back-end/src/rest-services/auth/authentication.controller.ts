@@ -11,27 +11,27 @@ import { LoginPayload } from '../../rest-service-views/payloads/auth/login.paylo
 import { ValidationError } from '../../validation/validation.error';
 import { ErrorCodes } from '../../validation/error.codes';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
-import { AuthUserView } from '../../rest-service-views/respond-views/user/auth-user.view';
+import {
+    AdminPermissions,
+    AuthUserView,
+    StaffPermissions
+} from '../../rest-service-views/respond-views/user/auth-user.view';
 import { InitialView } from '../../rest-service-views/respond-views/user/initial.view';
+import { GroupRepository } from '../../persistance/repositories/group.repository';
+import { Permissions } from '../../constants/permissions.constant';
 
 @Controller('api/auth')
 export class AuthenticationController {
-    private readonly userRepository: UserRepository;
-    private readonly tokenRepository: TokenRepository;
-
-    constructor ();
-    constructor (userRepository?: UserRepository, tokenRepository?: TokenRepository) {
-        this.userRepository = userRepository || new UserRepository();
-        this.tokenRepository = tokenRepository || new TokenRepository();
-    }
 
     @Get('initial')
     private async getInitial (req: Request, res: Response): Promise<void> {
+        const userRepository = new UserRepository();
+        const tokenRepository = new TokenRepository();
         const builder = InitialView.newBuilder();
 
-        const token = await this.tokenRepository.getTokenFromRequest(req);
-        const user = this.tokenRepository.isAccessTokenAlive(token) || this.tokenRepository.isRefreshTokenAlive(token) ?
-            await this.userRepository.getUserById(token.userId) : null;
+        const token = await tokenRepository.getTokenFromRequest(req);
+        const user = tokenRepository.isAccessTokenAlive(token) || tokenRepository.isRefreshTokenAlive(token) ?
+            await userRepository.getUserById(token.userId) : null;
 
         if (user) {
             builder.withAuthUser(AuthUserView.newBuilder()
@@ -48,6 +48,10 @@ export class AuthenticationController {
 
     @Post('login')
     private async doLogin (req: Request, res: Response): Promise<void> {
+        const userRepository = new UserRepository();
+        const tokenRepository = new TokenRepository();
+        const groupRepository = new GroupRepository();
+
         const payload = LoginPayload.of(req);
         const payloadErrors = await ValidationValidators.validatePayload(payload);
         if (payloadErrors.length > 0) {
@@ -55,7 +59,7 @@ export class AuthenticationController {
             return;
         }
 
-        const user = await this.userRepository.getUserWithUsername(payload.getUsername());
+        const user = await userRepository.getUserWithUsername(payload.getUsername());
         const isCorrectPassword = user && await HasherUtility.compare(payload.getPassword(), user.password);
         if (!isCorrectPassword) {
             res.status(NOT_FOUND).json([
@@ -68,36 +72,64 @@ export class AuthenticationController {
             return;
         }
 
-        const token = await this.tokenRepository.getToken(user);
+        const token = await tokenRepository.getToken(user);
         res.status(OK).json(AuthUserView.newBuilder()
             .withUserId(user.userId)
             .withUsername(user.username)
             .withHabbo(user.habbo)
             .withAccessToken(token.access)
             .withRefreshToken(token.refresh)
+            .withStaffPermissions(await this.getStaffPermissions(user, groupRepository))
+            .withAdminPermissions(await this.getAdminPermissions(user, groupRepository))
             .build());
+    }
+
+    private async getStaffPermissions (user: UserEntity, groupRepository: GroupRepository): Promise<StaffPermissions> {
+        return {
+            canBookRadio: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_BOOK_RADIO),
+            canBookEvents: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_BOOK_EVENTS),
+            canUnbookOthersRadio: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO),
+            canUnbookOthersEvents: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_EVENTS),
+            canWriteArticles: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_WRITE_ARTICLES),
+            canApproveArticles: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_APPROVE_ARTICLES),
+            canKickDjOffAir: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_KICK_DJ_OFF_AIR)
+        };
+    }
+
+    private async getAdminPermissions (user: UserEntity, groupRepository: GroupRepository): Promise<AdminPermissions> {
+        return {
+            canManageGroups: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_GROUPS),
+            canManageUserBasics: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_USER_BASICS),
+            canManageUserGroups: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_USER_GROUPS),
+            canManageWebsiteSettings: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_WEBSITE_SETTINGS),
+            canSeeLogs: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_SEE_LOGS),
+            canUploadResources: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_UPLOAD_RESOURCES)
+        };
     }
 
     @Post('logout')
     @Middleware([ AUTHORIZATION_MIDDLEWARE ])
     private async doLogout (req: Request, res: Response): Promise<void> {
-        const token = await this.tokenRepository.getTokenFromRequest(req);
+        const tokenRepository = new TokenRepository();
+        const token = await tokenRepository.getTokenFromRequest(req);
         if (!token) {
             res.status(OK).json();
             return;
         }
-        await this.tokenRepository.delete(token);
+        await tokenRepository.delete(token);
         res.status(OK).json();
     }
 
     @Post('token-refresh')
     private async doTokenRefresh (req: Request, res: Response): Promise<void> {
-        const entity = await this.tokenRepository.getTokenWithAccessAndRefreshToken(req);
+        const userRepository = new UserRepository();
+        const tokenRepository = new TokenRepository();
+        const entity = await tokenRepository.getTokenWithAccessAndRefreshToken(req);
         if (!entity) {
             res.status(401).json({ isTokenExisting: false });
             return;
         }
-        if (!this.tokenRepository.isRefreshTokenAlive(entity)) {
+        if (!tokenRepository.isRefreshTokenAlive(entity)) {
             res.status(401).json(ValidationError.newBuilder()
                 .withCode(ErrorCodes.INVALID_REFRESH_TOKEN.code)
                 .withField('refreshToken')
@@ -106,8 +138,8 @@ export class AuthenticationController {
             return;
         }
 
-        const user = await this.userRepository.getUserById(entity.userId);
-        const token = await this.tokenRepository.getToken(user);
+        const user = await userRepository.getUserById(entity.userId);
+        const token = await tokenRepository.getToken(user);
         res.status(OK).json(AuthUserView.newBuilder()
             .withUserId(user.userId)
             .withUsername(user.username)
@@ -119,6 +151,7 @@ export class AuthenticationController {
 
     @Post('register')
     private async doRegister (req: Request, res: Response): Promise<void> {
+        const userRepository = new UserRepository();
         const payload = RegisterPayload.of(req);
         const payloadErrors = await ValidationValidators.validatePayload(payload);
         if (payloadErrors.length > 0) {
@@ -139,7 +172,7 @@ export class AuthenticationController {
 
         let status = OK;
         let response = '';
-        await this.userRepository.save(user).catch(reason => {
+        await userRepository.save(user).catch(reason => {
             status = INTERNAL_SERVER_ERROR;
             response = reason;
         });

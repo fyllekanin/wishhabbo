@@ -1,4 +1,4 @@
-import { DeleteResult, getConnection, MoreThan, Repository } from 'typeorm';
+import { DeleteResult, getConnection, LessThan, Repository } from 'typeorm';
 import { TokenEntity } from '../../entities/user/token.entity';
 import { UserEntity } from '../../entities/user/user.entity';
 import { IdHelper } from '../../../helpers/id.helper';
@@ -51,7 +51,11 @@ export class TokenRepository {
     }
 
     async getTokens (): Promise<Array<TokenEntity>> {
-        return await this.repository.find({ tokenId: MoreThan(0) });
+        return await this.repository.find();
+    }
+
+    async deleteExpiredTokens (): Promise<DeleteResult> {
+        return await this.repository.delete({ updatedAt: LessThan(TimeUtility.getCurrent() - TokenRepository.REFRESH_TOKEN_LIFE_TIME) });
     }
 
     async getToken (user: UserEntity): Promise<TokenEntity> {

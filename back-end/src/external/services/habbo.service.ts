@@ -3,7 +3,22 @@ import axios from 'axios';
 
 export class HabboService {
     private static readonly COOKIE = 'browser_token=thisisabrowsertoken;session.id=thisisasessionid;';
-    private static readonly API_END_POINT = 'http://www.habbo.com/api/public';
+    private static readonly HOST = 'http://www.habbo.com';
+    private static readonly API_END_POINT = `${HabboService.HOST}/api/public`;
+
+    async getGamedata (): Promise<string> {
+        const data = await axios.get(`${HabboService.HOST}/gamedata/external_flash_texts/1`, {
+            headers: {
+                Cookie: HabboService.COOKIE,
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' +
+                    '(KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'
+            }
+        }).catch(() => null);
+        if (!data || !data.data) {
+            return null;
+        }
+        return data.data;
+    }
 
     async getHabbo (name: string): Promise<HabboUser> {
         const data = await axios.get(`${HabboService.API_END_POINT}/users?name=${name}`, {

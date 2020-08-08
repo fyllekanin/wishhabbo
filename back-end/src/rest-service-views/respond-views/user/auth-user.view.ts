@@ -1,9 +1,30 @@
+export interface StaffPermissions {
+    canBookRadio: boolean;
+    canBookEvents: boolean;
+    canUnbookOthersRadio: boolean;
+    canUnbookOthersEvents: boolean;
+    canWriteArticles: boolean;
+    canApproveArticles: boolean;
+    canKickDjOffAir: boolean;
+}
+
+export interface AdminPermissions {
+    canManageGroups: boolean;
+    canManageUserBasics: boolean;
+    canManageUserGroups: boolean;
+    canManageWebsiteSettings: boolean;
+    canSeeLogs: boolean;
+    canUploadResources: boolean;
+}
+
 export class AuthUserView {
     private readonly userId: number;
     private readonly username: string;
     private readonly habbo: string;
     private readonly accessToken: string;
     private readonly refreshToken: string;
+    private readonly staffPermissions: StaffPermissions;
+    private readonly adminPermissions: AdminPermissions;
 
     constructor (builder: AuthUserViewBuilder) {
         this.userId = builder.userId;
@@ -11,6 +32,8 @@ export class AuthUserView {
         this.habbo = builder.habbo;
         this.accessToken = builder.accessToken;
         this.refreshToken = builder.refreshToken;
+        this.staffPermissions = builder.staffPermissions;
+        this.adminPermissions = builder.adminPermissions;
     }
 
     getUserId (): number {
@@ -33,6 +56,14 @@ export class AuthUserView {
         return this.refreshToken;
     }
 
+    getStaffPermissions (): StaffPermissions {
+        return { ...this.staffPermissions };
+    }
+
+    getAdminPermissions (): AdminPermissions {
+        return { ...this.adminPermissions };
+    }
+
     static newBuilder (): AuthUserViewBuilder {
         return new AuthUserViewBuilder();
     }
@@ -44,6 +75,8 @@ class AuthUserViewBuilder {
     habbo: string;
     accessToken: string;
     refreshToken: string;
+    staffPermissions: StaffPermissions;
+    adminPermissions: AdminPermissions;
 
     withUserId (userId: number): AuthUserViewBuilder {
         this.userId = userId;
@@ -67,6 +100,16 @@ class AuthUserViewBuilder {
 
     withRefreshToken (refreshToken: string): AuthUserViewBuilder {
         this.refreshToken = refreshToken;
+        return this;
+    }
+
+    withStaffPermissions (staffPermissions: StaffPermissions): AuthUserViewBuilder {
+        this.staffPermissions = staffPermissions;
+        return this;
+    }
+
+    withAdminPermissions (adminPermissions: AdminPermissions): AuthUserViewBuilder {
+        this.adminPermissions = adminPermissions;
         return this;
     }
 
