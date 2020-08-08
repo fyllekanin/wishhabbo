@@ -1,4 +1,4 @@
-import { ClassHelper, primitiveOf } from '../../shared/helpers/class.helper';
+import { ClassHelper, objectOf, primitiveOf } from '../../shared/helpers/class.helper';
 
 export class StaffPermissions {
     @primitiveOf(Boolean)
@@ -51,6 +51,10 @@ export class AuthUser {
     accessToken: string;
     @primitiveOf(String)
     refreshToken: string;
+    @objectOf(AdminPermissions)
+    adminPermissions: AdminPermissions;
+    @objectOf(StaffPermissions)
+    staffPermissions: StaffPermissions;
 
     constructor (source: Partial<AuthUser>) {
         ClassHelper.assign(this, source);
