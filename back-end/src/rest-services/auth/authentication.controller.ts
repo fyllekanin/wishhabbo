@@ -2,7 +2,7 @@ import { Controller, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 import { RegisterPayload } from '../../rest-service-views/payloads/auth/register.payload';
 import { ValidationValidators } from '../../validation/validation.validators';
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from 'http-status-codes';
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR, OK } from 'http-status-codes';
 import { UserRepository } from '../../persistance/repositories/user/user.repository';
 import { TokenRepository } from '../../persistance/repositories/user/token.repository';
 import { UserEntity } from '../../persistance/entities/user/user.entity';
@@ -34,13 +34,12 @@ export class AuthenticationController {
             await userRepository.getUserById(token.userId) : null;
 
         if (user) {
-            const newtoken = await tokenRepository.getToken(user);
             builder.withAuthUser(AuthUserView.newBuilder()
                 .withUserId(user.userId)
                 .withUsername(user.username)
                 .withHabbo(user.habbo)
-                .withAccessToken(newtoken.access)
-                .withRefreshToken(newtoken.refresh)
+                .withAccessToken(token.access)
+                .withRefreshToken(token.refresh)
                 .withStaffPermissions(await this.getStaffPermissions(user, groupRepository))
                 .withAdminPermissions(await this.getAdminPermissions(user, groupRepository))
                 .build());
@@ -66,7 +65,7 @@ export class AuthenticationController {
         const user = await userRepository.getUserWithUsername(payload.getUsername());
         const isCorrectPassword = user && await HasherUtility.compare(payload.getPassword(), user.password);
         if (!isCorrectPassword) {
-            res.status(NOT_FOUND).json([
+            res.status(BAD_REQUEST).json([
                 ValidationError.newBuilder()
                     .withCode(ErrorCodes.FAILED_LOGIN.code)
                     .withMessage(ErrorCodes.FAILED_LOGIN.description)

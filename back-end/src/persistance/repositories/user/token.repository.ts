@@ -26,7 +26,13 @@ export class TokenRepository {
 
     async getTokenFromRequest (req: Request): Promise<TokenEntity> {
         const accessToken = RequestUtility.getAccessToken(req);
-        return await this.getTokenWithAccessToken(accessToken);
+        const token = await this.getTokenWithAccessToken(accessToken);
+        if (!this.isAccessTokenAlive(token) && this.isRefreshTokenAlive(token)) {
+            token.access = await this.getAvailableAccessToken();
+            token.refresh = await this.getAvailableRefreshToken();
+            await this.repository.save(token);
+        }
+        return token;
     }
 
     async getTokenWithAccessToken (accessToken: string): Promise<TokenEntity> {
