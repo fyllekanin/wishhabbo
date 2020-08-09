@@ -1,6 +1,7 @@
 import { Component, HostBinding } from '@angular/core';
 import { NavigationItem } from './navigation.model';
 import { AuthService } from '../../../core/auth/auth.service';
+import { AuthUser } from '../../../core/auth/auth-user.model';
 
 @Component({
     selector: 'app-navigation',
@@ -8,11 +9,8 @@ import { AuthService } from '../../../core/auth/auth.service';
     styleUrls: [ './navigation.component.css' ]
 })
 export class NavigationComponent {
-    data = {
-        isLoggedIn: false,
-        avatar: './assets/images/avatar.png',
-        username: null
-    };
+    user: AuthUser;
+    avatarUrl: string;
     items: Array<NavigationItem> = [
         new NavigationItem({
             title: 'WishHabbo',
@@ -42,9 +40,8 @@ export class NavigationComponent {
     }
 
     private syncUser (): void {
-        this.data.isLoggedIn = this.authService.isLoggedIn();
-        this.data.avatar = this.authService.isLoggedIn() ? this.getAvatarUrl(this.authService.getAuthUser().habbo) : './assets/images/avatar.png';
-        this.data.username = this.authService.isLoggedIn() ? this.authService.getAuthUser().username : null;
+        this.user = this.authService.getAuthUser();
+        this.avatarUrl = this.authService.isLoggedIn() ? this.getAvatarUrl(this.user.habbo) : './assets/images/avatar.png';
     }
 
     private getAvatarUrl (habbo: string): string {

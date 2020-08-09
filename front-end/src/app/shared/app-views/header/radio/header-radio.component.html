@@ -26,9 +26,11 @@
                     src="https://www.habbo.com/habbo-imaging/avatarimage?user=bear94&gesture=nrm&direction=4&head_direction=2&size=m&action=sit"/>
             </div>
             <div class="actions">
-                <button class="green"><i class="fas fa-play"></i></button>
-                <button class="blue"><i class="fas fa-volume-up"></i></button>
-                <button class="blue"><i class="fas fa-volume-down"></i></button>
+                <button class="green" (click)="radioService.toggleRadio()"><i
+                    [ngClass]="radioService.isPlaying ? 'fas fa-pause' : 'fas fa-play'"></i>
+                </button>
+                <button class="blue" (click)="radioService.doUpVolume()"><i class="fas fa-volume-up"></i></button>
+                <button class="blue" (click)="radioService.doDownVolume()"><i class="fas fa-volume-down"></i></button>
                 <button class="red"><i class="fas fa-heart"></i></button>
                 <button class="blue" (click)="openRequest()"><i class="fa fa-comment"></i></button>
             </div>

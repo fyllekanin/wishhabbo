@@ -14,7 +14,8 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, throwError as observableThrowError } from 'rxjs';
 import { catchError, filter, finalize, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
-import { HttpService } from './http.service';
+import { SiteNotificationService } from '../common-services/site-notification.service';
+import { SiteNotificationType } from '../../shared/app-views/site-notification/site-notification.interface';
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
@@ -24,7 +25,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     constructor (
         private authService: AuthService,
         private router: Router,
-        private httpService: HttpService
+        private siteNotificationSerivce: SiteNotificationService
     ) {
     }
 
@@ -41,6 +42,14 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                                 console.log('No valid access token at all, logging you out');
                                 return of(null);
                             }
+                        case 404:
+                            this.siteNotificationSerivce.create({
+                                title: 'Not Found',
+                                message: 'We could not find the page',
+                                type: SiteNotificationType.INFO
+                            });
+                            this.router.navigateByUrl('/default/not-found');
+                            return;
                         default:
                             return observableThrowError(error);
                     }

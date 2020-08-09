@@ -27,6 +27,7 @@ export class AuthenticationController {
     private async getInitial (req: Request, res: Response): Promise<void> {
         const userRepository = new UserRepository();
         const tokenRepository = new TokenRepository();
+        const groupRepository = new GroupRepository();
         const builder = InitialView.newBuilder();
 
         const token = await tokenRepository.getTokenFromRequest(req);
@@ -40,6 +41,8 @@ export class AuthenticationController {
                 .withHabbo(user.habbo)
                 .withAccessToken(token.access)
                 .withRefreshToken(token.refresh)
+                .withStaffPermissions(await this.getStaffPermissions(user, groupRepository))
+                .withAdminPermissions(await this.getAdminPermissions(user, groupRepository))
                 .build());
         }
 

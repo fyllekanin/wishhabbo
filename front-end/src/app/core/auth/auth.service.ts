@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { LocalStorageKeys } from '../../shared/constants/local-storage.constants';
 import { SiteNotificationService } from '../common-services/site-notification.service';
 import { SiteNotificationType } from '../../shared/app-views/site-notification/site-notification.interface';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,10 @@ export class AuthService {
     private onAuthChangeSubject: Subject<void> = new Subject<void>();
     onAuthChange = this.onAuthChangeSubject.asObservable();
 
-    constructor (private httpService: HttpService, private siteNotificationService: SiteNotificationService) {
+    constructor (
+        private httpService: HttpService,
+        private siteNotificationService: SiteNotificationService,
+        private router: Router) {
         this.authUser = this.getStoredAuthUser();
     }
 
@@ -65,6 +69,7 @@ export class AuthService {
                     type: SiteNotificationType.SUCCESS
                 });
                 this.onAuthChangeSubject.next();
+                this.router.navigateByUrl('/auth/login');
             });
     }
 

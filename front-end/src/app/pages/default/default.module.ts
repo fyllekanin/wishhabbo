@@ -4,15 +4,21 @@ import { RouterModule } from '@angular/router';
 import { defaultRoutes } from './default.routes';
 import { ArticleModule } from '../../shared/components/article/article.module';
 import { CommonModule } from '@angular/common';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { DefaultComponent } from './default.component';
+import { ContentModule } from '../../shared/components/content/content.module';
 
 @NgModule({
     imports: [
         RouterModule.forChild(defaultRoutes),
         ArticleModule,
-        CommonModule
+        CommonModule,
+        ContentModule
     ],
     declarations: [
-        HomeComponent
+        HomeComponent,
+        NotFoundComponent,
+        DefaultComponent
     ],
     exports: [
         RouterModule

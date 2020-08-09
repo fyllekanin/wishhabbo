@@ -5,6 +5,7 @@ import { Server } from '@overnightjs/core';
 import { AuthenticationController } from './rest-services/auth/authentication.controller';
 import { PageController } from './rest-services/page.controller';
 import { BackgroundTaskHandler } from './background-tasks/background-task.handler';
+import { StaffController } from './rest-services/staff/staff.controller';
 
 class MainServer extends Server {
     private backgroundTaskHandler: BackgroundTaskHandler;
@@ -30,7 +31,8 @@ class MainServer extends Server {
         super.addControllers(
             [
                 new AuthenticationController(),
-                new PageController()
+                new PageController(),
+                new StaffController()
             ]
         );
     }

@@ -15,6 +15,8 @@ export class ArticleEntity extends CreatedUpdatedAtEntity {
     room: string;
     @Column()
     difficulty: number;
+    @Column()
+    isApproved: boolean;
 
     static newBuilder (): ArticleEntityBuilder {
         return new ArticleEntityBuilder();
@@ -26,6 +28,7 @@ class ArticleEntityBuilder {
     content: string;
     badges: string;
     difficulty: number;
+    isApproved: boolean;
 
     withTitle (title: string): ArticleEntityBuilder {
         this.title = title;
@@ -47,12 +50,18 @@ class ArticleEntityBuilder {
         return this;
     }
 
+    withIsApproved (isApproved: boolean): ArticleEntityBuilder {
+        this.isApproved = isApproved;
+        return this;
+    }
+
     build (): ArticleEntity {
         const entity = new ArticleEntity();
         entity.title = this.title;
         entity.content = this.content;
         entity.badges = this.badges;
         entity.difficulty = this.difficulty;
+        entity.isApproved = this.isApproved;
         return entity;
     }
 }

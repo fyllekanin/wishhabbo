@@ -10,20 +10,42 @@
                 </div>
             </div>
             <div class="cell small-3 small-offset-1 welcome">
-                <div *ngIf="!data.isLoggedIn; else isLoggedIn">
-                    Hello, Welcome to WhishHabbo!
-                    <br/>
-                    <a class="register">Register</a>
-                    or
-                    <a class="login" routerLink="/auth/login">Login</a>
+                <div *ngIf="!user; else isLoggedIn" class="not-logged-in">
+                    <button class="green" routerLink="/auth/login">Login</button>
+                    <span class="slash">/</span>
+                    <button class="blue">Register</button>
                 </div>
                 <ng-template #isLoggedIn>
-                    Hello, Welcome {{data.username}}!
-                    <br/>
-                    <a class="login" (click)="onLogout()">Logout</a>
+
+                    <div class="logged-in-icon dropdown-menu">
+                        <i class="fas fa-user"></i>
+                        {{user.username}}
+                        <i class="fas fa-angle-down"></i>
+
+                        <div class="dropdown-content gray-bottom-shadow">
+                            <a href="#">Profile</a>
+                            <span class="dropdown-meny-divider"></span>
+
+                            <a href="#" *ngIf="user.doHaveAdminPermissions">AdminCP</a>
+                            <a routerLink="/staff" *ngIf="user.doHaveStaffPermissions">StaffCP</a>
+                            <span
+                                class="dropdown-meny-divider" *ngIf="user.doHaveStaffPermissions || user.doHaveAdminPermissions"></span>
+
+                            <a (click)="onLogout()">Logout</a>
+                        </div>
+                    </div>
+
+                    <div class="logged-in-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+
+                    <div class="logged-in-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+
                 </ng-template>
-                <div class="avatar" [ngClass]="data.isLoggedIn ? '' : 'logged-out-avatar'">
-                    <img [src]="data.avatar"/>
+                <div class="avatar" [ngClass]="user ? '' : 'logged-out-avatar'">
+                    <img [src]="avatarUrl"/>
                 </div>
             </div>
         </div>

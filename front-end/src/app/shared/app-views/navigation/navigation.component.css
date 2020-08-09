@@ -9,6 +9,21 @@
     left: 0;
 }
 
+.not-logged-in {
+    margin: 8px;
+}
+
+.logged-in-icon {
+    display: inline-block;
+    font-size: 12px;
+    margin: 10px 25px 0 0;
+}
+
+.slash {
+    font-size: 13px;
+    margin: 0 10px 0 5px;
+}
+
 .main-navigation-item {
     display: inline-block;
     color: #ffffff;

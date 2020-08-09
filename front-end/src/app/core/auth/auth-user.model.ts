@@ -19,6 +19,10 @@ export class StaffPermissions {
     constructor (source: Partial<StaffPermissions>) {
         ClassHelper.assign(this, source);
     }
+
+    doHaveAnyPerm (): boolean {
+        return Object.keys(this).some(key => this[key]);
+    }
 }
 
 export class AdminPermissions {
@@ -38,6 +42,10 @@ export class AdminPermissions {
     constructor (source: Partial<AdminPermissions>) {
         ClassHelper.assign(this, source);
     }
+
+    doHaveAnyPerm (): boolean {
+        return Object.keys(this).some(key => this[key]);
+    }
 }
 
 export class AuthUser {
@@ -52,11 +60,19 @@ export class AuthUser {
     @primitiveOf(String)
     refreshToken: string;
     @objectOf(AdminPermissions)
-    adminPermissions: AdminPermissions;
+    adminPermissions: AdminPermissions = new AdminPermissions(null);
     @objectOf(StaffPermissions)
-    staffPermissions: StaffPermissions;
+    staffPermissions: StaffPermissions = new StaffPermissions(null);
+
+    @primitiveOf(Boolean)
+    doHaveAdminPermissions: boolean;
+    @primitiveOf(Boolean)
+    doHaveStaffPermissions: boolean;
 
     constructor (source: Partial<AuthUser>) {
         ClassHelper.assign(this, source);
+        this.doHaveAdminPermissions = this.adminPermissions.doHaveAnyPerm();
+        this.doHaveStaffPermissions = this.staffPermissions.doHaveAnyPerm();
     }
+
 }

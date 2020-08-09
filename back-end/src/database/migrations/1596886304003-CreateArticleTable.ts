@@ -35,6 +35,10 @@ export class CreateArticleTable1596886304003 implements MigrationInterface {
                     type: 'int',
                 },
                 {
+                    name: 'isApproved',
+                    type: 'int'
+                },
+                {
                     name: 'createdAt',
                     type: 'int',
                 },
