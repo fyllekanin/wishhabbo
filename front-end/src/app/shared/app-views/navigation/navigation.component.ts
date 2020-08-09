@@ -14,6 +14,7 @@ export class NavigationComponent {
     items: Array<NavigationItem> = [
         new NavigationItem({
             title: 'WishHabbo',
+            path: '/default',
             icon: 'fa-home'
         }),
         new NavigationItem({

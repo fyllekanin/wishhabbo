@@ -26,8 +26,11 @@
 
 .main-navigation-item {
     display: inline-block;
-    color: #ffffff;
     margin: 0.75rem;
+}
+
+.main-navigation-item a {
+    color: #ffffff;
 }
 
 .welcome {

@@ -16,6 +16,10 @@ body {
     background-color: #eaeae6;
 }
 
+.grid-container {
+    max-width: 85rem;
+}
+
 .dark-bottom-shadow {
     -webkit-box-shadow: 0 5px 5px 0 rgba(64, 64, 64, 0.75);
     -moz-box-shadow: 0 5px 5px 0 rgba(64, 64, 64, 0.75);

@@ -3,10 +3,10 @@
         <div class="grid-x">
             <div class="cell small-8">
                 <div class="main-navigation-item" *ngFor="let mainItem of items">
-                    <span>
+                    <a [routerLink]="mainItem.path">
                         <i *ngIf="mainItem.icon" class="fa" aria-hidden="true" [ngClass]="mainItem.icon"></i>
                         {{mainItem.title}}
-                    </span>
+                    </a>
                 </div>
             </div>
             <div class="cell small-3 small-offset-1 welcome">

@@ -25,7 +25,7 @@
                         ],
                         "styles": [
                             "src/assets/css/all.min.css",
-                            "src/assets/css/foundation.min.css",
+                            "src/assets/css/foundation.css",
                             "src/styles.css"
                         ],
                         "scripts": []
@@ -91,7 +91,7 @@
                         ],
                         "styles": [
                             "src/assets/css/all.min.css",
-                            "src/assets/css/foundation.min.css",
+                            "src/assets/css/foundation.css",
                             "src/styles.css"
                         ],
                         "scripts": []
