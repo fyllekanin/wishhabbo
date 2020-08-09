@@ -1,4 +1,4 @@
-import { Controller, Get, Middleware, Post } from '@overnightjs/core';
+import { Controller, Get, Post } from '@overnightjs/core';
 import { Request, Response } from 'express';
 import { RegisterPayload } from '../../rest-service-views/payloads/auth/register.payload';
 import { ValidationValidators } from '../../validation/validation.validators';
@@ -10,7 +10,6 @@ import { HasherUtility } from '../../utilities/hasher.utility';
 import { LoginPayload } from '../../rest-service-views/payloads/auth/login.payload';
 import { ValidationError } from '../../validation/validation.error';
 import { ErrorCodes } from '../../validation/error.codes';
-import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
 import {
     AdminPermissions,
     AuthUserView,
@@ -35,18 +34,20 @@ export class AuthenticationController {
             await userRepository.getUserById(token.userId) : null;
 
         if (user) {
+            const newtoken = await tokenRepository.getToken(user);
             builder.withAuthUser(AuthUserView.newBuilder()
                 .withUserId(user.userId)
                 .withUsername(user.username)
                 .withHabbo(user.habbo)
-                .withAccessToken(token.access)
-                .withRefreshToken(token.refresh)
+                .withAccessToken(newtoken.access)
+                .withRefreshToken(newtoken.refresh)
                 .withStaffPermissions(await this.getStaffPermissions(user, groupRepository))
                 .withAdminPermissions(await this.getAdminPermissions(user, groupRepository))
                 .build());
+            res.status(OK).json(builder.build());
+        } else {
+            res.status(OK).json();
         }
-
-        res.status(OK).json(builder.build());
     }
 
     @Post('login')
@@ -111,7 +112,6 @@ export class AuthenticationController {
     }
 
     @Post('logout')
-    @Middleware([ AUTHORIZATION_MIDDLEWARE ])
     private async doLogout (req: Request, res: Response): Promise<void> {
         const tokenRepository = new TokenRepository();
         const token = await tokenRepository.getTokenFromRequest(req);

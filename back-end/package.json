@@ -12,6 +12,7 @@
         "dev": "nodemon --watch src -e ts,ejs --exec npm run dev:start",
         "start": "node .",
         "test": "echo \"Error: no test specified\" && exit 1",
+        "re:migrate": "node scripts/drop-tables.js && tsc && typeorm migration:run",
         "migrate": "tsc && typeorm migration:run"
     },
     "author": "",

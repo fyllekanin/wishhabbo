@@ -15,9 +15,7 @@ export class AppLoadService {
             const httpService: HttpService = this.injector.get(HttpService);
 
             httpService.get('/auth/initial').subscribe((res: { authUser: AuthUser }) => {
-                if (res.authUser) {
-                    authService.setAuthUser(res.authUser);
-                }
+                authService.setAuthUser(res && res.authUser ? res.authUser : null);
                 resolve();
             });
         });

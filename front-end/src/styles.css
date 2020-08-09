@@ -95,7 +95,7 @@ span {
 }
 
 /** Button Styles **/
-button {
+button, button[type='submit'] {
     display: inline-block;
     background-color: #eee;
     text-transform: uppercase;
@@ -140,13 +140,13 @@ button.green:hover {
 }
 
 /** Form Styles **/
-input {
+input, input[type='text'] {
     display: block;
     padding: 7px 10px;
     border: 1px solid #bbbbbb;
     border-bottom: 2px solid #cccccc;
     border-right: 2px solid #cccccc;
-    font-size: 0.7rem;
+    font-size: 11px;
     width: 100%;
     outline: none;
 }

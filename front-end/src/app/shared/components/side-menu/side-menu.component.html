@@ -1,4 +1,4 @@
-<app-content [title]="menu?.title">
+<app-content *ngIf="isAnyChildrenApplicable" [title]="menu?.title">
     <div *ngFor="let item of menu?.items">
         <a [routerLink]="item.url">
             <i [ngClass]="item.icon"></i>

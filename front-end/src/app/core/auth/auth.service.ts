@@ -86,7 +86,7 @@ export class AuthService {
     }
 
     setAuthUser (authUser: AuthUser): void {
-        this.authUser = new AuthUser(authUser);
+        this.authUser = authUser ? new AuthUser(authUser) : null;
         this.updateStoredAuthUser(this.authUser);
         this.onAuthChangeSubject.next();
     }

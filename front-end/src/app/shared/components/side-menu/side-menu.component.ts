@@ -7,5 +7,12 @@ import { ISideMenu } from './side-menu.interface';
     styleUrls: [ 'side-menu.component.css' ]
 })
 export class SideMenuComponent {
-    @Input() menu: ISideMenu;
+    menu: ISideMenu;
+    isAnyChildrenApplicable = false;
+
+    @Input()
+    set model (menu: ISideMenu) {
+        this.menu = menu;
+        this.isAnyChildrenApplicable = this.menu.items.some(item => item.isApplicable);
+    }
 }

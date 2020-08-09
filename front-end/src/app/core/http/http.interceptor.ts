@@ -39,7 +39,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                             if ((<{ isTokenExisting: boolean }>error.error).isTokenExisting) {
                                 return this.handleAuthenticationRefresh(req, next);
                             } else {
-                                console.log('No valid access token at all, logging you out');
+                                this.authService.logout();
                                 return of(null);
                             }
                         case 404:
