@@ -1,11 +1,11 @@
-import { Request } from 'express';
+import { InternalRequest } from './internal.request';
 
 export class RequestUtility {
     private static readonly BEARER = 'Bearer';
     private static readonly AUTHORIZATION_HEADER = 'Authorization';
     private static readonly REFRESH_AUTHORIZATION_HEADER = 'RefreshAuthorization';
 
-    static getAccessToken (req: Request): string {
+    static getAccessToken (req: InternalRequest): string {
         const header = req.header(RequestUtility.AUTHORIZATION_HEADER);
         if (!header || header.length < 1) {
             return null;
@@ -16,7 +16,7 @@ export class RequestUtility {
         return header.split(' ')[1];
     }
 
-    static getRefreshToken (req: Request): string {
+    static getRefreshToken (req: InternalRequest): string {
         const header = req.header(RequestUtility.REFRESH_AUTHORIZATION_HEADER);
         return header ? header : null;
     }

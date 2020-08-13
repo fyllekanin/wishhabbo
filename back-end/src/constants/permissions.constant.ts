@@ -6,7 +6,7 @@ export class Permissions {
         CAN_UNBOOK_OTHERS_RADIO: 4,
         CAN_UNBOOK_OTHERS_EVENTS: 8,
         CAN_WRITE_ARTICLES: 16,
-        CAN_APPROVE_ARTICLES: 32,
+        CAN_MANAGE_ARTICLES: 32,
         CAN_KICK_DJ_OFF_AIR: 64
     };
 

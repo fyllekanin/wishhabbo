@@ -3,9 +3,9 @@ import { TokenEntity } from '../../entities/user/token.entity';
 import { UserEntity } from '../../entities/user/user.entity';
 import { IdHelper } from '../../../helpers/id.helper';
 import { TimeUtility } from '../../../utilities/time.utility';
-import { Request } from 'express';
 import { RequestUtility } from '../../../utilities/request.utility';
 import { HasherUtility } from '../../../utilities/hasher.utility';
+import { InternalRequest } from '../../../utilities/internal.request';
 
 export class TokenRepository {
     private static readonly ACCESS_TOKEN_LIFE_TIME = 7200;
@@ -24,7 +24,7 @@ export class TokenRepository {
         return await this.repository.delete({ tokenId: entity.tokenId });
     }
 
-    async getTokenFromRequest (req: Request): Promise<TokenEntity> {
+    async getTokenFromRequest (req: InternalRequest): Promise<TokenEntity> {
         const accessToken = RequestUtility.getAccessToken(req);
         const token = await this.getTokenWithAccessToken(accessToken);
         if (!this.isAccessTokenAlive(token) && this.isRefreshTokenAlive(token)) {
@@ -35,13 +35,18 @@ export class TokenRepository {
         return token;
     }
 
+    async getUserIdFromRequest (req: InternalRequest): Promise<number> {
+        const token = await this.getTokenFromRequest(req);
+        return token.userId;
+    }
+
     async getTokenWithAccessToken (accessToken: string): Promise<TokenEntity> {
         return await this.repository.findOne({
             access: accessToken
         });
     }
 
-    async getTokenWithAccessAndRefreshToken (req: Request): Promise<TokenEntity> {
+    async getTokenWithAccessAndRefreshToken (req: InternalRequest): Promise<TokenEntity> {
         return await this.repository.findOne({
             refresh: RequestUtility.getRefreshToken(req),
             access: RequestUtility.getAccessToken(req)

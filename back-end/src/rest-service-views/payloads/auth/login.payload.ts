@@ -1,5 +1,5 @@
-import { Request } from 'express';
 import { IPayload } from '../payload.interface';
+import { InternalRequest } from '../../../utilities/internal.request';
 
 export class LoginPayload implements IPayload {
     private readonly username: string;
@@ -20,7 +20,7 @@ export class LoginPayload implements IPayload {
         return this.password;
     }
 
-    static of (req: Request): LoginPayload {
+    static of (req: InternalRequest): LoginPayload {
         const { username, password } = req.body;
         return new LoginPayload(username, password);
     }

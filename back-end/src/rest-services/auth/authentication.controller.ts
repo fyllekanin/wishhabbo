@@ -1,5 +1,5 @@
 import { Controller, Get, Post } from '@overnightjs/core';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { RegisterPayload } from '../../rest-service-views/payloads/auth/register.payload';
 import { ValidationValidators } from '../../validation/validation.validators';
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR, OK } from 'http-status-codes';
@@ -18,12 +18,13 @@ import {
 import { InitialView } from '../../rest-service-views/respond-views/user/initial.view';
 import { GroupRepository } from '../../persistance/repositories/group.repository';
 import { Permissions } from '../../constants/permissions.constant';
+import { InternalRequest } from '../../utilities/internal.request';
 
 @Controller('api/auth')
 export class AuthenticationController {
 
     @Get('initial')
-    private async getInitial (req: Request, res: Response): Promise<void> {
+    private async getInitial (req: InternalRequest, res: Response): Promise<void> {
         const userRepository = new UserRepository();
         const tokenRepository = new TokenRepository();
         const groupRepository = new GroupRepository();
@@ -50,7 +51,7 @@ export class AuthenticationController {
     }
 
     @Post('login')
-    private async doLogin (req: Request, res: Response): Promise<void> {
+    private async doLogin (req: InternalRequest, res: Response): Promise<void> {
         const userRepository = new UserRepository();
         const tokenRepository = new TokenRepository();
         const groupRepository = new GroupRepository();
@@ -87,31 +88,8 @@ export class AuthenticationController {
             .build());
     }
 
-    private async getStaffPermissions (user: UserEntity, groupRepository: GroupRepository): Promise<StaffPermissions> {
-        return {
-            canBookRadio: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_BOOK_RADIO),
-            canBookEvents: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_BOOK_EVENTS),
-            canUnbookOthersRadio: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO),
-            canUnbookOthersEvents: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_EVENTS),
-            canWriteArticles: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_WRITE_ARTICLES),
-            canApproveArticles: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_APPROVE_ARTICLES),
-            canKickDjOffAir: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_KICK_DJ_OFF_AIR)
-        };
-    }
-
-    private async getAdminPermissions (user: UserEntity, groupRepository: GroupRepository): Promise<AdminPermissions> {
-        return {
-            canManageGroups: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_GROUPS),
-            canManageUserBasics: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_USER_BASICS),
-            canManageUserGroups: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_USER_GROUPS),
-            canManageWebsiteSettings: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_WEBSITE_SETTINGS),
-            canSeeLogs: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_SEE_LOGS),
-            canUploadResources: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_UPLOAD_RESOURCES)
-        };
-    }
-
     @Post('logout')
-    private async doLogout (req: Request, res: Response): Promise<void> {
+    private async doLogout (req: InternalRequest, res: Response): Promise<void> {
         const tokenRepository = new TokenRepository();
         const token = await tokenRepository.getTokenFromRequest(req);
         if (!token) {
@@ -123,7 +101,7 @@ export class AuthenticationController {
     }
 
     @Post('token-refresh')
-    private async doTokenRefresh (req: Request, res: Response): Promise<void> {
+    private async doTokenRefresh (req: InternalRequest, res: Response): Promise<void> {
         const userRepository = new UserRepository();
         const tokenRepository = new TokenRepository();
         const entity = await tokenRepository.getTokenWithAccessAndRefreshToken(req);
@@ -152,7 +130,7 @@ export class AuthenticationController {
     }
 
     @Post('register')
-    private async doRegister (req: Request, res: Response): Promise<void> {
+    private async doRegister (req: InternalRequest, res: Response): Promise<void> {
         const userRepository = new UserRepository();
         const payload = RegisterPayload.of(req);
         const payloadErrors = await ValidationValidators.validatePayload(payload);
@@ -180,5 +158,28 @@ export class AuthenticationController {
         });
 
         res.status(status).json(response);
+    }
+
+    private async getStaffPermissions (user: UserEntity, groupRepository: GroupRepository): Promise<StaffPermissions> {
+        return {
+            canBookRadio: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_BOOK_RADIO),
+            canBookEvents: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_BOOK_EVENTS),
+            canUnbookOthersRadio: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO),
+            canUnbookOthersEvents: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_EVENTS),
+            canWriteArticles: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_WRITE_ARTICLES),
+            canApproveArticles: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_MANAGE_ARTICLES),
+            canKickDjOffAir: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_KICK_DJ_OFF_AIR)
+        };
+    }
+
+    private async getAdminPermissions (user: UserEntity, groupRepository: GroupRepository): Promise<AdminPermissions> {
+        return {
+            canManageGroups: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_GROUPS),
+            canManageUserBasics: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_USER_BASICS),
+            canManageUserGroups: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_USER_GROUPS),
+            canManageWebsiteSettings: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_WEBSITE_SETTINGS),
+            canSeeLogs: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_SEE_LOGS),
+            canUploadResources: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_UPLOAD_RESOURCES)
+        };
     }
 }

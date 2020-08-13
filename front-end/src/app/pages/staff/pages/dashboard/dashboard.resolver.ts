@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { HttpService } from '../../../core/http/http.service';
+import { HttpService } from '../../../../core/http/http.service';
 import { Observable } from 'rxjs';
 
 @Injectable()

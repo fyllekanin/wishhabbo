@@ -1,23 +1,21 @@
 import { NextFunction, Response } from 'express';
 import { TokenRepository } from '../../persistance/repositories/user/token.repository';
-import { UNAUTHORIZED } from 'http-status-codes';
 import { InternalRequest } from '../../utilities/internal.request';
+import { UserRepository } from '../../persistance/repositories/user/user.repository';
 
-export const AUTHORIZATION_MIDDLEWARE = async (req: InternalRequest, res: Response, next: NextFunction) => {
+export const SET_USER_MIDDLEWARE = async (req: InternalRequest, res: Response, next: NextFunction) => {
     const tokenRepository = new TokenRepository();
+    const userRepository = new UserRepository();
     const entity = await tokenRepository.getTokenFromRequest(req);
 
     if (!entity) {
-        res.status(UNAUTHORIZED).json({
-            isTokenExisting: false
-        });
+        next();
         return;
     }
     if (!tokenRepository.isAccessTokenAlive(entity)) {
-        res.status(UNAUTHORIZED).json({
-            isTokenExisting: true
-        });
+        next();
         return;
     }
+    req.user = await userRepository.getUserById(entity.userId);
     next();
 };
