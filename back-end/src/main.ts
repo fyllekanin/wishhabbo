@@ -7,6 +7,7 @@ import { PageController } from './rest-services/page.controller';
 import { BackgroundTaskHandler } from './background-tasks/background-task.handler';
 import { StaffController } from './rest-services/staff/staff.controller';
 import { SET_USER_MIDDLEWARE } from './rest-services/middlewares/set-user.middleware';
+import { ArticleController } from './rest-services/staff/media/article.controller';
 
 class MainServer extends Server {
     private backgroundTaskHandler: BackgroundTaskHandler;
@@ -33,7 +34,8 @@ class MainServer extends Server {
             [
                 new AuthenticationController(),
                 new PageController(),
-                new StaffController()
+                new StaffController(),
+                new ArticleController()
             ],
             null,
             SET_USER_MIDDLEWARE

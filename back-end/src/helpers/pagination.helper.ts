@@ -1,6 +1,6 @@
 export class PaginationHelper {
-    public static readonly TEN_ITEMS = 10;
-    public static readonly TWENTY_ITEMS = 20;
+    static readonly TEN_ITEMS = 10;
+    static readonly TWENTY_ITEMS = 20;
 
     static getSkip (page: number, itemsPerPage: number): number {
         return page >= 2 ? (itemsPerPage * page) - itemsPerPage : 0;

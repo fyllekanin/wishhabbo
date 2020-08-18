@@ -1,8 +1,8 @@
-import { ValidationError } from '../validation.error';
-import { EntityValidator } from '../entities/entity-validator.interface';
-import { IPayload } from '../../rest-service-views/payloads/payload.interface';
-import { ErrorCodes } from '../error.codes';
-import { LoginPayload } from '../../rest-service-views/payloads/auth/login.payload';
+import { ValidationError } from '../../validation.error';
+import { EntityValidator } from '../../entities/entity-validator.interface';
+import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
+import { ErrorCodes } from '../../error.codes';
+import { LoginPayload } from '../../../rest-service-views/payloads/auth/login.payload';
 
 export class LoginPayloadValidator implements EntityValidator<LoginPayload> {
 

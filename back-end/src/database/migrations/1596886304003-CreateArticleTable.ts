@@ -14,6 +14,10 @@ export class CreateArticleTable1596886304003 implements MigrationInterface {
                     isPrimary: true,
                 },
                 {
+                    name: 'userId',
+                    type: 'int'
+                },
+                {
                     name: 'title',
                     type: 'varchar',
                     isUnique: true
@@ -32,6 +36,10 @@ export class CreateArticleTable1596886304003 implements MigrationInterface {
                 },
                 {
                     name: 'difficulty',
+                    type: 'int',
+                },
+                {
+                    name: 'type',
                     type: 'int',
                 },
                 {

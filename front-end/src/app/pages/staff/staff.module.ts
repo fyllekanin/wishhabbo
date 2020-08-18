@@ -9,13 +9,21 @@ import { CommonModule } from '@angular/common';
 import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
 import { ArticleComponent } from './pages/articles/article/article.component';
 import { ArticleListComponent } from './pages/articles/list/article-list.component';
+import { TableModule } from '../../shared/components/table/table.module';
+import { ArticleListService } from './pages/articles/list/article-list.service';
+import { ArticleService } from './pages/articles/article/article.service';
+import { FormsModule } from '@angular/forms';
+import { EditorModule } from '../../shared/components/editor/editor.module';
 
 @NgModule({
     imports: [
         RouterModule.forChild(staffRoutes),
         ContentModule,
         SideMenuModule,
-        CommonModule
+        CommonModule,
+        TableModule,
+        FormsModule,
+        EditorModule
     ],
     declarations: [
         StaffComponent,
@@ -24,7 +32,9 @@ import { ArticleListComponent } from './pages/articles/list/article-list.compone
         ArticleListComponent
     ],
     providers: [
-        DashboardResolver
+        DashboardResolver,
+        ArticleListService,
+        ArticleService
     ],
     exports: [
         RouterModule

@@ -65,4 +65,34 @@ export class ErrorCodes {
         name: 'Refresh token invalid',
         description: 'Given refresh token do not exist'
     };
+
+    static readonly NON_UNIQUE_ARTICLE_TITLE: ErrorCode = {
+        code: 11,
+        name: 'Article title is not unique',
+        description: 'Give article title already exists'
+    };
+
+    static readonly NOT_VALID_HABBO_ROOM_LINK: ErrorCode = {
+        code: 12,
+        name: 'Habbo room link is not valid',
+        description: 'Given habbo room link is not a valid link'
+    };
+
+    static readonly NOT_VALID_ARTICLE_DIFFICULTY: ErrorCode = {
+        code: 13,
+        name: 'Invalid article difficulty',
+        description: 'Given difficulty is not valid'
+    };
+
+    static readonly NOT_VALID_ARTICLE_TYPE: ErrorCode = {
+        code: 14,
+        name: 'Invalid article type',
+        description: 'Given type is not valid'
+    };
+
+    static readonly MISSING_BADGE_WHEN_MANDATORY: ErrorCode = {
+        code: 15,
+        name: 'Missing badges on mandatory article type',
+        description: 'On given article type it is mandatory to have at least one badge set'
+    };
 }

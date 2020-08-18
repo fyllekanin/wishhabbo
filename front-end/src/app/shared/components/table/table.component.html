@@ -1,0 +1,18 @@
+<table>
+    <thead>
+    <th *ngFor="let header of headers">{{header.label}}</th>
+    <th *ngIf="doAnyRowHaveActions" class="actions">Actions</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let row of rows" [ngClass]="row.isClickable ? 'clickable' : ''"
+        (click)="row.isClickable ? onRowClick.emit(row) : null">
+        <td *ngFor="let cell of row.cells">
+            {{cell.label}}
+        </td>
+
+        <td *ngIf="row.actions" class="actions">
+            <i class="fas fa-ellipsis-v"></i>
+        </td>
+    </tr>
+    </tbody>
+</table>

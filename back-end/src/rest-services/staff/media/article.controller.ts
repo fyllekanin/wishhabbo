@@ -11,27 +11,89 @@ import { ArticlePayload } from '../../../rest-service-views/payloads/staff/media
 import { ValidationValidators } from '../../../validation/validation.validators';
 import { ArticleEntity } from '../../../persistance/entities/staff/media/article.entity';
 import { InternalRequest } from '../../../utilities/internal.request';
+import { PaginationView } from '../../../rest-service-views/respond-views/pagination.view';
+import { ArticleView } from '../../../rest-service-views/respond-views/staff/media/article.view';
+import { UserRepository } from '../../../persistance/repositories/user/user.repository';
 
 @Controller('api/staff/article')
 export class ArticleController {
 
-    @Get('list/:page')
-    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES ]) ])
+    @Get('page/:page')
+    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([
+        Permissions.STAFF.CAN_WRITE_ARTICLES,
+        Permissions.STAFF.CAN_MANAGE_ARTICLES
+    ]) ])
     private async getArticles (req: InternalRequest, res: Response): Promise<void> {
         const articleRepository = new ArticleRepository();
+        const userRepository = new UserRepository();
 
-        res.status(OK).json(await articleRepository.paginate({
+        const data = await articleRepository.paginate({
             take: PaginationHelper.TWENTY_ITEMS,
             page: Number(req.params.page),
             orderBy: {
-                sort: 'createdAt',
+                sort: 'articleId',
                 order: 'DESC'
             }
-        }));
+        });
+
+        const items = [];
+        for (const item of data.getItems()) {
+            items.push(ArticleView.newBuilder()
+                .withArticleId(item.articleId)
+                .withUser(await userRepository.getSlimUserById(item.userId))
+                .withTitle(item.title)
+                .withContent(item.content)
+                .withBadges(JSON.parse(item.badges))
+                .withRoom(item.room)
+                .withDifficulty(item.difficulty)
+                .withType(item.type)
+                .withIsApproved(item.isApproved)
+                .build());
+        }
+
+        res.status(OK).json(PaginationView.newBuilder<ArticleView>()
+            .withTotal(data.getTotal())
+            .withPage(data.getPage())
+            .withItems(items)
+            .build());
+    }
+
+    @Get(':articleId')
+    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([
+        Permissions.STAFF.CAN_WRITE_ARTICLES,
+        Permissions.STAFF.CAN_MANAGE_ARTICLES
+    ]) ])
+    private async getArticle (req: InternalRequest, res: Response): Promise<void> {
+        const articleRepository = new ArticleRepository();
+
+        if (req.params.articleId === 'new') {
+            res.status(OK).json();
+            return;
+        }
+
+        const article = await articleRepository.getByArticleId(Number(req.params.articleId));
+        if (!article) {
+            res.status(NOT_FOUND).json();
+            return;
+        }
+
+        res.status(OK).json(ArticleView.newBuilder()
+            .withArticleId(article.articleId)
+            .withTitle(article.title)
+            .withContent(article.content)
+            .withBadges(JSON.parse(article.badges))
+            .withRoom(article.room)
+            .withDifficulty(article.difficulty)
+            .withType(article.type)
+            .withIsApproved(article.isApproved)
+            .build());
     }
 
     @Post()
-    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES ]) ])
+    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([
+        Permissions.STAFF.CAN_WRITE_ARTICLES,
+        Permissions.STAFF.CAN_MANAGE_ARTICLES
+    ]) ])
     private async createArticle (req: InternalRequest, res: Response): Promise<void> {
         const articleRepository = new ArticleRepository();
         const payload = ArticlePayload.of(req);
@@ -66,7 +128,10 @@ export class ArticleController {
     }
 
     @Post(':articleId')
-    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ]) ])
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
+    ])
     private async updateArticle (req: InternalRequest, res: Response): Promise<void> {
         const articleRepository = new ArticleRepository();
         const article = await articleRepository.getByArticleId(Number(req.params.articleId));
@@ -107,7 +172,10 @@ export class ArticleController {
     }
 
     @Delete(':articleId')
-    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ]) ])
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
+    ])
     private async deleteArticle (req: InternalRequest, res: Response): Promise<void> {
         const articleRepository = new ArticleRepository();
         const article = await articleRepository.getByArticleId(Number(req.params.articleId));
@@ -123,7 +191,10 @@ export class ArticleController {
     }
 
     @Put(':articleId/approve')
-    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ]) ])
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
+    ])
     private async approveArticle (req: InternalRequest, res: Response): Promise<void> {
         const articleRepository = new ArticleRepository();
         const article = await articleRepository.getByArticleId(Number(req.params.articleId));
@@ -140,7 +211,10 @@ export class ArticleController {
     }
 
     @Put(':articleId/unapprove')
-    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ]) ])
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
+    ])
     private async unapproveArticle (req: InternalRequest, res: Response): Promise<void> {
         const articleRepository = new ArticleRepository();
         const article = await articleRepository.getByArticleId(Number(req.params.articleId));

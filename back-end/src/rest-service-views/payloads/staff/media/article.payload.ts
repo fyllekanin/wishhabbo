@@ -8,6 +8,7 @@ export class ArticlePayload implements IPayload {
     private readonly badges: Array<string>;
     private readonly room: string;
     private readonly difficulty: number;
+    private readonly type: number;
 
     constructor (
         articleId: number,
@@ -15,7 +16,8 @@ export class ArticlePayload implements IPayload {
         content: string,
         badges: Array<string>,
         room: string,
-        difficulty: number
+        difficulty: number,
+        type: number
     ) {
         this.articleId = articleId;
         this.title = title;
@@ -23,6 +25,7 @@ export class ArticlePayload implements IPayload {
         this.badges = badges;
         this.room = room;
         this.difficulty = difficulty;
+        this.type = type;
     }
 
     getArticleId (): number {
@@ -49,6 +52,10 @@ export class ArticlePayload implements IPayload {
         return this.difficulty;
     }
 
+    getType (): number {
+        return this.type;
+    }
+
     static of (req: InternalRequest): ArticlePayload {
         const {
             articleId,
@@ -56,7 +63,8 @@ export class ArticlePayload implements IPayload {
             content,
             badges,
             room,
-            difficulty
+            difficulty,
+            type
         } = req.body;
         return new ArticlePayload(
             articleId,
@@ -64,7 +72,8 @@ export class ArticlePayload implements IPayload {
             content,
             badges,
             room,
-            difficulty
+            difficulty,
+            type
         );
     }
 }

@@ -1,0 +1,26 @@
+thead {
+    background: none;
+    border: none;
+}
+
+tbody {
+    border: none;
+}
+
+tbody tr:nth-child(even) {
+    border-bottom: 0;
+    background-color: #fbfbfb;
+}
+
+.clickable {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.clickable:hover, .clickable:hover:nth-child(even) {
+    background: #e8e8e8;
+}
+
+.actions {
+    text-align: right;
+}

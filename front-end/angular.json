@@ -26,9 +26,14 @@
                         "styles": [
                             "src/assets/css/all.min.css",
                             "src/assets/css/foundation.css",
+                            "src/assets/editor/themes/content/default.css",
+                            "src/assets/editor/themes/default.css",
                             "src/styles.css"
                         ],
-                        "scripts": []
+                        "scripts": [
+                            "src/assets/editor/sceditor.js",
+                            "src/assets/editor/formats/bbcode.js"
+                        ]
                     },
                     "configurations": {
                         "production": {
@@ -92,9 +97,14 @@
                         "styles": [
                             "src/assets/css/all.min.css",
                             "src/assets/css/foundation.css",
+                            "src/assets/editor/themes/content/default.css",
+                            "src/assets/editor/themes/default.css",
                             "src/styles.css"
                         ],
-                        "scripts": []
+                        "scripts": [
+                            "src/assets/editor/sceditor.js",
+                            "src/assets/editor/formats/bbcode.js"
+                        ]
                     }
                 },
                 "lint": {

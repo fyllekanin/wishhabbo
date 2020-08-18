@@ -1,11 +1,12 @@
 import { ValidationError } from './validation.error';
 import { UserValidation } from './entities/user/user.validator';
-import { RegisterPayloadValidator } from './payloads/register-payload.validator';
+import { RegisterPayloadValidator } from './payloads/user/register-payload.validator';
 import { EntityValidator } from './entities/entity-validator.interface';
 import { IEntity } from '../persistance/entities/entity.interface';
 import { PayloadValidator } from './payloads/payload-validator.interface';
 import { IPayload } from '../rest-service-views/payloads/payload.interface';
-import { LoginPayloadValidator } from './payloads/login-payload.validator';
+import { LoginPayloadValidator } from './payloads/user/login-payload.validator';
+import { ArticlePayloadValidator } from './payloads/staff/article-payload.validator';
 
 export class ValidationValidators {
     private static readonly ENTITY_VALIDATORS: Array<EntityValidator<IEntity>> = [
@@ -14,7 +15,8 @@ export class ValidationValidators {
 
     private static readonly PAYLOAD_VALIDATORS: Array<PayloadValidator<IPayload>> = [
         new RegisterPayloadValidator(),
-        new LoginPayloadValidator()
+        new LoginPayloadValidator(),
+        new ArticlePayloadValidator()
     ];
 
     static async validateEntity<T> (entity: T): Promise<Array<ValidationError>> {

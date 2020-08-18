@@ -1,9 +1,9 @@
-import { ValidationError } from '../validation.error';
-import { EntityValidator } from '../entities/entity-validator.interface';
-import { IPayload } from '../../rest-service-views/payloads/payload.interface';
-import { RegisterPayload } from '../../rest-service-views/payloads/auth/register.payload';
-import { ErrorCodes } from '../error.codes';
-import { HabboService } from '../../external/services/habbo.service';
+import { ValidationError } from '../../validation.error';
+import { EntityValidator } from '../../entities/entity-validator.interface';
+import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
+import { RegisterPayload } from '../../../rest-service-views/payloads/auth/register.payload';
+import { ErrorCodes } from '../../error.codes';
+import { HabboService } from '../../../external/services/habbo.service';
 
 export class RegisterPayloadValidator implements EntityValidator<RegisterPayload> {
 

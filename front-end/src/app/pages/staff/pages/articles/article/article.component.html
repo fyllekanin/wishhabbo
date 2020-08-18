@@ -1,1 +1,34 @@
-Create a new or edit an article
+<app-content [title]="data.articleId ? 'Editing: ' + data.title : 'Creating: ' + data.title ">
+
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-6">
+            <label for="title" class="display-block">Title*</label>
+            <input id="title" type="text" [(ngModel)]="data.title"/>
+        </div>
+        <div class="cell small-6">
+            <label for="room" class="display-block">Room</label>
+            <input id="room" type="text" [(ngModel)]="data.room"/>
+        </div>
+        <div class="cell small-6">
+            <label for="badges" class="display-block">Badges <em>(comma seperated)</em></label>
+            <input id="badges" type="text" [(ngModel)]="data.badges" (input)="onBadgesChange()"/>
+            <div class="badges">
+                <img *ngFor="let badge of badges"
+                     [src]="'https://images.habbogroup.com/c_images/album1584/' + badge + '.gif'"/>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <label for="type" class="display-block">Type</label>
+            <select id="type" [(ngModel)]="data.type">
+                <option *ngFor="let option of types" [ngValue]="option.value">
+                    {{ option.label }}
+                </option>
+            </select>
+        </div>
+
+        <div class="cell small-12">
+            <app-editor></app-editor>
+        </div>
+    </div>
+
+</app-content>

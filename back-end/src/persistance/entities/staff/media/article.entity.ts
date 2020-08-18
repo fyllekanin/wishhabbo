@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../../created-updated-at.entity';
+import { SlimUserView } from '../../../../rest-service-views/respond-views/user/slim-user.view';
 
 @Entity('articles')
 export class ArticleEntity extends CreatedUpdatedAtEntity {
@@ -18,7 +19,11 @@ export class ArticleEntity extends CreatedUpdatedAtEntity {
     @Column()
     difficulty: number;
     @Column()
+    type: number;
+    @Column()
     isApproved: boolean;
+
+    user: SlimUserView;
 
     getParsedBadges (): Array<string> {
         try {
@@ -40,6 +45,7 @@ class ArticleEntityBuilder {
     badges: string;
     room: string;
     difficulty: number;
+    type: number;
     isApproved: boolean;
 
     withUserId (userId: number): ArticleEntityBuilder {
@@ -72,6 +78,11 @@ class ArticleEntityBuilder {
         return this;
     }
 
+    withType (type: number): ArticleEntityBuilder {
+        this.type = type;
+        return this;
+    }
+
     withIsApproved (isApproved: boolean): ArticleEntityBuilder {
         this.isApproved = isApproved;
         return this;
@@ -83,7 +94,9 @@ class ArticleEntityBuilder {
         entity.title = this.title;
         entity.content = this.content;
         entity.badges = this.badges;
+        entity.room = this.room;
         entity.difficulty = this.difficulty;
+        entity.type = this.type;
         entity.isApproved = this.isApproved;
         return entity;
     }

@@ -1,0 +1,18 @@
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { ArticleClass } from '../../../../../shared/classes/media/article.class';
+import { Observable } from 'rxjs';
+import { HttpService } from '../../../../../core/http/http.service';
+import { map } from 'rxjs/operators';
+
+@Injectable()
+export class ArticleService implements Resolve<ArticleClass> {
+
+    constructor (private httpService: HttpService) {
+    }
+
+    resolve (route: ActivatedRouteSnapshot): Observable<ArticleClass> {
+        return this.httpService.get(`/staff/article/${route.params.articleId}`)
+            .pipe(map((data: ArticleClass) => new ArticleClass(data)));
+    }
+}

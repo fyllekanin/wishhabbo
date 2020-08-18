@@ -140,7 +140,16 @@ button.green:hover {
 }
 
 /** Form Styles **/
-input, input[type='text'] {
+label {
+    display: block;
+    margin: 0;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.8;
+    color: #9e9e9e;
+}
+
+input, input[type='text'], select {
     display: block;
     padding: 7px 10px;
     border: 1px solid #bbbbbb;
@@ -149,4 +158,6 @@ input, input[type='text'] {
     font-size: 11px;
     width: 100%;
     outline: none;
+    color: #9e9e9e;
+    background-position: right 0rem center;
 }

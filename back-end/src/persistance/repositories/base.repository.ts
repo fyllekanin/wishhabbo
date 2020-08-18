@@ -29,10 +29,6 @@ export class BaseRepository<T> {
             query.orderBy(options.orderBy.sort, options.orderBy.order);
         }
 
-        (options.where || []).forEach(where => {
-            query.where(where);
-        });
-
         const items = await query.getMany();
         return PaginationView.newBuilder<T>()
             .withTotal(PaginationHelper.getTotalAmountOfPages(options.take, await this.getBaseQuery(options).getCount()))
@@ -45,7 +41,8 @@ export class BaseRepository<T> {
         const baseQuery = this.repository.createQueryBuilder();
 
         (options.where || []).forEach(where => {
-            baseQuery.where(where);
+            baseQuery.where(`${where.key} ${where.operator} :${where.key}`);
+            baseQuery.setParameter(where.key, where.value);
         });
         return baseQuery;
     }
