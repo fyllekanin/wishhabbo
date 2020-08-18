@@ -10,7 +10,7 @@
             <input id="room" type="text" [(ngModel)]="data.room"/>
         </div>
         <div class="cell small-6">
-            <label for="badges" class="display-block">Badges <em>(comma seperated)</em></label>
+            <label for="badges" class="display-block">Badges <em>(comma separated)</em></label>
             <input id="badges" type="text" [(ngModel)]="data.badges" (input)="onBadgesChange()"/>
             <div class="badges">
                 <img *ngFor="let badge of badges"
