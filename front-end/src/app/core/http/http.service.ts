@@ -14,7 +14,7 @@ export class HttpService {
         return this.httpClient.get<T>(HttpService.API + url, options);
     }
 
-    post<T, B> (url: string, body: B, options?: { headers: { [key: string]: string } }): Observable<T> {
+    post<B, T> (url: string, body: B, options?: { headers: { [key: string]: string } }): Observable<T> {
         return this.httpClient.post<T>(HttpService.API + url, body, options);
     }
 

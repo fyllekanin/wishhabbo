@@ -1,4 +1,4 @@
-import { ClassHelper, objectOf, primitiveOf } from '../../helpers/class.helper';
+import { arrayOf, ClassHelper, objectOf, primitiveOf } from '../../helpers/class.helper';
 import { SlimUser } from '../slim-user.class';
 
 export const ARTICLE_TYPES = {
@@ -16,6 +16,21 @@ export const ARTICLE_TYPES = {
     }
 };
 
+export const ARTICLE_DIFFICULTIES = {
+    0: {
+        name: 'None'
+    },
+    1: {
+        name: 'Easy'
+    },
+    2: {
+        name: 'Medium'
+    },
+    3: {
+        name: 'Hard'
+    }
+};
+
 export class ArticleClass {
     private parsedBadges: Array<string> = [];
 
@@ -27,8 +42,8 @@ export class ArticleClass {
     title: string;
     @primitiveOf(String)
     content: string;
-    @primitiveOf(String)
-    badges: string;
+    @arrayOf(String)
+    badges: Array<string> = [];
     @primitiveOf(String)
     room: string;
     @primitiveOf(Number)
@@ -48,13 +63,5 @@ export class ArticleClass {
             name: 'Unknown',
             isBadgeMandatory: false
         };
-    }
-
-    getParsedBadges (): Array<string> {
-        if (Array.isArray(this.parsedBadges)) {
-            return this.parsedBadges;
-        }
-        this.parsedBadges = JSON.parse(this.badges);
-        return this.parsedBadges;
     }
 }

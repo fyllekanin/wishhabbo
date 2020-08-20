@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { SiteNotification } from '../../shared/app-views/site-notification/site-notification.interface';
+import {
+    SiteNotification,
+    SiteNotificationType
+} from '../../shared/app-views/site-notification/site-notification.interface';
+import { ValidationError } from '../../shared/constants/common.interfaces';
 
 @Injectable()
 export class SiteNotificationService {
@@ -12,5 +16,11 @@ export class SiteNotificationService {
             return;
         }
         this.onSiteNotificationSubject.next(notification);
+    }
+
+    onError (errors: Array<ValidationError>): void {
+        errors.forEach(error => {
+            this.create({ title: 'Validation error', message: error.message, type: SiteNotificationType.ERROR });
+        });
     }
 }

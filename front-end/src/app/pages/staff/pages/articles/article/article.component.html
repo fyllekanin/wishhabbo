@@ -1,4 +1,5 @@
-<app-content [title]="data.articleId ? 'Editing: ' + data.title : 'Creating: ' + data.title ">
+<app-content [title]="data.articleId ? 'Editing: ' + data.title : 'Creating: ' + data.title " [actions]="actions"
+             (onAction)="onAction($event)">
 
     <div class="grid-x grid-margin-x">
         <div class="cell small-6">
@@ -11,9 +12,9 @@
         </div>
         <div class="cell small-6">
             <label for="badges" class="display-block">Badges <em>(comma separated)</em></label>
-            <input id="badges" type="text" [(ngModel)]="data.badges" (input)="onBadgesChange()"/>
+            <input id="badges" type="text" [(ngModel)]="badges" (input)="onBadgesChange()"/>
             <div class="badges">
-                <img *ngFor="let badge of badges"
+                <img *ngFor="let badge of data.badges"
                      [src]="'https://images.habbogroup.com/c_images/album1584/' + badge + '.gif'"/>
             </div>
         </div>
@@ -21,6 +22,14 @@
             <label for="type" class="display-block">Type</label>
             <select id="type" [(ngModel)]="data.type">
                 <option *ngFor="let option of types" [ngValue]="option.value">
+                    {{ option.label }}
+                </option>
+            </select>
+        </div>
+        <div class="cell small-6">
+            <label for="difficulty" class="display-block">Difficulty</label>
+            <select id="difficulty" [(ngModel)]="data.difficulty">
+                <option *ngFor="let option of difficulties" [ngValue]="option.value">
                     {{ option.label }}
                 </option>
             </select>

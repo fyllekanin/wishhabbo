@@ -55,7 +55,7 @@ export class ArticlePayloadValidator implements EntityValidator<ArticlePayload> 
     private validateType (payload: ArticlePayload, errors: Array<ValidationError>): void {
         const validTypes = Object.keys(ArticleConstants.TYPES)
             .map(key => ArticleConstants.TYPES[key].value);
-        if (!validTypes.includes(payload.getDifficulty())) {
+        if (!validTypes.includes(payload.getType())) {
             errors.push(ValidationError.newBuilder()
                 .withField('difficulty')
                 .withMessage(ErrorCodes.NOT_VALID_ARTICLE_TYPE.description)
@@ -79,10 +79,19 @@ export class ArticlePayloadValidator implements EntityValidator<ArticlePayload> 
 
     private async validateTitle (payload: ArticlePayload, errors: Array<ValidationError>,
                                  articleRepository: ArticleRepository): Promise<void> {
+        const wheres = payload.getArticleId() ?
+            [
+                { key: 'title', operator: '=', value: payload.getTitle() },
+                { key: 'articleId', operator: '!=', value: payload.getArticleId() }
+            ]
+            :
+            [
+                { key: 'title', operator: '=', value: payload.getTitle() }
+            ];
         const items = await articleRepository.paginate({
             take: 1,
             page: 1,
-            where: [ { key: 'title', operator: '=', value: payload.getTitle() } ]
+            where: wheres
         });
 
         if (items.getItems().length > 0) {

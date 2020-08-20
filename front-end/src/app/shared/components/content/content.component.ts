@@ -1,4 +1,5 @@
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+import { UserAction } from '../../constants/common.interfaces';
 
 @Component({
     selector: 'app-content',
@@ -8,4 +9,7 @@ import { Component, HostBinding, Input } from '@angular/core';
 export class ContentComponent {
     @HostBinding('class.gray-bottom-shadow') grayBottomShadow = true;
     @Input() title: string;
+    @Input() actions: Array<UserAction> = [];
+
+    @Output() onAction: EventEmitter<UserAction> = new EventEmitter();
 }

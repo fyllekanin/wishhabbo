@@ -1,5 +1,14 @@
 <div class="title">
     <span>{{title}}</span>
+
+    <div *ngIf="actions && actions.length > 0 " class="actions">
+        <i class="fas fa-ellipsis-v action" tabindex="1"></i>
+        <div class="action-list">
+            <div *ngFor="let action of actions" (click)="onAction.emit(action)">
+                {{action.label}}
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="content">

@@ -40,10 +40,16 @@ export class BaseRepository<T> {
     private getBaseQuery (options: PaginationOptions): SelectQueryBuilder<T> {
         const baseQuery = this.repository.createQueryBuilder();
 
-        (options.where || []).forEach(where => {
-            baseQuery.where(`${where.key} ${where.operator} :${where.key}`);
-            baseQuery.setParameter(where.key, where.value);
+        const parameters: any = {};
+        (options.where || []).forEach((where, index) => {
+            if (index === 0) {
+                baseQuery.where(`${where.key} ${where.operator} :${where.key}`);
+            } else {
+                baseQuery.andWhere(`${where.key} ${where.operator} :${where.key}`);
+            }
+            parameters[where.key] = where.value;
         });
+        baseQuery.setParameters(parameters);
         return baseQuery;
     }
 }

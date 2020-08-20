@@ -12,15 +12,11 @@ tbody tr:nth-child(even) {
     background-color: #fbfbfb;
 }
 
-.clickable {
-    cursor: pointer;
-    transition: 0.3s;
+.action {
+    padding: 8px 12px;
+    border-radius: 50%;
 }
 
-.clickable:hover, .clickable:hover:nth-child(even) {
-    background: #e8e8e8;
-}
-
-.actions {
-    text-align: right;
+.action:hover {
+    background-color: #c7c7c7;
 }

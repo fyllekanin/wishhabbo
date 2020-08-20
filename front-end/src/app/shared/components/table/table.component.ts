@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TableHeader, TableRow } from './table.model';
+import { TableActionResponse, TableHeader, TableRow } from './table.model';
 
 @Component({
     selector: 'app-table',
@@ -11,16 +11,20 @@ export class TableComponent {
 
 
     @Input() headers: Array<TableHeader> = [];
-    @Output() onRowClick: EventEmitter<TableRow> = new EventEmitter<TableRow>();
+    @Output() onAction: EventEmitter<TableActionResponse> = new EventEmitter();
     doAnyRowHaveActions = false;
 
     @Input()
     set rows (rows: Array<TableRow>) {
         this.myRows = rows;
-        this.doAnyRowHaveActions = this.myRows.some(row => Array.isArray(row.actions));
+        this.doAnyRowHaveActions = this.myRows.some(row => Array.isArray(row.actions) && row.actions.length > 0);
     }
 
     get rows (): Array<TableRow> {
         return this.myRows;
+    }
+
+    onOpenAction (e): void {
+        e.preventDefault();
     }
 }

@@ -117,14 +117,11 @@ export class ArticleController {
             return;
         }
 
-        let status = OK;
-        let response = '';
         await articleRepository.save(article).catch(reason => {
-            status = INTERNAL_SERVER_ERROR;
-            response = reason;
+            throw reason;
         });
 
-        res.status(status).json(response);
+        res.status(OK).json(article.articleId);
     }
 
     @Post(':articleId')
