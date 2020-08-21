@@ -21,9 +21,12 @@ export class ArticleService implements Resolve<ArticleClass> {
             .pipe(map((data: ArticleClass) => new ArticleClass(data)));
     }
 
-    save (article: ArticleClass): Promise<number | unknown> {
+    save (article: ArticleClass, fileElement: HTMLInputElement): Promise<number | unknown> {
+        const data = new FormData();
+        data.append('article', JSON.stringify(article));
+        data.append('thumbnail', fileElement.files[0]);
         if (article.articleId) {
-            return this.httpService.post(`/staff/article/${article.articleId}`, article).toPromise()
+            return this.httpService.post(`/staff/article/${article.articleId}`, data).toPromise()
                 .then(articleId => {
                     this.siteNotificationService.create({
                         title: 'Updated',
@@ -36,7 +39,7 @@ export class ArticleService implements Resolve<ArticleClass> {
                     this.siteNotificationService.onError(error.error);
                 });
         } else {
-            return this.httpService.post('/staff/article', article).toPromise()
+            return this.httpService.post('/staff/article', data).toPromise()
                 .then(articleId => {
                     this.siteNotificationService.create({
                         title: 'Created',

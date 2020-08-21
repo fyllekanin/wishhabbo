@@ -13,7 +13,6 @@ import { ArticleEntity } from '../../../persistance/entities/staff/media/article
 import { InternalRequest } from '../../../utilities/internal.request';
 import { PaginationView } from '../../../rest-service-views/respond-views/pagination.view';
 import { ArticleView } from '../../../rest-service-views/respond-views/staff/media/article.view';
-import { UserRepository } from '../../../persistance/repositories/user/user.repository';
 
 @Controller('api/staff/article')
 export class ArticleController {
@@ -24,10 +23,7 @@ export class ArticleController {
         Permissions.STAFF.CAN_MANAGE_ARTICLES
     ]) ])
     private async getArticles (req: InternalRequest, res: Response): Promise<void> {
-        const articleRepository = new ArticleRepository();
-        const userRepository = new UserRepository();
-
-        const data = await articleRepository.paginate({
+        const data = await req.serviceConfig.articleRepository.paginate({
             take: PaginationHelper.TWENTY_ITEMS,
             page: Number(req.params.page),
             orderBy: {
@@ -40,7 +36,7 @@ export class ArticleController {
         for (const item of data.getItems()) {
             items.push(ArticleView.newBuilder()
                 .withArticleId(item.articleId)
-                .withUser(await userRepository.getSlimUserById(item.userId))
+                .withUser(await req.serviceConfig.userRepository.getSlimUserById(item.userId))
                 .withTitle(item.title)
                 .withContent(item.content)
                 .withBadges(JSON.parse(item.badges))
@@ -64,14 +60,12 @@ export class ArticleController {
         Permissions.STAFF.CAN_MANAGE_ARTICLES
     ]) ])
     private async getArticle (req: InternalRequest, res: Response): Promise<void> {
-        const articleRepository = new ArticleRepository();
-
         if (req.params.articleId === 'new') {
             res.status(OK).json();
             return;
         }
 
-        const article = await articleRepository.getByArticleId(Number(req.params.articleId));
+        const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         if (!article) {
             res.status(NOT_FOUND).json();
             return;
@@ -95,9 +89,8 @@ export class ArticleController {
         Permissions.STAFF.CAN_MANAGE_ARTICLES
     ]) ])
     private async createArticle (req: InternalRequest, res: Response): Promise<void> {
-        const articleRepository = new ArticleRepository();
-        const payload = ArticlePayload.of(req);
-        const payloadErrors = await ValidationValidators.validatePayload(payload);
+        const payload = ArticlePayload.of(JSON.parse(req.fields.article as string), req.files.thumbnail);
+        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
             return;
@@ -111,15 +104,21 @@ export class ArticleController {
             .withRoom(payload.getRoom())
             .withDifficulty(payload.getDifficulty())
             .build();
-        const entityErrors = await ValidationValidators.validateEntity(article);
+        const entityErrors = await ValidationValidators.validateEntity(article, req.serviceConfig);
         if (entityErrors.length > 0) {
             res.status(BAD_REQUEST).json(entityErrors);
             return;
         }
 
-        await articleRepository.save(article).catch(reason => {
+        await req.serviceConfig.articleRepository.save(article).catch(reason => {
             throw reason;
         });
+        const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${article.articleId}.png`);
+        if (!result) {
+            await req.serviceConfig.articleRepository.delete(article);
+            res.status(BAD_REQUEST).json();
+            return;
+        }
 
         res.status(OK).json(article.articleId);
     }
@@ -130,8 +129,7 @@ export class ArticleController {
         GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
     ])
     private async updateArticle (req: InternalRequest, res: Response): Promise<void> {
-        const articleRepository = new ArticleRepository();
-        const article = await articleRepository.getByArticleId(Number(req.params.articleId));
+        const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         const canManageArticle = await this.canRequesterManageArticles(req);
 
         if (!article || (article.userId !== req.user.userId && !canManageArticle)) {
@@ -139,8 +137,8 @@ export class ArticleController {
             return;
         }
 
-        const payload = ArticlePayload.of(req);
-        const payloadErrors = await ValidationValidators.validatePayload(payload);
+        const payload = ArticlePayload.of(JSON.parse(req.fields.article as string), req.files.thumbnail);
+        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
             return;
@@ -152,7 +150,7 @@ export class ArticleController {
         article.room = payload.getRoom();
         article.difficulty = payload.getDifficulty();
 
-        const entityErrors = await ValidationValidators.validateEntity(article);
+        const entityErrors = await ValidationValidators.validateEntity(article, req.serviceConfig);
         if (entityErrors.length > 0) {
             res.status(BAD_REQUEST).json(entityErrors);
             return;
@@ -160,10 +158,15 @@ export class ArticleController {
 
         let status = OK;
         let response = '';
-        await articleRepository.save(article).catch(reason => {
+        await req.serviceConfig.articleRepository.save(article).catch(reason => {
             status = INTERNAL_SERVER_ERROR;
             response = reason;
         });
+        const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${article.articleId}.png`);
+        if (!result) {
+            res.status(BAD_REQUEST).json();
+            return;
+        }
 
         res.status(status).json(response);
     }

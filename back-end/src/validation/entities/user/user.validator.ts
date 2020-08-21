@@ -4,17 +4,17 @@ import { UserEntity } from '../../../persistance/entities/user/user.entity';
 import { UserRepository } from '../../../persistance/repositories/user/user.repository';
 import { ErrorCodes } from '../../error.codes';
 import { IEntity } from '../../../persistance/entities/entity.interface';
+import { ServiceConfig } from '../../../utilities/internal.request';
 
 export class UserValidation implements EntityValidator<UserEntity> {
     private static readonly VALID_USERNAME = /^[a-zA-Z0-9]+$/;
 
-    async validate (entity: IEntity): Promise<Array<ValidationError>> {
+    async validate (entity: IEntity, serviceConfig: ServiceConfig): Promise<Array<ValidationError>> {
         const user = entity as UserEntity;
         const errors: Array<ValidationError> = [];
-        const userRepository = new UserRepository();
 
         this.validateInvalidUsername(user, errors);
-        await this.validateExistingUsername(user, userRepository, errors);
+        await this.validateExistingUsername(user, serviceConfig.userRepository, errors);
 
         return errors;
     }

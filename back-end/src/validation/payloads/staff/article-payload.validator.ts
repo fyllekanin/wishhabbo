@@ -5,25 +5,38 @@ import { ArticlePayload } from '../../../rest-service-views/payloads/staff/media
 import { ArticleRepository } from '../../../persistance/repositories/staff/media/article.repository';
 import { ErrorCodes } from '../../error.codes';
 import { ArticleConstants } from '../../../constants/article.constant';
+import { ServiceConfig } from '../../../utilities/internal.request';
+import { ResourceRepository } from '../../../persistance/repositories/resource.repository';
 
 export class ArticlePayloadValidator implements EntityValidator<ArticlePayload> {
 
-    async validate (payload: IPayload): Promise<Array<ValidationError>> {
-        const articleRepository = new ArticleRepository();
+    async validate (payload: IPayload, serviceConfig: ServiceConfig): Promise<Array<ValidationError>> {
         const articlePayload = payload as ArticlePayload;
         const errors: Array<ValidationError> = [];
 
-        await this.validateTitle(articlePayload, errors, articleRepository);
+        await this.validateTitle(articlePayload, errors, serviceConfig.articleRepository);
         this.validateRoomLink(articlePayload, errors);
         this.validateDifficulty(articlePayload, errors);
         this.validateType(articlePayload, errors);
         this.validateMandatoryBadge(articlePayload, errors);
+        await this.validateThumbnail(articlePayload, errors, serviceConfig.resourceRepository);
 
         return errors;
     }
 
     isValidEntity (payload: IPayload): boolean {
         return payload instanceof ArticlePayload;
+    }
+
+    private async validateThumbnail (payload: ArticlePayload, errors: Array<ValidationError>,
+                                     resourceRepository: ResourceRepository): Promise<void> {
+        if (!resourceRepository.isFileValidImage(payload.getFile())) {
+            errors.push(ValidationError.newBuilder()
+                .withField('thumbnail')
+                .withMessage(ErrorCodes.INVALID_IMAGE_FILE.description)
+                .withCode(ErrorCodes.INVALID_IMAGE_FILE.code)
+                .build());
+        }
     }
 
     private validateDifficulty (payload: ArticlePayload, errors: Array<ValidationError>): void {

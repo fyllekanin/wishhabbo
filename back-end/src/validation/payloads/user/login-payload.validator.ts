@@ -3,10 +3,11 @@ import { EntityValidator } from '../../entities/entity-validator.interface';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
 import { ErrorCodes } from '../../error.codes';
 import { LoginPayload } from '../../../rest-service-views/payloads/auth/login.payload';
+import { ServiceConfig } from '../../../utilities/internal.request';
 
 export class LoginPayloadValidator implements EntityValidator<LoginPayload> {
 
-    async validate (payload: IPayload): Promise<Array<ValidationError>> {
+    async validate (payload: IPayload, serviceConfig: ServiceConfig): Promise<Array<ValidationError>> {
         const loginPayload = payload as LoginPayload;
         const errors: Array<ValidationError> = [];
 

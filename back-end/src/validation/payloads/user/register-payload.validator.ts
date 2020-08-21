@@ -4,10 +4,11 @@ import { IPayload } from '../../../rest-service-views/payloads/payload.interface
 import { RegisterPayload } from '../../../rest-service-views/payloads/auth/register.payload';
 import { ErrorCodes } from '../../error.codes';
 import { HabboService } from '../../../external/services/habbo.service';
+import { ServiceConfig } from '../../../utilities/internal.request';
 
 export class RegisterPayloadValidator implements EntityValidator<RegisterPayload> {
 
-    async validate (payload: IPayload): Promise<Array<ValidationError>> {
+    async validate (payload: IPayload, serviceConfig: ServiceConfig): Promise<Array<ValidationError>> {
         const registerPayload = payload as RegisterPayload;
         const habboService = new HabboService();
         const errors: Array<ValidationError> = [];

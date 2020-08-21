@@ -1,9 +1,10 @@
 import { ValidationError } from '../validation.error';
 import { IPayload } from '../../rest-service-views/payloads/payload.interface';
+import { ServiceConfig } from '../../utilities/internal.request';
 
 export interface PayloadValidator<T extends IPayload> {
 
     isValidEntity (payload: T): boolean;
 
-    validate (payload: T): Promise<Array<ValidationError>>;
+    validate (payload: T, serviceConfig: ServiceConfig): Promise<Array<ValidationError>>;
 }

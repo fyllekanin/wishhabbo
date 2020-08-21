@@ -95,4 +95,10 @@ export class ErrorCodes {
         name: 'Missing badges on mandatory article type',
         description: 'On given article type it is mandatory to have at least one badge set'
     };
+
+    static readonly INVALID_IMAGE_FILE: ErrorCode = {
+        code: 16,
+        name: 'Given file is not an image',
+        description: 'Given file is either not the correct format or is corrupt'
+    };
 }

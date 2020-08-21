@@ -1,13 +1,14 @@
 import 'reflect-metadata';
 import { createConnection } from 'typeorm';
-import * as bodyParser from 'body-parser';
 import { Server } from '@overnightjs/core';
 import { AuthenticationController } from './rest-services/auth/authentication.controller';
 import { PageController } from './rest-services/page.controller';
 import { BackgroundTaskHandler } from './background-tasks/background-task.handler';
 import { StaffController } from './rest-services/staff/staff.controller';
-import { SET_USER_MIDDLEWARE } from './rest-services/middlewares/set-user.middleware';
+import { INITIAL_MIDDLEWARE } from './rest-services/middlewares/set-user.middleware';
 import { ArticleController } from './rest-services/staff/media/article.controller';
+import ExpressFormidable from 'express-formidable';
+
 
 class MainServer extends Server {
     private backgroundTaskHandler: BackgroundTaskHandler;
@@ -15,8 +16,9 @@ class MainServer extends Server {
     constructor () {
         super();
         this.backgroundTaskHandler = new BackgroundTaskHandler();
-        this.app.use(bodyParser.json());
-        this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(ExpressFormidable({
+            multiples: true
+        }));
     }
 
     start (port: number): void {
@@ -38,7 +40,7 @@ class MainServer extends Server {
                 new ArticleController()
             ],
             null,
-            SET_USER_MIDDLEWARE
+            INITIAL_MIDDLEWARE
         );
     }
 }

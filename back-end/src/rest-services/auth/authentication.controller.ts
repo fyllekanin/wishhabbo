@@ -3,8 +3,6 @@ import { Response } from 'express';
 import { RegisterPayload } from '../../rest-service-views/payloads/auth/register.payload';
 import { ValidationValidators } from '../../validation/validation.validators';
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR, OK } from 'http-status-codes';
-import { UserRepository } from '../../persistance/repositories/user/user.repository';
-import { TokenRepository } from '../../persistance/repositories/user/token.repository';
 import { UserEntity } from '../../persistance/entities/user/user.entity';
 import { HasherUtility } from '../../utilities/hasher.utility';
 import { LoginPayload } from '../../rest-service-views/payloads/auth/login.payload';
@@ -25,14 +23,12 @@ export class AuthenticationController {
 
     @Get('initial')
     private async getInitial (req: InternalRequest, res: Response): Promise<void> {
-        const userRepository = new UserRepository();
-        const tokenRepository = new TokenRepository();
-        const groupRepository = new GroupRepository();
         const builder = InitialView.newBuilder();
 
-        const token = await tokenRepository.getTokenFromRequest(req);
-        const user = tokenRepository.isAccessTokenAlive(token) || tokenRepository.isRefreshTokenAlive(token) ?
-            await userRepository.getUserById(token.userId) : null;
+        const token = await req.serviceConfig.tokenRepository.getTokenFromRequest(req);
+        const user = req.serviceConfig.tokenRepository.isAccessTokenAlive(token) ||
+        req.serviceConfig.tokenRepository.isRefreshTokenAlive(token) ?
+            await req.serviceConfig.userRepository.getUserById(token.userId) : null;
 
         if (user) {
             builder.withAuthUser(AuthUserView.newBuilder()
@@ -41,8 +37,8 @@ export class AuthenticationController {
                 .withHabbo(user.habbo)
                 .withAccessToken(token.access)
                 .withRefreshToken(token.refresh)
-                .withStaffPermissions(await this.getStaffPermissions(user, groupRepository))
-                .withAdminPermissions(await this.getAdminPermissions(user, groupRepository))
+                .withStaffPermissions(await this.getStaffPermissions(user, req.serviceConfig.groupRepository))
+                .withAdminPermissions(await this.getAdminPermissions(user, req.serviceConfig.groupRepository))
                 .build());
             res.status(OK).json(builder.build());
         } else {
@@ -52,18 +48,14 @@ export class AuthenticationController {
 
     @Post('login')
     private async doLogin (req: InternalRequest, res: Response): Promise<void> {
-        const userRepository = new UserRepository();
-        const tokenRepository = new TokenRepository();
-        const groupRepository = new GroupRepository();
-
-        const payload = LoginPayload.of(req);
-        const payloadErrors = await ValidationValidators.validatePayload(payload);
+        const payload = LoginPayload.of(req.fields);
+        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
             return;
         }
 
-        const user = await userRepository.getUserWithUsername(payload.getUsername());
+        const user = await req.serviceConfig.userRepository.getUserWithUsername(payload.getUsername());
         const isCorrectPassword = user && await HasherUtility.compare(payload.getPassword(), user.password);
         if (!isCorrectPassword) {
             res.status(BAD_REQUEST).json([
@@ -76,40 +68,37 @@ export class AuthenticationController {
             return;
         }
 
-        const token = await tokenRepository.getToken(user);
+        const token = await req.serviceConfig.tokenRepository.getToken(user);
         res.status(OK).json(AuthUserView.newBuilder()
             .withUserId(user.userId)
             .withUsername(user.username)
             .withHabbo(user.habbo)
             .withAccessToken(token.access)
             .withRefreshToken(token.refresh)
-            .withStaffPermissions(await this.getStaffPermissions(user, groupRepository))
-            .withAdminPermissions(await this.getAdminPermissions(user, groupRepository))
+            .withStaffPermissions(await this.getStaffPermissions(user, req.serviceConfig.groupRepository))
+            .withAdminPermissions(await this.getAdminPermissions(user, req.serviceConfig.groupRepository))
             .build());
     }
 
     @Post('logout')
     private async doLogout (req: InternalRequest, res: Response): Promise<void> {
-        const tokenRepository = new TokenRepository();
-        const token = await tokenRepository.getTokenFromRequest(req);
+        const token = await req.serviceConfig.tokenRepository.getTokenFromRequest(req);
         if (!token) {
             res.status(OK).json();
             return;
         }
-        await tokenRepository.delete(token);
+        await req.serviceConfig.tokenRepository.delete(token);
         res.status(OK).json();
     }
 
     @Post('token-refresh')
     private async doTokenRefresh (req: InternalRequest, res: Response): Promise<void> {
-        const userRepository = new UserRepository();
-        const tokenRepository = new TokenRepository();
-        const entity = await tokenRepository.getTokenWithAccessAndRefreshToken(req);
+        const entity = await req.serviceConfig.tokenRepository.getTokenWithAccessAndRefreshToken(req);
         if (!entity) {
             res.status(401).json({ isTokenExisting: false });
             return;
         }
-        if (!tokenRepository.isRefreshTokenAlive(entity)) {
+        if (!req.serviceConfig.tokenRepository.isRefreshTokenAlive(entity)) {
             res.status(401).json(ValidationError.newBuilder()
                 .withCode(ErrorCodes.INVALID_REFRESH_TOKEN.code)
                 .withField('refreshToken')
@@ -118,8 +107,8 @@ export class AuthenticationController {
             return;
         }
 
-        const user = await userRepository.getUserById(entity.userId);
-        const token = await tokenRepository.getToken(user);
+        const user = await req.serviceConfig.userRepository.getUserById(entity.userId);
+        const token = await req.serviceConfig.tokenRepository.getToken(user);
         res.status(OK).json(AuthUserView.newBuilder()
             .withUserId(user.userId)
             .withUsername(user.username)
@@ -131,9 +120,8 @@ export class AuthenticationController {
 
     @Post('register')
     private async doRegister (req: InternalRequest, res: Response): Promise<void> {
-        const userRepository = new UserRepository();
-        const payload = RegisterPayload.of(req);
-        const payloadErrors = await ValidationValidators.validatePayload(payload);
+        const payload = RegisterPayload.of(req.fields);
+        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
             return;
@@ -144,7 +132,7 @@ export class AuthenticationController {
             .withPassword(await HasherUtility.hash(payload.getPassword()))
             .withHabbo(payload.getHabbo())
             .build();
-        const entityErrors = await ValidationValidators.validateEntity(user);
+        const entityErrors = await ValidationValidators.validateEntity(user, req.serviceConfig);
         if (entityErrors.length > 0) {
             res.status(BAD_REQUEST).json(entityErrors);
             return;
@@ -152,7 +140,7 @@ export class AuthenticationController {
 
         let status = OK;
         let response = '';
-        await userRepository.save(user).catch(reason => {
+        await req.serviceConfig.userRepository.save(user).catch(reason => {
             status = INTERNAL_SERVER_ERROR;
             response = reason;
         });

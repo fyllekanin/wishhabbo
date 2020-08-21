@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UnSub } from '../../../../../shared/decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
@@ -27,6 +27,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
     difficulties: Array<{ label: string, value: number }> = [];
     badges: string = '';
     @ViewChild(EditorComponent, { static: true }) editorComponent: EditorComponent;
+    @ViewChild('fileElement', { static: true }) fileElementRef: ElementRef<HTMLInputElement>;
 
     constructor (
         private service: ArticleService,
@@ -60,9 +61,10 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
                 this.router.navigateByUrl('/staff/articles/page/1');
                 break;
             case this.ACTIONS.SAVE:
-                const articleId = await this.service.save(this.data);
+                const articleId = await this.service.save(this.data, this.fileElementRef.nativeElement);
                 this.data.articleId = articleId as number;
                 this.actions = this.getActions();
+            case this.ACTIONS.DELETE:
                 break;
         }
     }

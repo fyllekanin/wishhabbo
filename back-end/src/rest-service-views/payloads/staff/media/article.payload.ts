@@ -1,5 +1,5 @@
 import { IPayload } from '../../payload.interface';
-import { InternalRequest } from '../../../../utilities/internal.request';
+import { File } from 'formidable';
 
 export class ArticlePayload implements IPayload {
     private readonly articleId: number;
@@ -9,6 +9,7 @@ export class ArticlePayload implements IPayload {
     private readonly room: string;
     private readonly difficulty: number;
     private readonly type: number;
+    private readonly file: File;
 
     constructor (
         articleId: number,
@@ -17,7 +18,8 @@ export class ArticlePayload implements IPayload {
         badges: Array<string>,
         room: string,
         difficulty: number,
-        type: number
+        type: number,
+        file: File
     ) {
         this.articleId = articleId;
         this.title = title;
@@ -26,6 +28,7 @@ export class ArticlePayload implements IPayload {
         this.room = room;
         this.difficulty = difficulty;
         this.type = type;
+        this.file = file;
     }
 
     getArticleId (): number {
@@ -56,24 +59,20 @@ export class ArticlePayload implements IPayload {
         return this.type;
     }
 
-    static of (req: InternalRequest): ArticlePayload {
-        const {
-            articleId,
-            title,
-            content,
-            badges,
-            room,
-            difficulty,
-            type
-        } = req.body;
+    getFile (): File {
+        return this.file;
+    }
+
+    static of (article: any, file: File): ArticlePayload {
         return new ArticlePayload(
-            articleId,
-            title,
-            content,
-            badges,
-            room,
-            difficulty,
-            type
+            article.articleId,
+            article.title,
+            article.content,
+            article.badges,
+            article.room,
+            article.difficulty,
+            article.type,
+            file
         );
     }
 }
