@@ -5,7 +5,7 @@ import { AuthenticationController } from './rest-services/auth/authentication.co
 import { PageController } from './rest-services/page.controller';
 import { BackgroundTaskHandler } from './background-tasks/background-task.handler';
 import { StaffController } from './rest-services/staff/staff.controller';
-import { INITIAL_MIDDLEWARE } from './rest-services/middlewares/set-user.middleware';
+import { INITIAL_MIDDLEWARE } from './rest-services/middlewares/initial.middleware';
 import { ArticleController } from './rest-services/staff/media/article.controller';
 import ExpressFormidable from 'express-formidable';
 

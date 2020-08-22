@@ -7,19 +7,24 @@ export class HabboBadgeDirective {
     private static readonly DEFAULT = '/assets/images/badge_error.gif';
     private static readonly URL = 'https://images.habbogroup.com/c_images/album1584/{code}.{extension}';
     private static readonly EXTENSIONS = [
-        'gif',
         'png',
+        'gif',
         'jpg'
     ];
     private _code: string;
+    private _timeout: number;
 
     constructor (private _elementRef: ElementRef) {
     }
 
     @Input()
     set code (code: string) {
-        this._code = code;
-        this.setImage(0);
+        clearTimeout(this._timeout);
+        // @ts-ignore
+        this._timeout = setTimeout(() => {
+            this._code = code;
+            this.setImage(0);
+        }, 200);
     }
 
     private setImage (index: number): void {

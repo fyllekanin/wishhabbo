@@ -10,7 +10,7 @@ export class ArticleEntity extends CreatedUpdatedAtEntity {
     userId: number;
     @Column()
     title: string;
-    @Column()
+    @Column({ type: 'longtext' })
     content: string;
     @Column()
     badges: string;

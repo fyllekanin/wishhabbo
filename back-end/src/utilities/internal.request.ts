@@ -6,6 +6,7 @@ import { GroupRepository } from '../persistance/repositories/group.repository';
 import { TokenRepository } from '../persistance/repositories/user/token.repository';
 import { ArticleRepository } from '../persistance/repositories/staff/media/article.repository';
 import { UserRepository } from '../persistance/repositories/user/user.repository';
+import { LogRepository } from '../persistance/repositories/log.repository';
 
 export interface ServiceConfig {
     resourceRepository: ResourceRepository;
@@ -14,6 +15,7 @@ export interface ServiceConfig {
     userRepository: UserRepository;
     tokenRepository: TokenRepository;
     articleRepository: ArticleRepository;
+    logRepository: LogRepository;
 }
 
 export interface InternalRequest extends Request {

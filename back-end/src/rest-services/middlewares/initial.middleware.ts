@@ -6,6 +6,7 @@ import { ResourceRepository } from '../../persistance/repositories/resource.repo
 import { HabboRepository } from '../../persistance/repositories/habbo.repository';
 import { GroupRepository } from '../../persistance/repositories/group.repository';
 import { ArticleRepository } from '../../persistance/repositories/staff/media/article.repository';
+import { LogRepository } from '../../persistance/repositories/log.repository';
 
 let serviceConfig: ServiceConfig = null;
 
@@ -19,7 +20,8 @@ function getServiceConfig (): ServiceConfig {
         groupRepository: new GroupRepository(),
         userRepository: new UserRepository(),
         tokenRepository: new TokenRepository(),
-        articleRepository: new ArticleRepository()
+        articleRepository: new ArticleRepository(),
+        logRepository: new LogRepository()
     };
     return serviceConfig;
 }

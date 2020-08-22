@@ -17,7 +17,6 @@ export class LoginComponent {
     }
 
     onLogin (): void {
-        console.log(this.username);
         this.authService.doLogin(this.username, this.password).then(result => {
             this.wasLoginFailed = !result;
             if (result) {

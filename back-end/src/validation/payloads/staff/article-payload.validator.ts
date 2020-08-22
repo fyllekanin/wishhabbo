@@ -40,6 +40,10 @@ export class ArticlePayloadValidator implements EntityValidator<ArticlePayload> 
 
     private async validateThumbnail (payload: ArticlePayload, errors: Array<ValidationError>,
                                      resourceRepository: ResourceRepository): Promise<void> {
+        if (payload.getArticleId() && !payload.getFile()) {
+            return;
+        }
+
         if (!resourceRepository.isFileValidImage(payload.getFile())) {
             errors.push(ValidationError.newBuilder()
                 .withField('thumbnail')

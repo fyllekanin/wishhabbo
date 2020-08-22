@@ -3,7 +3,6 @@ import { Response } from 'express';
 import { AUTHORIZATION_MIDDLEWARE } from '../../middlewares/authorization.middleware';
 import { GET_STAFF_PERMISSION_MIDDLEWARE } from '../../middlewares/staff-permission.middleware';
 import { Permissions } from '../../../constants/permissions.constant';
-import { ArticleRepository } from '../../../persistance/repositories/staff/media/article.repository';
 import { PaginationHelper } from '../../../helpers/pagination.helper';
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from 'http-status-codes';
 import { GroupRepository } from '../../../persistance/repositories/group.repository';
@@ -13,6 +12,8 @@ import { ArticleEntity } from '../../../persistance/entities/staff/media/article
 import { InternalRequest } from '../../../utilities/internal.request';
 import { PaginationView } from '../../../rest-service-views/respond-views/pagination.view';
 import { ArticleView } from '../../../rest-service-views/respond-views/staff/media/article.view';
+import { Logger } from '../../../logging/log.logger';
+import { LogTypes } from '../../../logging/log.types';
 
 @Controller('api/staff/article')
 export class ArticleController {
@@ -120,6 +121,14 @@ export class ArticleController {
             return;
         }
 
+        await Logger.createStaffLog(req, {
+            id: LogTypes.CREATED_ARTICLE,
+            contentId: article.articleId,
+            userId: req.user.userId,
+            beforeChange: null,
+            afterChange: JSON.stringify(article)
+        });
+
         res.status(OK).json(article.articleId);
     }
 
@@ -144,6 +153,7 @@ export class ArticleController {
             return;
         }
 
+        const articleCopy = { ...article };
         article.title = payload.getTitle();
         article.content = payload.getContent();
         article.badges = JSON.stringify(payload.getBadges());
@@ -162,11 +172,21 @@ export class ArticleController {
             status = INTERNAL_SERVER_ERROR;
             response = reason;
         });
-        const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${article.articleId}`);
-        if (!result) {
-            res.status(BAD_REQUEST).json();
-            return;
+        if (payload.getFile()) {
+            const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${article.articleId}`);
+            if (!result) {
+                res.status(BAD_REQUEST).json();
+                return;
+            }
         }
+
+        await Logger.createStaffLog(req, {
+            id: LogTypes.UPDATED_ARTICLE,
+            contentId: article.articleId,
+            userId: req.user.userId,
+            beforeChange: JSON.stringify(articleCopy),
+            afterChange: JSON.stringify(article)
+        });
 
         res.status(status).json(response);
     }
@@ -187,6 +207,15 @@ export class ArticleController {
 
         await req.serviceConfig.articleRepository.delete(article);
         await req.serviceConfig.resourceRepository.removeArticleThumbnail(Number(req.params.articleId));
+
+        await Logger.createStaffLog(req, {
+            id: LogTypes.DELETED_ARTICLE,
+            contentId: article.articleId,
+            userId: req.user.userId,
+            beforeChange: JSON.stringify(article),
+            afterChange: null
+        });
+
         res.status(OK).json();
     }
 
@@ -196,8 +225,7 @@ export class ArticleController {
         GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
     ])
     private async approveArticle (req: InternalRequest, res: Response): Promise<void> {
-        const articleRepository = new ArticleRepository();
-        const article = await articleRepository.getByArticleId(Number(req.params.articleId));
+        const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         const canManageArticle = await this.canRequesterManageArticles(req);
 
         if (!article || (article.userId !== req.user.userId && !canManageArticle)) {
@@ -206,7 +234,14 @@ export class ArticleController {
         }
 
         article.isApproved = true;
-        await articleRepository.save(article);
+        await req.serviceConfig.articleRepository.save(article);
+        await Logger.createStaffLog(req, {
+            id: LogTypes.APPROVED_ARTICLE,
+            contentId: article.articleId,
+            userId: req.user.userId,
+            beforeChange: null,
+            afterChange: null
+        });
         res.status(OK).json();
     }
 
@@ -216,8 +251,7 @@ export class ArticleController {
         GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
     ])
     private async unapproveArticle (req: InternalRequest, res: Response): Promise<void> {
-        const articleRepository = new ArticleRepository();
-        const article = await articleRepository.getByArticleId(Number(req.params.articleId));
+        const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         const canManageArticle = await this.canRequesterManageArticles(req);
 
         if (!article || (article.userId !== req.user.userId && !canManageArticle)) {
@@ -226,7 +260,14 @@ export class ArticleController {
         }
 
         article.isApproved = false;
-        await articleRepository.save(article);
+        await req.serviceConfig.articleRepository.save(article);
+        await Logger.createStaffLog(req, {
+            id: LogTypes.UNAPPROVED_ARTICLE,
+            contentId: article.articleId,
+            userId: req.user.userId,
+            beforeChange: null,
+            afterChange: null
+        });
         res.status(OK).json();
     }
 
