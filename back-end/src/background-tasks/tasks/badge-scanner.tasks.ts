@@ -6,6 +6,7 @@ import { HabboBadgeEntity } from '../../persistance/entities/habbo/habbo-badge.e
 export class BadgeScannerTasks implements IBackgroundTask {
     private static readonly FIRST_PATTERN = /_badge_desc/;
     private static readonly SECOND_PATTERN = /badge_desc_/;
+    private static readonly THIRD_PATTERN = /badge_name_/;
 
 
     async run (): Promise<void> {
@@ -43,6 +44,9 @@ export class BadgeScannerTasks implements IBackgroundTask {
         } else if (item.match(BadgeScannerTasks.SECOND_PATTERN)) {
             const parts = item.split('=');
             return { badgeId: parts[0].replace('badge_desc_', ''), description: parts[1] };
+        } else if (item.match(BadgeScannerTasks.THIRD_PATTERN)) {
+            const parts = item.split('=');
+            return { badgeId: parts[0].replace('badge_name_', ''), description: parts[1] };
         }
         return null;
     }
