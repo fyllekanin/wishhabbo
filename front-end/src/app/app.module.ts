@@ -15,7 +15,10 @@ export function init_app (appLoadService: AppLoadService) {
 @NgModule({
     imports: [
         CoreModule.forRoot(),
-        RouterModule.forRoot(appRoutes),
+        RouterModule.forRoot(appRoutes, {
+            onSameUrlNavigation: 'reload',
+            anchorScrolling: 'enabled'
+        }),
         AppViewsModule,
         BrowserModule,
     ],

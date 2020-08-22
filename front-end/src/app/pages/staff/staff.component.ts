@@ -12,6 +12,7 @@ export class StaffComponent {
 
     constructor (authService: AuthService) {
         const user = authService.getAuthUser();
+        const day = new Date().getUTCDay();
         this.menus = [
             {
                 title: 'General',
@@ -29,7 +30,7 @@ export class StaffComponent {
                 items: [
                     {
                         label: 'Timetable',
-                        url: '/staff/radio/timetable',
+                        url: `/staff/radio/timetable/${day}`,
                         icon: 'fas fa-table',
                         isApplicable: user.staffPermissions.canBookRadio
                     }

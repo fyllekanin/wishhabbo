@@ -1,0 +1,147 @@
+<app-content [title]="title" [actions]="actions" (onAction)="onDaySwitch($event)">
+    <div class="grid-x grid-margin-x" *ngIf="data.current && data.current.length > 0">
+        <div class="cell small-4 hour" (click)="clickHour(data.current[0])"
+             [ngClass]="{ current: data.current[0].isCurrentSlot , isBooked: data.current[0].isBooked }">
+            <span *ngIf="data.current[0].isBooked">12AM - {{data.current[0].user.username}}</span>
+            <span *ngIf="!data.current[0].isBooked">12AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[8])"
+             [ngClass]="{ current: data.current[8].isCurrentSlot , isBooked: data.current[8].isBooked }">
+            <span *ngIf="data.current[8].isBooked">8AM - {{data.current[8].user.username}}</span>
+            <span *ngIf="!data.current[8].isBooked">8AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[16])"
+             [ngClass]="{ current: data.current[16].isCurrentSlot , isBooked: data.current[16].isBooked }">
+            <span *ngIf="data.current[16].isBooked">4PM - {{data.current[16].user.username}}</span>
+            <span *ngIf="!data.current[16].isBooked">4PM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[1])"
+             [ngClass]="{ current: data.current[1].isCurrentSlot , isBooked: data.current[1].isBooked }">
+            <span *ngIf="data.current[1].isBooked">1AM - {{data.current[1].user.username}}</span>
+            <span *ngIf="!data.current[1].isBooked">1AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[9])"
+             [ngClass]="{ current: data.current[9].isCurrentSlot , isBooked: data.current[9].isBooked }">
+            <span *ngIf="data.current[9].isBooked">9AM - {{data.current[9].user.username}}</span>
+            <span *ngIf="!data.current[9].isBooked">9AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[17])"
+             [ngClass]="{ current: data.current[17].isCurrentSlot , isBooked: data.current[17].isBooked }">
+            <span *ngIf="data.current[17].isBooked">5PM - {{data.current[17].user.username}}</span>
+            <span *ngIf="!data.current[17].isBooked">5PM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[2])"
+             [ngClass]="{ current: data.current[2].isCurrentSlot , isBooked: data.current[2].isBooked }">
+            <span *ngIf="data.current[2].isBooked">2AM - {{data.current[2].user.username}}</span>
+            <span *ngIf="!data.current[2].isBooked">2AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[10])"
+             [ngClass]="{ current: data.current[10].isCurrentSlot , isBooked: data.current[10].isBooked }">
+            <span *ngIf="data.current[10].isBooked">10AM - {{data.current[10].user.username}}</span>
+            <span *ngIf="!data.current[10].isBooked">10AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[18])"
+             [ngClass]="{ current: data.current[18].isCurrentSlot , isBooked: data.current[18].isBooked }">
+            <span *ngIf="data.current[18].isBooked">6PM - {{data.current[18].user.username}}</span>
+            <span *ngIf="!data.current[18].isBooked">6PM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[3])"
+             [ngClass]="{ current: data.current[3].isCurrentSlot , isBooked: data.current[3].isBooked }">
+            <span *ngIf="data.current[3].isBooked">3AM - {{data.current[3].user.username}}</span>
+            <span *ngIf="!data.current[3].isBooked">3AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[11])"
+             [ngClass]="{ current: data.current[11].isCurrentSlot , isBooked: data.current[11].isBooked }">
+            <span *ngIf="data.current[11].isBooked">11AM - {{data.current[11].user.username}}</span>
+            <span *ngIf="!data.current[11].isBooked">11AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[19])"
+             [ngClass]="{ current: data.current[19].isCurrentSlot , isBooked: data.current[19].isBooked }">
+            <span *ngIf="data.current[19].isBooked">7PM - {{data.current[19].user.username}}</span>
+            <span *ngIf="!data.current[19].isBooked">7PM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[4])"
+             [ngClass]="{ current: data.current[4].isCurrentSlot , isBooked: data.current[4].isBooked }">
+            <span *ngIf="data.current[4].isBooked">4AM - {{data.current[4].user.username}}</span>
+            <span *ngIf="!data.current[4].isBooked">4AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[12])"
+             [ngClass]="{ current: data.current[12].isCurrentSlot , isBooked: data.current[12].isBooked }">
+            <span *ngIf="data.current[12].isBooked">12PM - {{data.current[12].user.username}}</span>
+            <span *ngIf="!data.current[12].isBooked">12PM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[20])"
+             [ngClass]="{ current: data.current[20].isCurrentSlot , isBooked: data.current[20].isBooked }">
+            <span *ngIf="data.current[20].isBooked">8PM - {{data.current[20].user.username}}</span>
+            <span *ngIf="!data.current[20].isBooked">8PM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[5])"
+             [ngClass]="{ current: data.current[5].isCurrentSlot , isBooked: data.current[5].isBooked }">
+            <span *ngIf="data.current[5].isBooked">5AM - {{data.current[5].user.username}}</span>
+            <span *ngIf="!data.current[5].isBooked">5AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[13])"
+             [ngClass]="{ current: data.current[13].isCurrentSlot , isBooked: data.current[13].isBooked }">
+            <span *ngIf="data.current[13].isBooked">1PM - {{data.current[13].user.username}}</span>
+            <span *ngIf="!data.current[13].isBooked">1PM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[21])"
+             [ngClass]="{ current: data.current[21].isCurrentSlot , isBooked: data.current[21].isBooked }">
+            <span *ngIf="data.current[21].isBooked">9PM - {{data.current[21].user.username}}</span>
+            <span *ngIf="!data.current[21].isBooked">9PM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[6])"
+             [ngClass]="{ current: data.current[6].isCurrentSlot , isBooked: data.current[6].isBooked }">
+            <span *ngIf="data.current[6].isBooked">6AM - {{data.current[6].user.username}}</span>
+            <span *ngIf="!data.current[6].isBooked">6AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[14])"
+             [ngClass]="{ current: data.current[14].isCurrentSlot , isBooked: data.current[14].isBooked }">
+            <span *ngIf="data.current[14].isBooked">2PM - {{data.current[14].user.username}}</span>
+            <span *ngIf="!data.current[14].isBooked">2PM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[22])"
+             [ngClass]="{ current: data.current[22].isCurrentSlot , isBooked: data.current[22].isBooked }">
+            <span *ngIf="data.current[22].isBooked">10PM - {{data.current[22].user.username}}</span>
+            <span *ngIf="!data.current[22].isBooked">10PM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[7])"
+             [ngClass]="{ current: data.current[7].isCurrentSlot , isBooked: data.current[7].isBooked }">
+            <span *ngIf="data.current[7].isBooked">7AM - {{data.current[7].user.username}}</span>
+            <span *ngIf="!data.current[7].isBooked">7AM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[15])"
+             [ngClass]="{ current: data.current[15].isCurrentSlot , isBooked: data.current[15].isBooked }">
+            <span *ngIf="data.current[15].isBooked">3PM - {{data.current[15].user.username}}</span>
+            <span *ngIf="!data.current[15].isBooked">3PM - Book</span>
+        </div>
+
+        <div class="cell small-4 hour" (click)="clickHour(data.current[23])"
+             [ngClass]="{ current: data.current[23].isCurrentSlot , isBooked: data.current[23].isBooked }">
+            <span *ngIf="data.current[23].isBooked">11PM - {{data.current[23].user.username}}</span>
+            <span *ngIf="!data.current[23].isBooked">11PM - Book</span>
+        </div>
+    </div>
+</app-content>

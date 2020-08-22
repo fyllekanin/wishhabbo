@@ -18,6 +18,10 @@ export const staffRoutes: Routes = [
             {
                 path: 'media',
                 loadChildren: () => import('./pages/media/media.module').then(m => m.MediaModule)
+            },
+            {
+                path: 'radio',
+                loadChildren: () => import('./pages/radio/radio.module').then(m => m.RadioModule)
             }
         ]
     }

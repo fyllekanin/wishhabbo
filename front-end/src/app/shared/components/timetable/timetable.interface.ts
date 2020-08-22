@@ -10,9 +10,12 @@ export interface Slot {
     day: number;
     hour: number;
     event: string;
+    isBooked: boolean;
+    isCurrentSlot: boolean;
 }
 
 export interface ITimetable {
-    slots: Array<Slot>;
+    current: Array<Slot>;
+    all: Array<Slot>;
     type: string;
 }

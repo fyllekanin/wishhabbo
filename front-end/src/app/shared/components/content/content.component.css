@@ -29,11 +29,15 @@
     top: 0;
 }
 
-.actions i {
-    padding: 9px 15px;
+.action {
+    outline: none;
+    cursor: pointer;
+    padding: 9px;
+    display: inline-block;
+    background-color: #9a7993;
+    box-shadow: inset 0 0 1px #ffffff;
 }
 
-.action-list {
-    top: 11px;
-    right: 10px;
+.action:hover, .active {
+    background-color: #a27f9b;
 }
