@@ -5,6 +5,12 @@
                 <div class="title">{{title}}</div>
                 {{content}}
                 <ng-template #container></ng-template>
+
+                <div class="buttons">
+                    <button *ngFor="let button of buttons" [ngClass]="button.type" (click)="onAction(button)">
+                        {{button.label}}
+                    </button>
+                </div>
             </div>
         </div>
     </div>

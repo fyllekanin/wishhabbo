@@ -25,19 +25,18 @@ function getServiceConfig (): ServiceConfig {
 }
 
 export const INITIAL_MIDDLEWARE = async (req: InternalRequest, res: Response, next: NextFunction) => {
-    const tokenRepository = new TokenRepository();
-    const userRepository = new UserRepository();
-    const entity = await tokenRepository.getTokenFromRequest(req);
+    req.serviceConfig = getServiceConfig();
+    const entity = await req.serviceConfig.tokenRepository.getTokenFromRequest(req);
 
     if (!entity) {
         next();
         return;
     }
-    if (!tokenRepository.isAccessTokenAlive(entity)) {
+    if (!req.serviceConfig.tokenRepository.isAccessTokenAlive(entity)) {
         next();
         return;
     }
-    req.user = await userRepository.getUserById(entity.userId);
+    req.user = await req.serviceConfig.userRepository.getUserById(entity.userId);
     req.serviceConfig = getServiceConfig();
     next();
 };

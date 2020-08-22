@@ -113,7 +113,7 @@ export class ArticleController {
         await req.serviceConfig.articleRepository.save(article).catch(reason => {
             throw reason;
         });
-        const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${article.articleId}.png`);
+        const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${article.articleId}`);
         if (!result) {
             await req.serviceConfig.articleRepository.delete(article);
             res.status(BAD_REQUEST).json();
@@ -162,7 +162,7 @@ export class ArticleController {
             status = INTERNAL_SERVER_ERROR;
             response = reason;
         });
-        const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${article.articleId}.png`);
+        const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${article.articleId}`);
         if (!result) {
             res.status(BAD_REQUEST).json();
             return;
@@ -177,8 +177,7 @@ export class ArticleController {
         GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
     ])
     private async deleteArticle (req: InternalRequest, res: Response): Promise<void> {
-        const articleRepository = new ArticleRepository();
-        const article = await articleRepository.getByArticleId(Number(req.params.articleId));
+        const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         const canManageArticle = await this.canRequesterManageArticles(req);
 
         if (!article || (article.userId !== req.user.userId && !canManageArticle)) {
@@ -186,7 +185,8 @@ export class ArticleController {
             return;
         }
 
-        await articleRepository.delete(article);
+        await req.serviceConfig.articleRepository.delete(article);
+        await req.serviceConfig.resourceRepository.removeArticleThumbnail(Number(req.params.articleId));
         res.status(OK).json();
     }
 

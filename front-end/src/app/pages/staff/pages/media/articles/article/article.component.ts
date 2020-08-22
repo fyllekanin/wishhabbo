@@ -1,11 +1,16 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UnSub } from '../../../../../shared/decorators/unsub.decorator';
+import { UnSub } from '../../../../../../shared/decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
-import { ARTICLE_DIFFICULTIES, ARTICLE_TYPES, ArticleClass } from '../../../../../shared/classes/media/article.class';
-import { EditorComponent } from '../../../../../shared/components/editor/editor.component';
-import { UserAction } from '../../../../../shared/constants/common.interfaces';
+import {
+    ARTICLE_DIFFICULTIES,
+    ARTICLE_TYPES,
+    ArticleClass
+} from '../../../../../../shared/classes/media/article.class';
+import { EditorComponent } from '../../../../../../shared/components/editor/editor.component';
+import { UserAction } from '../../../../../../shared/constants/common.interfaces';
 import { ArticleService } from './article.service';
+import { DialogService } from '../../../../../../core/common-services/dialog.service';
 
 @Component({
     selector: 'app-staff-articles-article',
@@ -32,6 +37,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
     constructor (
         private service: ArticleService,
         private router: Router,
+        private dialogService: DialogService,
         activatedRoute: ActivatedRoute
     ) {
         this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
@@ -58,19 +64,34 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
     async onAction (action: UserAction): Promise<void> {
         switch (action.value) {
             case this.ACTIONS.BACK:
-                this.router.navigateByUrl('/staff/articles/page/1');
+                await this.router.navigateByUrl('/staff/media/articles/page/1');
                 break;
             case this.ACTIONS.SAVE:
-                const articleId = await this.service.save(this.data, this.fileElementRef.nativeElement);
-                this.data.articleId = articleId as number;
-                this.actions = this.getActions();
+                await this.onSave();
+                break;
             case this.ACTIONS.DELETE:
+                await this.onDelete();
                 break;
         }
     }
 
     ngAfterViewInit (): void {
         this.editorComponent.setContent(this.data.content);
+    }
+
+    private async onSave (): Promise<void> {
+        this.data.content = this.editorComponent.getContent();
+        const articleId = await this.service.save(this.data, this.fileElementRef.nativeElement);
+        this.data.articleId = articleId as number;
+        this.actions = this.getActions();
+    }
+
+    private async onDelete (): Promise<void> {
+        const confirmed = await this.dialogService.confirm('Do you really wanna delete this article?');
+        if (confirmed) {
+            await this.service.delete(this.data.articleId);
+            await this.router.navigateByUrl('/staff/media/articles/page/1');
+        }
     }
 
     private onData ({ data }: { data: ArticleClass }): void {

@@ -7,6 +7,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { DialogService } from '../../../core/common-services/dialog.service';
+import { DialogButton } from './dialog.model';
 
 @Component({
     selector: 'app-dialog',
@@ -19,6 +20,7 @@ export class DialogComponent {
 
     content: string = null;
     title: string = null;
+    buttons: Array<DialogButton> = [];
 
     constructor (private dialogService: DialogService, private componentFactoryResolver: ComponentFactoryResolver) {
         dialogService.onOpen.subscribe(configuration => {
@@ -26,6 +28,7 @@ export class DialogComponent {
 
             this.isVisible = true;
             this.title = configuration.title;
+            this.buttons = configuration.buttons;
             if (configuration.component) {
                 this.containerElement
                     .createComponent(this.componentFactoryResolver.resolveComponentFactory((configuration.component)));
@@ -47,6 +50,10 @@ export class DialogComponent {
         if (!isInsideWrapper) {
             this.isVisible = false;
         }
+    }
+
+    onAction (button: DialogButton): void {
+        this.dialogService.onActionSubject.next(button);
     }
 
     private onReset (): void {

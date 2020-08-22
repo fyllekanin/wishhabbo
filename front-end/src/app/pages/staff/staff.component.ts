@@ -51,7 +51,7 @@ export class StaffComponent {
                 items: [
                     {
                         label: 'Articles',
-                        url: '/staff/articles/page/1',
+                        url: '/staff/media/articles/page/1',
                         icon: 'fas fa-hashtag',
                         isApplicable: user.staffPermissions.canWriteArticles || user.staffPermissions.canApproveArticles
                     }

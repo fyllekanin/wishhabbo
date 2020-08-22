@@ -28,6 +28,16 @@ export class ArticlePayloadValidator implements EntityValidator<ArticlePayload> 
         return payload instanceof ArticlePayload;
     }
 
+    private validateContent (payload: ArticlePayload, errors: Array<ValidationError>): void {
+        if (!payload.getContent() || payload.getContent().length === 0) {
+            errors.push(ValidationError.newBuilder()
+                .withField('content')
+                .withMessage(ErrorCodes.MISSING_CONTENT.description)
+                .withCode(ErrorCodes.MISSING_CONTENT.code)
+                .build());
+        }
+    }
+
     private async validateThumbnail (payload: ArticlePayload, errors: Array<ValidationError>,
                                      resourceRepository: ResourceRepository): Promise<void> {
         if (!resourceRepository.isFileValidImage(payload.getFile())) {

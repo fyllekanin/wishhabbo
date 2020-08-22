@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
-import { IPagination } from '../../../../../shared/components/pagination/pagination.model';
-import { ArticleClass } from '../../../../../shared/classes/media/article.class';
+import { IPagination } from '../../../../../../shared/components/pagination/pagination.model';
+import { ArticleClass } from '../../../../../../shared/classes/media/article.class';
 import { Observable } from 'rxjs';
-import { HttpService } from '../../../../../core/http/http.service';
+import { HttpService } from '../../../../../../core/http/http.service';
 import { map } from 'rxjs/operators';
 
 @Injectable()

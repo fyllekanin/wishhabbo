@@ -14,8 +14,7 @@
             <label for="badges" class="display-block">Badges <em>(comma separated)</em></label>
             <input id="badges" type="text" [(ngModel)]="badges" (input)="onBadgesChange()"/>
             <div class="badges">
-                <img *ngFor="let badge of data.badges"
-                     [src]="'https://images.habbogroup.com/c_images/album1584/' + badge + '.gif'"/>
+                <img appHabboBadge *ngFor="let badge of data.badges" [code]="badge"/>
             </div>
         </div>
         <div class="cell small-6">

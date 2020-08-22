@@ -144,6 +144,14 @@ button.green:hover {
     background-color: #7fbf85;
 }
 
+button.gray {
+    background-color: #cacaca;
+}
+
+button.gray:hover {
+    background-color: #b7b7b7;
+}
+
 /** Form Styles **/
 label {
     display: block;

@@ -101,4 +101,10 @@ export class ErrorCodes {
         name: 'Given file is not an image',
         description: 'Given file is either not the correct format or is corrupt'
     };
+
+    static readonly MISSING_CONTENT: ErrorCode = {
+        code: 17,
+        name: 'Content is empty',
+        description: 'The content is not valid as it\'s empty'
+    };
 }
