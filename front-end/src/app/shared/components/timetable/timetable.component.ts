@@ -6,6 +6,7 @@ import { Unsubscribable } from 'rxjs';
 import { TimetableService } from './timetable.service';
 import { TimeHelper } from '../../helpers/time.helper';
 import { UserAction } from '../../constants/common.interfaces';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
     selector: 'app-timetable',
@@ -24,6 +25,7 @@ export class TimetableComponent implements OnDestroy {
     actions: Array<UserAction> = [];
 
     constructor (
+        private authService: AuthService,
         private service: TimetableService,
         private router: Router,
         activatedRoute: ActivatedRoute
@@ -44,12 +46,42 @@ export class TimetableComponent implements OnDestroy {
         this.router.navigateByUrl(`/staff/radio/timetable/${action.value}`);
     }
 
-    clickHour (slot: Slot): void {
+    async clickHour (slot: Slot): Promise<void> {
+        if (!slot.isBooked) {
+            await this.doBooking(slot);
+            return;
+        }
 
+        if ((this.authService.getAuthUser().staffPermissions.canUnbookOthersRadio && this.isRadio()) ||
+            this.authService.getAuthUser().staffPermissions.canUnbookOthersEvents && !this.isRadio()) {
+            await this.doEdit(slot);
+        } else {
+            await this.service.unbook(slot, this.isRadio());
+        }
     }
 
     ngOnDestroy (): void {
         // Empty
+    }
+
+    private async doEdit (slot: Slot): Promise<void> {
+        const result = await this.service.doOpenDetails(slot, true, this.isRadio());
+        if (!result.proceed) {
+            return;
+        }
+        slot.event = result.event;
+        await this.service.edit(slot, this.isRadio());
+        await this.doSetup();
+    }
+
+    private async doBooking (slot: Slot): Promise<void> {
+        const result = await this.service.doOpenDetails(slot, false, this.isRadio());
+        if (!result.proceed) {
+            return;
+        }
+        slot.event = result.event;
+        await this.service.book(slot, this.isRadio());
+        await this.doSetup();
     }
 
     private async doSetup (): Promise<void> {
@@ -71,10 +103,11 @@ export class TimetableComponent implements OnDestroy {
     private getDataWithCurrentSlots (data: ITimetable): ITimetable {
         const offset = TimeHelper.getTimeOffsetInHours();
         data.current = data.all.map(item => {
-            const convertedHour = TimeHelper.getConvertedHour(item.hour + offset);
-            item.hour = convertedHour;
-            item.day = TimeHelper.getConvertedDay(convertedHour, item.day);
-            return item;
+            const copy = { ...item };
+            const convertedHour = TimeHelper.getConvertedHour(copy.hour + offset);
+            copy.hour = convertedHour;
+            copy.day = TimeHelper.getConvertedDay(convertedHour, copy.day);
+            return copy;
         }).filter(item => item.day === this.day);
         return data;
     }

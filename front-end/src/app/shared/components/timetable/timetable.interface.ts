@@ -5,11 +5,24 @@ export const TimeTableTypes = {
     RADIO: 'radio'
 };
 
+export interface TimetableEvent {
+    eventId: number;
+    name: string;
+}
+
+export interface BookingResult {
+    proceed: boolean;
+    event: TimetableEvent;
+    username: string;
+    isUnbooking: boolean;
+}
+
 export interface Slot {
+    timetableId: number;
     user: SlimUser;
     day: number;
     hour: number;
-    event: string;
+    event: TimetableEvent;
     isBooked: boolean;
     isCurrentSlot: boolean;
 }

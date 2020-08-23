@@ -1,6 +1,7 @@
 import {
     Component,
     ComponentFactoryResolver,
+    ComponentRef,
     HostBinding,
     HostListener,
     ViewChild,
@@ -14,7 +15,8 @@ import { DialogButton } from './dialog.model';
     templateUrl: 'dialog.component.html',
     styleUrls: [ 'dialog.component.css' ]
 })
-export class DialogComponent {
+export class DialogComponent<C> {
+    private componentInstance: ComponentRef<C>;
     @ViewChild('container', { read: ViewContainerRef, static: true }) containerElement;
     @HostBinding('class.visible') isVisible = false;
 
@@ -30,8 +32,9 @@ export class DialogComponent {
             this.title = configuration.title;
             this.buttons = configuration.buttons;
             if (configuration.component) {
-                this.containerElement
+                this.componentInstance = this.containerElement
                     .createComponent(this.componentFactoryResolver.resolveComponentFactory((configuration.component)));
+                this.dialogService.setComponentInstance(this.componentInstance);
             } else {
                 this.content = configuration.content;
             }

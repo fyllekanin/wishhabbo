@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ComponentRef, Injectable } from '@angular/core';
 import { ButtonTypes, DialogButton, DialogConfiguration } from '../../shared/app-views/dialog/dialog.model';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -7,10 +7,12 @@ import { take } from 'rxjs/operators';
 export class DialogService {
     private onOpenSubject = new Subject<DialogConfiguration<any>>();
     private onCloseSubject = new Subject<void>();
+    private onComponentInstanceSubject = new Subject<ComponentRef<any>>();
     onActionSubject = new Subject<DialogButton>();
     onOpen = this.onOpenSubject.asObservable();
     onClose = this.onCloseSubject.asObservable();
     onAction = this.onActionSubject.asObservable();
+    onComponentInstance = this.onComponentInstanceSubject.asObservable();
 
     /**
      * Open a new instance of a dialog
@@ -23,6 +25,10 @@ export class DialogService {
      */
     open<T> (configuration: DialogConfiguration<T>): void {
         this.onOpenSubject.next(configuration);
+    }
+
+    setComponentInstance (componentInstance: ComponentRef<any>): void {
+        this.onComponentInstanceSubject.next(componentInstance);
     }
 
     confirm (message: string): Promise<boolean> {
