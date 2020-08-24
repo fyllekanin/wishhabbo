@@ -1,4 +1,4 @@
-<div class="grid-x grid-margin-x">
+<div class="grid-x grid-margin-x" *ngIf="slot">
     <div class="cell small-12">
         <span *ngIf="slot.isBooked">You are currently editing the slot, you can change the booked user etc or just unbook it below</span>
         <span *ngIf="!slot.isBooked">{{isRadio ? 'Click' : 'Select an event below and click'}} the button below to book this slot</span>

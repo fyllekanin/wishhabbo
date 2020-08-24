@@ -31,14 +31,14 @@ export class TimetableService {
 
     async doOpenDetails (slot: Slot, isEditing: boolean, isRadio: boolean): Promise<BookingResult> {
         const presentedHour = TimeHelper.getHours().find(hour => hour.number === slot.hour);
-        const ref: ComponentRef<DetailedSlotComponent> = await this.dialogService.onComponentInstance.pipe(take(1)).toPromise();
-        ref.instance.setup(slot, await this.getEvents(), isRadio);
 
         this.dialogService.open({
             title: `${isEditing ? 'Editing' : 'Booking'} ${TimeHelper.getDay(slot.day)} - ${presentedHour}`,
             component: DetailedSlotComponent,
             buttons: isEditing ? this.editingActions : this.bookingActions
         });
+        const ref: ComponentRef<DetailedSlotComponent> = await this.dialogService.onComponentInstance.pipe(take(1)).toPromise();
+        ref.instance.setup(slot, await this.getEvents(), isRadio);
         const action = await this.dialogService.onAction.pipe(take(1)).toPromise();
         this.dialogService.close();
 
