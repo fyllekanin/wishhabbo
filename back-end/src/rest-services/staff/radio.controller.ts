@@ -18,7 +18,7 @@ const middlewares = [
 ];
 
 @Controller('api/staff/radio')
-export class StaffController extends TimetableController {
+export class RadioController extends TimetableController {
 
     @Get('slots')
     @Middleware(middlewares)

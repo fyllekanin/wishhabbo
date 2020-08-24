@@ -8,6 +8,8 @@ import { StaffController } from './rest-services/staff/staff.controller';
 import { INITIAL_MIDDLEWARE } from './rest-services/middlewares/initial.middleware';
 import { ArticleController } from './rest-services/staff/media/article.controller';
 import ExpressFormidable from 'express-formidable';
+import { RadioController } from './rest-services/staff/radio.controller';
+import { EventsController } from './rest-services/staff/events.controller';
 
 
 class MainServer extends Server {
@@ -37,7 +39,9 @@ class MainServer extends Server {
                 new AuthenticationController(),
                 new PageController(),
                 new StaffController(),
-                new ArticleController()
+                new ArticleController(),
+                new RadioController(),
+                new EventsController()
             ],
             null,
             INITIAL_MIDDLEWARE

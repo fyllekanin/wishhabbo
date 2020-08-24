@@ -18,7 +18,7 @@ const middlewares = [
 ];
 
 @Controller('api/staff/events')
-export class StaffController extends TimetableController {
+export class EventsController extends TimetableController {
 
     @Get('list')
     private async getEventsList (req: InternalRequest, res: Response): Promise<void> {

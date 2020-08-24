@@ -11,3 +11,7 @@
 - Typeorm
 - Axios
 - OvernightJS
+
+### Setup
+
+Reference: [Setup guide](SETUP.md)

@@ -15,7 +15,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 })
 @UnSub()
 export class TimetableComponent implements OnDestroy {
-    private type: string;
+    private readonly type: string;
     private day: number;
 
     subscriptions: Array<Unsubscribable> = [];
@@ -34,10 +34,6 @@ export class TimetableComponent implements OnDestroy {
         this.day = Number(activatedRoute.snapshot.params.day);
         this.subscriptions.push(activatedRoute.params.subscribe(async data => {
             this.day = Number(data.day);
-            await this.doSetup();
-        }));
-        this.subscriptions.push(activatedRoute.data.subscribe(async data => {
-            this.type = data.type;
             await this.doSetup();
         }));
     }
@@ -88,7 +84,7 @@ export class TimetableComponent implements OnDestroy {
     private async doSetup (): Promise<void> {
         this.title = this.isRadio() ? 'Radio Timetable' : 'Events Timetable';
 
-        const slots = await this.service.fetchSlots(this.type);
+        const slots = this.data ? this.data : await this.service.fetchSlots(this.type);
         this.data = this.getDataWithCurrentSlots(slots);
         this.actions = [
             { label: 'Mon', value: 1, isActive: this.day === 1 },
