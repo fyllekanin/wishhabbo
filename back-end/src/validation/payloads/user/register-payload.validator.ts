@@ -1,14 +1,15 @@
 import { ValidationError } from '../../validation.error';
-import { EntityValidator } from '../../entities/entity-validator.interface';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
 import { RegisterPayload } from '../../../rest-service-views/payloads/auth/register.payload';
 import { ErrorCodes } from '../../error.codes';
 import { HabboService } from '../../../external/services/habbo.service';
 import { ServiceConfig } from '../../../utilities/internal.request';
+import { PayloadValidator } from '../payload-validator.interface';
+import { UserEntity } from '../../../persistance/entities/user/user.entity';
 
-export class RegisterPayloadValidator implements EntityValidator<RegisterPayload> {
+export class RegisterPayloadValidator implements PayloadValidator<RegisterPayload> {
 
-    async validate (payload: IPayload, serviceConfig: ServiceConfig): Promise<Array<ValidationError>> {
+    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
         const registerPayload = payload as RegisterPayload;
         const habboService = new HabboService();
         const errors: Array<ValidationError> = [];

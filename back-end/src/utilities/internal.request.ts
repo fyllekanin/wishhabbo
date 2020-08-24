@@ -7,6 +7,8 @@ import { TokenRepository } from '../persistance/repositories/user/token.reposito
 import { ArticleRepository } from '../persistance/repositories/staff/media/article.repository';
 import { UserRepository } from '../persistance/repositories/user/user.repository';
 import { LogRepository } from '../persistance/repositories/log.repository';
+import { TimetableRepository } from '../persistance/repositories/staff/timetable.repository';
+import { EventsRepository } from '../persistance/repositories/staff/events.repository';
 
 export interface ServiceConfig {
     resourceRepository: ResourceRepository;
@@ -16,6 +18,8 @@ export interface ServiceConfig {
     tokenRepository: TokenRepository;
     articleRepository: ArticleRepository;
     logRepository: LogRepository;
+    timetableRepository: TimetableRepository;
+    eventsRepository: EventsRepository;
 }
 
 export interface InternalRequest extends Request {

@@ -63,9 +63,9 @@ export class ArticlePayload implements IPayload {
         return this.file;
     }
 
-    static of (article: any, file: File): ArticlePayload {
+    static of (article: any, file: File, articleId: number): ArticlePayload {
         return new ArticlePayload(
-            article.articleId,
+            articleId,
             article.title,
             article.content,
             article.badges,

@@ -12,6 +12,10 @@ interface PaginationOptions {
 export class BaseRepository<T> {
     protected repository: Repository<T>;
 
+    async get (id: number): Promise<T> {
+        return await this.repository.findOne(id);
+    }
+
     async save (entity: T): Promise<T> {
         return await this.repository.save(entity);
     }

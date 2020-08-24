@@ -49,7 +49,7 @@ export class AuthenticationController {
     @Post('login')
     private async doLogin (req: InternalRequest, res: Response): Promise<void> {
         const payload = LoginPayload.of(req.fields);
-        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig);
+        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
             return;
@@ -121,7 +121,7 @@ export class AuthenticationController {
     @Post('register')
     private async doRegister (req: InternalRequest, res: Response): Promise<void> {
         const payload = RegisterPayload.of(req.fields);
-        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig);
+        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
             return;
@@ -132,7 +132,7 @@ export class AuthenticationController {
             .withPassword(await HasherUtility.hash(payload.getPassword()))
             .withHabbo(payload.getHabbo())
             .build();
-        const entityErrors = await ValidationValidators.validateEntity(user, req.serviceConfig);
+        const entityErrors = await ValidationValidators.validateEntity(user, req.serviceConfig, req);
         if (entityErrors.length > 0) {
             res.status(BAD_REQUEST).json(entityErrors);
             return;

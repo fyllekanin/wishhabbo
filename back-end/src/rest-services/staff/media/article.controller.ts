@@ -4,7 +4,7 @@ import { AUTHORIZATION_MIDDLEWARE } from '../../middlewares/authorization.middle
 import { GET_STAFF_PERMISSION_MIDDLEWARE } from '../../middlewares/staff-permission.middleware';
 import { Permissions } from '../../../constants/permissions.constant';
 import { PaginationHelper } from '../../../helpers/pagination.helper';
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from 'http-status-codes';
+import { BAD_REQUEST, NOT_FOUND, OK } from 'http-status-codes';
 import { GroupRepository } from '../../../persistance/repositories/group.repository';
 import { ArticlePayload } from '../../../rest-service-views/payloads/staff/media/article.payload';
 import { ValidationValidators } from '../../../validation/validation.validators';
@@ -90,8 +90,8 @@ export class ArticleController {
         Permissions.STAFF.CAN_MANAGE_ARTICLES
     ]) ])
     private async createArticle (req: InternalRequest, res: Response): Promise<void> {
-        const payload = ArticlePayload.of(JSON.parse(req.fields.article as string), req.files.thumbnail);
-        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig);
+        const payload = ArticlePayload.of(JSON.parse(req.fields.article as string), req.files.thumbnail, null);
+        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
             return;
@@ -105,31 +105,31 @@ export class ArticleController {
             .withRoom(payload.getRoom())
             .withDifficulty(payload.getDifficulty())
             .build();
-        const entityErrors = await ValidationValidators.validateEntity(article, req.serviceConfig);
+        const entityErrors = await ValidationValidators.validateEntity(article, req.serviceConfig, req);
         if (entityErrors.length > 0) {
             res.status(BAD_REQUEST).json(entityErrors);
             return;
         }
 
-        await req.serviceConfig.articleRepository.save(article).catch(reason => {
+        const updatedEntity = await req.serviceConfig.articleRepository.save(article).catch(reason => {
             throw reason;
         });
-        const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${article.articleId}`);
+        const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${updatedEntity.articleId}`);
         if (!result) {
-            await req.serviceConfig.articleRepository.delete(article);
+            await req.serviceConfig.articleRepository.delete(updatedEntity);
             res.status(BAD_REQUEST).json();
             return;
         }
 
         await Logger.createStaffLog(req, {
             id: LogTypes.CREATED_ARTICLE,
-            contentId: article.articleId,
+            contentId: updatedEntity.articleId,
             userId: req.user.userId,
             beforeChange: null,
-            afterChange: JSON.stringify(article)
+            afterChange: JSON.stringify(updatedEntity)
         });
 
-        res.status(OK).json(article.articleId);
+        res.status(OK).json(updatedEntity.articleId);
     }
 
     @Post(':articleId')
@@ -146,8 +146,8 @@ export class ArticleController {
             return;
         }
 
-        const payload = ArticlePayload.of(JSON.parse(req.fields.article as string), req.files.thumbnail);
-        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig);
+        const payload = ArticlePayload.of(JSON.parse(req.fields.article as string), req.files.thumbnail, article.articleId);
+        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
             return;
@@ -160,20 +160,20 @@ export class ArticleController {
         article.room = payload.getRoom();
         article.difficulty = payload.getDifficulty();
 
-        const entityErrors = await ValidationValidators.validateEntity(article, req.serviceConfig);
+        const entityErrors = await ValidationValidators.validateEntity(article, req.serviceConfig, req);
         if (entityErrors.length > 0) {
             res.status(BAD_REQUEST).json(entityErrors);
             return;
         }
 
-        let status = OK;
-        let response = '';
-        await req.serviceConfig.articleRepository.save(article).catch(reason => {
-            status = INTERNAL_SERVER_ERROR;
-            response = reason;
-        });
+        const updatedEntity = await req.serviceConfig.articleRepository.save(article);
+        if (!updatedEntity) {
+            res.status(BAD_REQUEST).json();
+            return;
+        }
+
         if (payload.getFile()) {
-            const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${article.articleId}`);
+            const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${updatedEntity.articleId}`);
             if (!result) {
                 res.status(BAD_REQUEST).json();
                 return;
@@ -182,13 +182,13 @@ export class ArticleController {
 
         await Logger.createStaffLog(req, {
             id: LogTypes.UPDATED_ARTICLE,
-            contentId: article.articleId,
+            contentId: updatedEntity.articleId,
             userId: req.user.userId,
             beforeChange: JSON.stringify(articleCopy),
-            afterChange: JSON.stringify(article)
+            afterChange: JSON.stringify(updatedEntity)
         });
 
-        res.status(status).json(response);
+        res.status(OK).json();
     }
 
     @Delete(':articleId')

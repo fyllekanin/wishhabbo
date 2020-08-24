@@ -70,6 +70,7 @@ export class TimetableComponent implements OnDestroy {
             return;
         }
         slot.event = result.event;
+        slot.user.username = result.username;
         await this.service.edit(slot, this.isRadio());
         await this.doSetup();
     }

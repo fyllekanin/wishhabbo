@@ -14,16 +14,20 @@ import { LogTypes } from '../../logging/log.types';
 
 const middlewares = [
     AUTHORIZATION_MIDDLEWARE,
-    GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_BOOK_RADIO ])
+    GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_BOOK_EVENTS ])
 ];
 
-@Controller('api/staff/radio')
+@Controller('api/staff/events')
 export class StaffController extends TimetableController {
 
+    @Get('list')
+    private async getEventsList (req: InternalRequest, res: Response): Promise<void> {
+        res.status(OK).json(await req.serviceConfig.eventsRepository.all());
+    }
+
     @Get('slots')
-    @Middleware(middlewares)
     private async getSlots (req: InternalRequest, res: Response): Promise<void> {
-        const slots = await req.serviceConfig.timetableRepository.getSlots(TimetableType.RADIO);
+        const slots = await req.serviceConfig.timetableRepository.getSlots(TimetableType.EVENTS);
         const items = [];
         const currentDay = new Date().getUTCDay();
         const currentHour = new Date().getUTCHours();
@@ -32,11 +36,12 @@ export class StaffController extends TimetableController {
             for (let h = 0; h < 24; h++) {
                 const slot = slots.find(item => item.day === d && item.hour === h);
                 const user = slot ? await req.serviceConfig.userRepository.getSlimUserById(slot.userId) : null;
+                const event = slot ? await req.serviceConfig.eventsRepository.get(slot.eventId) : null;
                 items.push(TimetableSlot.newBuilder()
                     .withTimetableId(slot ? slot.timetableId : null)
                     .withDay(d)
                     .withHour(h)
-                    .withEvent(null)
+                    .withEvent(event)
                     .withIsBooked(Boolean(slot))
                     .withIsCurrentSlot(d === currentDay && h === currentHour)
                     .withUser(user)
@@ -69,6 +74,7 @@ export class StaffController extends TimetableController {
             await req.serviceConfig.userRepository.getUserWithUsername(slot.getUser().getUsername()) : null;
         entity.hour = slot.getHour();
         entity.day = slot.getDay();
+        entity.eventId = slot.getEvent().eventId;
         entity.userId = user ? user.userId : entity.userId;
         const updatedEntity = await req.serviceConfig.timetableRepository.save(entity);
 
@@ -97,7 +103,8 @@ export class StaffController extends TimetableController {
         const entity = TimetableEntity.newBuilder()
             .withDay(slot.getDay())
             .withHour(slot.getHour())
-            .withType(TimetableType.RADIO)
+            .withEventId(slot.getEvent().eventId)
+            .withType(TimetableType.EVENTS)
             .withUserId(user ? user.userId : req.user.userId)
             .build();
         const updatedEntity = await req.serviceConfig.timetableRepository.save(entity);
@@ -123,7 +130,7 @@ export class StaffController extends TimetableController {
 
         const canUnbookThisSlot = entity.userId === req.user.userId ||
             await req.serviceConfig.groupRepository
-                .haveStaffPermission(req.user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO);
+                .haveStaffPermission(req.user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_EVENTS);
 
         if (!canUnbookThisSlot) {
             res.status(NOT_FOUND).json();

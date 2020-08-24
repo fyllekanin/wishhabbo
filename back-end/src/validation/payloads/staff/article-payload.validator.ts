@@ -1,5 +1,4 @@
 import { ValidationError } from '../../validation.error';
-import { EntityValidator } from '../../entities/entity-validator.interface';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
 import { ArticlePayload } from '../../../rest-service-views/payloads/staff/media/article.payload';
 import { ArticleRepository } from '../../../persistance/repositories/staff/media/article.repository';
@@ -7,10 +6,12 @@ import { ErrorCodes } from '../../error.codes';
 import { ArticleConstants } from '../../../constants/article.constant';
 import { ServiceConfig } from '../../../utilities/internal.request';
 import { ResourceRepository } from '../../../persistance/repositories/resource.repository';
+import { PayloadValidator } from '../payload-validator.interface';
+import { UserEntity } from '../../../persistance/entities/user/user.entity';
 
-export class ArticlePayloadValidator implements EntityValidator<ArticlePayload> {
+export class ArticlePayloadValidator implements PayloadValidator<ArticlePayload> {
 
-    async validate (payload: IPayload, serviceConfig: ServiceConfig): Promise<Array<ValidationError>> {
+    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
         const articlePayload = payload as ArticlePayload;
         const errors: Array<ValidationError> = [];
 
@@ -19,6 +20,7 @@ export class ArticlePayloadValidator implements EntityValidator<ArticlePayload> 
         this.validateDifficulty(articlePayload, errors);
         this.validateType(articlePayload, errors);
         this.validateMandatoryBadge(articlePayload, errors);
+        this.validateContent(articlePayload, errors);
         await this.validateThumbnail(articlePayload, errors, serviceConfig.resourceRepository);
 
         return errors;

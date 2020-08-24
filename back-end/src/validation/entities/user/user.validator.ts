@@ -9,12 +9,12 @@ import { ServiceConfig } from '../../../utilities/internal.request';
 export class UserValidation implements EntityValidator<UserEntity> {
     private static readonly VALID_USERNAME = /^[a-zA-Z0-9]+$/;
 
-    async validate (entity: IEntity, serviceConfig: ServiceConfig): Promise<Array<ValidationError>> {
-        const user = entity as UserEntity;
+    async validate (entity: IEntity, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
+        const userEntity = entity as UserEntity;
         const errors: Array<ValidationError> = [];
 
-        this.validateInvalidUsername(user, errors);
-        await this.validateExistingUsername(user, serviceConfig.userRepository, errors);
+        this.validateInvalidUsername(userEntity, errors);
+        await this.validateExistingUsername(userEntity, serviceConfig.userRepository, errors);
 
         return errors;
     }

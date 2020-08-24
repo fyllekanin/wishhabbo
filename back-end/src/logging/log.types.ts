@@ -1,9 +1,11 @@
-export class LogTypes {
+export enum LogTypes {
+    CREATED_ARTICLE = 1,
+    UPDATED_ARTICLE = 2,
+    DELETED_ARTICLE = 3,
+    APPROVED_ARTICLE = 4,
+    UNAPPROVED_ARTICLE = 5,
 
-    static readonly CREATED_ARTICLE = 1;
-    static readonly UPDATED_ARTICLE = 2;
-    static readonly DELETED_ARTICLE = 3;
-    static readonly APPROVED_ARTICLE = 4;
-    static readonly UNAPPROVED_ARTICLE = 5;
-
+    UPDATED_TIMETABLE_SLOT = 6,
+    CREATED_TIMETABLE_SLOT = 7,
+    DELETED_TIMETABLE_SLOT = 8
 }

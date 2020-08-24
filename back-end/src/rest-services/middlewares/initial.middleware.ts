@@ -7,23 +7,21 @@ import { HabboRepository } from '../../persistance/repositories/habbo.repository
 import { GroupRepository } from '../../persistance/repositories/group.repository';
 import { ArticleRepository } from '../../persistance/repositories/staff/media/article.repository';
 import { LogRepository } from '../../persistance/repositories/log.repository';
-
-let serviceConfig: ServiceConfig = null;
+import { TimetableRepository } from '../../persistance/repositories/staff/timetable.repository';
+import { EventsRepository } from '../../persistance/repositories/staff/events.repository';
 
 function getServiceConfig (): ServiceConfig {
-    if (serviceConfig) {
-        return serviceConfig;
-    }
-    serviceConfig = {
+    return {
         resourceRepository: new ResourceRepository(),
         habboRepository: new HabboRepository(),
         groupRepository: new GroupRepository(),
         userRepository: new UserRepository(),
         tokenRepository: new TokenRepository(),
         articleRepository: new ArticleRepository(),
-        logRepository: new LogRepository()
+        logRepository: new LogRepository(),
+        timetableRepository: new TimetableRepository(),
+        eventsRepository: new EventsRepository()
     };
-    return serviceConfig;
 }
 
 export const INITIAL_MIDDLEWARE = async (req: InternalRequest, res: Response, next: NextFunction) => {
@@ -39,6 +37,5 @@ export const INITIAL_MIDDLEWARE = async (req: InternalRequest, res: Response, ne
         return;
     }
     req.user = await req.serviceConfig.userRepository.getUserById(entity.userId);
-    req.serviceConfig = getServiceConfig();
     next();
 };

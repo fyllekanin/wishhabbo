@@ -1,13 +1,14 @@
 import { ValidationError } from '../../validation.error';
-import { EntityValidator } from '../../entities/entity-validator.interface';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
 import { ErrorCodes } from '../../error.codes';
 import { LoginPayload } from '../../../rest-service-views/payloads/auth/login.payload';
 import { ServiceConfig } from '../../../utilities/internal.request';
+import { PayloadValidator } from '../payload-validator.interface';
+import { UserEntity } from '../../../persistance/entities/user/user.entity';
 
-export class LoginPayloadValidator implements EntityValidator<LoginPayload> {
+export class LoginPayloadValidator implements PayloadValidator<LoginPayload> {
 
-    async validate (payload: IPayload, serviceConfig: ServiceConfig): Promise<Array<ValidationError>> {
+    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
         const loginPayload = payload as LoginPayload;
         const errors: Array<ValidationError> = [];
 

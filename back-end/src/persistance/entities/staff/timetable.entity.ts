@@ -1,6 +1,11 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
+export enum TimetableType {
+    RADIO = 0,
+    EVENTS = 1
+}
+
 @Entity('timetable')
 export class TimetableEntity extends CreatedUpdatedAtEntity {
     @PrimaryGeneratedColumn()

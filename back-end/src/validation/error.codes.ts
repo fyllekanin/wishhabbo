@@ -107,4 +107,28 @@ export class ErrorCodes {
         name: 'Content is empty',
         description: 'The content is not valid as it\'s empty'
     };
+
+    static readonly ALREADY_TAKEN_SLOT: ErrorCode = {
+        code: 18,
+        name: 'Slot already booked',
+        description: 'The slot is already booked'
+    };
+
+    static readonly NO_USER_WITH_USERNAME: ErrorCode = {
+        code: 19,
+        name: 'No user with username',
+        description: 'There is no user with given username'
+    };
+
+    static readonly INVALID_EVENT: ErrorCode = {
+        code: 20,
+        name: 'No event with given id',
+        description: 'There is no event with given id'
+    };
+
+    static readonly CAN_NOT_BOOK_FOR_OTHERS: ErrorCode = {
+        code: 21,
+        name: 'No permission for booking for others',
+        description: 'You do not have permission to book for other users'
+    };
 }

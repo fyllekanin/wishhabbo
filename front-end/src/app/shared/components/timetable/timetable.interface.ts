@@ -8,6 +8,8 @@ export const TimeTableTypes = {
 export interface TimetableEvent {
     eventId: number;
     name: string;
+    createdAt: number;
+    updatedAt: number;
 }
 
 export interface BookingResult {

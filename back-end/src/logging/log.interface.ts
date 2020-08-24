@@ -1,5 +1,7 @@
+import { LogTypes } from './log.types';
+
 export interface Log {
-    id: number;
+    id: LogTypes;
     contentId: number;
     userId: number;
     beforeChange: string;

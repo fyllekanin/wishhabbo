@@ -1,5 +1,5 @@
 import { ComponentRef, Injectable } from '@angular/core';
-import { BookingResult, ITimetable, Slot, TimetableEvent } from './timetable.interface';
+import { BookingResult, ITimetable, Slot, TimetableEvent, TimeTableTypes } from './timetable.interface';
 import { HttpService } from '../../../core/http/http.service';
 import { SiteNotificationService } from '../../../core/common-services/site-notification.service';
 import { DialogService } from '../../../core/common-services/dialog.service';
@@ -94,42 +94,12 @@ export class TimetableService {
     }
 
     fetchSlots (type: string): Promise<ITimetable> {
-        return new Promise(res => {
-            const all = [];
-
-            for (let d = 1; d < 8; d++) {
-                for (let i = 0; i < 24; i++) {
-                    const random = Math.round(Math.random() * 10);
-                    if (random % 3) {
-                        all.push({
-                            timetableId: Number(`${d}${i}`),
-                            user: {
-                                username: 'test #1'
-                            },
-                            day: d,
-                            hour: i,
-                            isBooked: true,
-                            isCurrentSlot: false
-                        });
-                    } else {
-                        all.push({
-                            timetableId: Number(`${d}${i}`),
-                            user: null,
-                            day: d,
-                            hour: i,
-                            isBooked: false,
-                            isCurrentSlot: false
-                        });
-                    }
-                }
-            }
-
-            res({
-                type: type,
-                all: all,
-                current: []
-            });
-        });
+        return this.httpService.get(`/staff/${type === TimeTableTypes.RADIO ? 'radio' : 'events'}/slots`).toPromise()
+            .then((slots: Array<Slot>) => ({
+                all: slots,
+                current: [],
+                type: type
+            }));
     }
 
     private async getEvents (): Promise<Array<TimetableEvent>> {
