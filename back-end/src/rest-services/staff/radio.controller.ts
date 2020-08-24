@@ -24,28 +24,7 @@ export class StaffController extends TimetableController {
     @Middleware(middlewares)
     private async getSlots (req: InternalRequest, res: Response): Promise<void> {
         const slots = await req.serviceConfig.timetableRepository.getSlots(TimetableType.RADIO);
-        const items = [];
-        const currentDay = new Date().getUTCDay();
-        const currentHour = new Date().getUTCHours();
-
-        for (let d = 1; d < 8; d++) {
-            for (let h = 0; h < 24; h++) {
-                const slot = slots.find(item => item.day === d && item.hour === h);
-                const user = slot ? await req.serviceConfig.userRepository.getSlimUserById(slot.userId) : null;
-                items.push(TimetableSlot.newBuilder()
-                    .withTimetableId(slot ? slot.timetableId : null)
-                    .withDay(d)
-                    .withHour(h)
-                    .withEvent(null)
-                    .withIsBooked(Boolean(slot))
-                    .withIsCurrentSlot(d === currentDay && h === currentHour)
-                    .withUser(user)
-                    .build());
-            }
-        }
-
-
-        res.status(OK).json(items);
+        res.status(OK).json(await this.getConvertedSlots(req, slots));
     }
 
     @Put(':timetableId')
