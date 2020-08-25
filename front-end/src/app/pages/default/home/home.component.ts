@@ -27,4 +27,7 @@ export class HomeComponent {
             badge: null
         })
     ];
+    ngAfterViewInit(): void {
+        (<any>window).twttr.widgets.load();
+    }    
 }
