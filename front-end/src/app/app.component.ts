@@ -10,7 +10,6 @@ export class AppComponent implements AfterContentInit {
     @ViewChild('radio', { static: true }) radioElement: ElementRef<HTMLAudioElement>;
 
     constructor (private radioService: RadioService) {
-
     }
 
     ngAfterContentInit (): void {

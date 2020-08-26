@@ -1,4 +1,4 @@
-<app-content [title]="data.articleId ? 'Editing: ' + data.title : 'Creating: ' + data.title " [actions]="actions"
+<app-content [header]="data.articleId ? 'Editing: ' + data.title : 'Creating: ' + data.title " [actions]="actions"
              (onAction)="onAction($event)">
 
     <div class="grid-x grid-margin-x">
