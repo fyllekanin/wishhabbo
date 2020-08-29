@@ -3,7 +3,7 @@ const fs = require('fs');
 
 ncp.limit = 16;
 
-console.log('Starting to copy assets');
+console.log('Starting to copy assets.');
 const promises = [
     new Promise(res => {
         ncp('src/resources', 'dist/resources', function (err) {
