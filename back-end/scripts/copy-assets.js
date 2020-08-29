@@ -35,4 +35,4 @@ const promises = [
     })
 ];
 
-Promise.all(promises).then(() => console.log('Done copying assets to dist'));
+Promise.all(promises).then(() => console.log('Done copying assets'));
