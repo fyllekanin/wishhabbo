@@ -1,12 +1,12 @@
 import { Type } from '@angular/core';
 import { primitiveOf } from '../../helpers/class.helper';
 
-export const ButtonTypes = {
-    GREEN: 'green',
-    BLUE: 'blue',
-    RED: 'red',
-    GRAY: 'gray'
-};
+export enum ButtonTypes {
+    GREEN = 'green',
+    BLUE = 'blue',
+    RED = 'red',
+    GRAY = 'gray'
+}
 
 export class DialogButton {
     @primitiveOf(String)

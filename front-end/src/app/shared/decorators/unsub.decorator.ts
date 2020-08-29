@@ -5,7 +5,7 @@ const triggerMethod = 'ngOnDestroy';
 export function UnSub () {
 
     return function (target) {
-        const unsubscribableLike: { subscriptions: Unsubscribable[], unsubscribe: () => void } = {
+        const unsubscribableLike: { subscriptions: Array<Unsubscribable>, unsubscribe: () => void } = {
             subscriptions: [],
             unsubscribe,
         };

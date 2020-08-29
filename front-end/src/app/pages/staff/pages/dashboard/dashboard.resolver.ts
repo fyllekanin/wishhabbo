@@ -4,12 +4,12 @@ import { HttpService } from '../../../../core/http/http.service';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class DashboardResolver implements Resolve<Object> {
+export class DashboardResolver implements Resolve<any> {
 
     constructor (private httpService: HttpService) {
     }
 
-    resolve (): Observable<Object> {
+    resolve (): Observable<any> {
         return this.httpService.get('/staff/dashboard');
     }
 }

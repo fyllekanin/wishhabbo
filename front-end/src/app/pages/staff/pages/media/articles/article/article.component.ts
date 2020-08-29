@@ -30,7 +30,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
 
     types: Array<{ label: string, value: number, isBadgeMandatory: boolean }> = [];
     difficulties: Array<{ label: string, value: number }> = [];
-    badges: string = '';
+    badges = '';
     @ViewChild(EditorComponent, { static: true }) editorComponent: EditorComponent;
     @ViewChild('fileElement', { static: true }) fileElementRef: ElementRef<HTMLInputElement>;
 

@@ -1,9 +1,9 @@
 import { SlimUser } from '../../classes/slim-user.class';
 
-export const TimeTableTypes = {
-    EVENTS: 'events',
-    RADIO: 'radio'
-};
+export enum TimeTableTypes {
+    EVENTS = 'events',
+    RADIO = 'radio'
+}
 
 export interface TimetableEvent {
     eventId: number;
