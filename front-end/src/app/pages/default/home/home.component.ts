@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { Article } from '../../../shared/components/article/article.model';
 
 @Component({
@@ -6,7 +6,7 @@ import { Article } from '../../../shared/components/article/article.model';
     templateUrl: 'home.component.html',
     styleUrls: [ 'home.component.css' ]
 })
-export class HomeComponent {
+export class HomeComponent implements AfterViewInit {
     articles: Array<Article> = [
         new Article({
             articleId: 1,
@@ -27,7 +27,8 @@ export class HomeComponent {
             badge: null
         })
     ];
-    ngAfterViewInit(): void {
+
+    ngAfterViewInit (): void {
         (<any>window).twttr.widgets.load();
-    }    
+    }
 }
