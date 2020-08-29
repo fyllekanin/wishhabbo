@@ -69,10 +69,10 @@ describe('TimeHelper', () => {
             // Then
             expect(result).toEqual(1);
         });
-        it('should return 7 if converted hours is less then 1 and current day is 1', () => {
+        it('should return 7 if converted hours is less then 0 and current day is 1', () => {
             // Given
             const day = 1;
-            const convertedHour = 0;
+            const convertedHour = -1;
 
             // When
             const result = TimeHelper.getConvertedDay(convertedHour, day);
@@ -80,10 +80,10 @@ describe('TimeHelper', () => {
             // Then
             expect(result).toEqual(7);
         });
-        it('should return day - 1 if converted hours is less then 1', () => {
+        it('should return day - 1 if converted hours is less then 0', () => {
             // Given
             const day = 2;
-            const convertedHour = 0;
+            const convertedHour = -1;
 
             // When
             const result = TimeHelper.getConvertedDay(convertedHour, day);
