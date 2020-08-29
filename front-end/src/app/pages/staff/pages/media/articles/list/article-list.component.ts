@@ -97,7 +97,6 @@ export class ArticleListComponent implements OnDestroy {
     private getRows (): Array<TableRow> {
         return this.data.items.map(item => ({
             rowId: item.articleId,
-            isClickable: true,
             actions: [
                 {
                     label: 'Edit',

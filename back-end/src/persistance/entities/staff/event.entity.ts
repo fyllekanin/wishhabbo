@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
+import { InternalRequest } from '../../../utilities/internal.request';
 
 @Entity('events')
 export class EventEntity extends CreatedUpdatedAtEntity {
@@ -10,6 +11,12 @@ export class EventEntity extends CreatedUpdatedAtEntity {
 
     static newBuilder (): EventEntityBuilder {
         return new EventEntityBuilder();
+    }
+
+    static of (req: InternalRequest): EventEntity {
+        const entity = new EventEntity();
+        entity.name = req.body.name;
+        return entity;
     }
 }
 

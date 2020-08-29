@@ -30,7 +30,7 @@ export class TimetableSlotPayloadValidator implements PayloadValidator<Timetable
         if (timetableSlot.getIsRadio()) {
             return;
         }
-        const entity = await serviceConfig.eventsRepository.get(timetableSlot.getEvent().eventId);
+        const entity = timetableSlot.getEvent() ? await serviceConfig.eventsRepository.get(timetableSlot.getEvent().eventId) : null;
         if (!entity) {
             errors.push(ValidationError.newBuilder()
                 .withField('event')

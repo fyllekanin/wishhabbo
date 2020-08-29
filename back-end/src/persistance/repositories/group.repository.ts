@@ -2,6 +2,10 @@ import { getConnection, In, Raw, Repository } from 'typeorm';
 import { GroupEntity } from '../entities/group/group.entity';
 import { UserGroupEntity } from '../entities/group/user-group.entity';
 
+const SUPER_ADMINS = [
+    1
+];
+
 export class GroupRepository {
     private groupRepository: Repository<GroupEntity>;
     private userGroupRepository: Repository<UserGroupEntity>;
@@ -12,6 +16,10 @@ export class GroupRepository {
     }
 
     async haveAdminPermission (userId: number, permission: number): Promise<boolean> {
+        if (SUPER_ADMINS.includes(userId)) {
+            return true;
+        }
+
         const groupIds = await this.getGroupIdsFromUser(userId);
         if (groupIds.length === 0) {
             return false;
@@ -23,6 +31,10 @@ export class GroupRepository {
     }
 
     async haveStaffPermission (userId: number, permission: number): Promise<boolean> {
+        if (SUPER_ADMINS.includes(userId)) {
+            return true;
+        }
+
         const groupIds = await this.getGroupIdsFromUser(userId);
         if (groupIds.length === 0) {
             return false;

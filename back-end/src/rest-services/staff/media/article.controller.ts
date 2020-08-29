@@ -14,6 +14,7 @@ import { PaginationView } from '../../../rest-service-views/respond-views/pagina
 import { ArticleView } from '../../../rest-service-views/respond-views/staff/media/article.view';
 import { Logger } from '../../../logging/log.logger';
 import { LogTypes } from '../../../logging/log.types';
+import ExpressFormidable from 'express-formidable';
 
 @Controller('api/staff/article')
 export class ArticleController {
@@ -85,10 +86,16 @@ export class ArticleController {
     }
 
     @Post()
-    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([
-        Permissions.STAFF.CAN_WRITE_ARTICLES,
-        Permissions.STAFF.CAN_MANAGE_ARTICLES
-    ]) ])
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_STAFF_PERMISSION_MIDDLEWARE([
+            Permissions.STAFF.CAN_WRITE_ARTICLES,
+            Permissions.STAFF.CAN_MANAGE_ARTICLES
+        ]),
+        ExpressFormidable({
+            multiples: true
+        })
+    ])
     private async createArticle (req: InternalRequest, res: Response): Promise<void> {
         const payload = ArticlePayload.of(JSON.parse(req.fields.article as string), req.files.thumbnail, null);
         const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
@@ -135,7 +142,10 @@ export class ArticleController {
     @Post(':articleId')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
+        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ]),
+        ExpressFormidable({
+            multiples: true
+        })
     ])
     private async updateArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));

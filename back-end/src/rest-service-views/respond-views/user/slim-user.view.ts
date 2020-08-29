@@ -4,6 +4,9 @@ export class SlimUserView {
     private readonly habbo: string;
 
     constructor (builder: SlimUserViewBuilder) {
+        if (!builder) {
+            return;
+        }
         this.userId = builder.userId;
         this.username = builder.username;
         this.habbo = builder.habbo;
@@ -19,6 +22,17 @@ export class SlimUserView {
 
     getHabbo (): string {
         return this.habbo;
+    }
+
+    static of (user: SlimUserView): SlimUserView {
+        if (!user) {
+            return new SlimUserView(null);
+        }
+        const builder = new SlimUserViewBuilder();
+        return builder.withUserId(user.userId)
+            .withUsername(user.username)
+            .withHabbo(user.habbo)
+            .build();
     }
 
     static newBuilder (): SlimUserViewBuilder {

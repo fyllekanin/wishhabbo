@@ -46,8 +46,6 @@ export class RadioController extends TimetableController {
         const copy = { ...entity };
         const user = slot.getUser() && slot.getUser().getUsername() ?
             await req.serviceConfig.userRepository.getUserWithUsername(slot.getUser().getUsername()) : null;
-        entity.hour = slot.getHour();
-        entity.day = slot.getDay();
         entity.userId = user ? user.userId : entity.userId;
         const updatedEntity = await req.serviceConfig.timetableRepository.save(entity);
 

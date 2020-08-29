@@ -31,6 +31,9 @@ export class DialogComponent<C> {
             this.isVisible = true;
             this.title = configuration.title;
             this.buttons = configuration.buttons;
+            if (this.buttons.filter(button => button.isClosing).length !== 1) {
+                throw new Error('A dialog need and can only have one closing button');
+            }
             if (configuration.component) {
                 this.componentInstance = this.containerElement
                     .createComponent(this.componentFactoryResolver.resolveComponentFactory((configuration.component)));
@@ -52,6 +55,9 @@ export class DialogComponent<C> {
             .some(item => item.classList && item.classList.contains('dialog-wrapper'));
         if (!isInsideWrapper) {
             this.isVisible = false;
+
+            const closeButton = this.buttons.find(button => button.isClosing);
+            this.dialogService.onActionSubject.next(closeButton);
         }
     }
 

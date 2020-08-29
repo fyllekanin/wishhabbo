@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DialogService } from '../../../../core/common-services/dialog.service';
 import { RadioService } from '../../../../core/common-services/radio.service';
+import { ButtonTypes, DialogButton } from '../../dialog/dialog.model';
 
 @Component({
     selector: 'app-header-radio',
@@ -15,6 +16,17 @@ export class HeaderRadioComponent {
     }
 
     openRequest (): void {
-        this.dialogService.open({ title: 'test', content: 'test', buttons: [] });
+        this.dialogService.open({
+            title: 'test',
+            content: 'test',
+            buttons: [
+                new DialogButton({
+                    label: 'Cancel',
+                    action: 'cancel',
+                    isClosing: true,
+                    type: ButtonTypes.GRAY
+                })
+            ]
+        });
     }
 }

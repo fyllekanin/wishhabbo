@@ -7,7 +7,8 @@ export class Permissions {
         CAN_UNBOOK_OTHERS_EVENTS: 8,
         CAN_WRITE_ARTICLES: 16,
         CAN_MANAGE_ARTICLES: 32,
-        CAN_KICK_DJ_OFF_AIR: 64
+        CAN_KICK_DJ_OFF_AIR: 64,
+        CAN_MANAGE_EVENTS: 128
     };
 
     static readonly ADMIN = {

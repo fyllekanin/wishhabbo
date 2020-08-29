@@ -48,7 +48,7 @@ export class AuthenticationController {
 
     @Post('login')
     private async doLogin (req: InternalRequest, res: Response): Promise<void> {
-        const payload = LoginPayload.of(req.fields);
+        const payload = LoginPayload.of(req);
         const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
@@ -120,7 +120,7 @@ export class AuthenticationController {
 
     @Post('register')
     private async doRegister (req: InternalRequest, res: Response): Promise<void> {
-        const payload = RegisterPayload.of(req.fields);
+        const payload = RegisterPayload.of(req);
         const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
@@ -156,7 +156,8 @@ export class AuthenticationController {
             canUnbookOthersEvents: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_EVENTS),
             canWriteArticles: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_WRITE_ARTICLES),
             canApproveArticles: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_MANAGE_ARTICLES),
-            canKickDjOffAir: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_KICK_DJ_OFF_AIR)
+            canKickDjOffAir: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_KICK_DJ_OFF_AIR),
+            canManageEvents: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_MANAGE_EVENTS)
         };
     }
 

@@ -7,10 +7,9 @@ import { BackgroundTaskHandler } from './background-tasks/background-task.handle
 import { StaffController } from './rest-services/staff/staff.controller';
 import { INITIAL_MIDDLEWARE } from './rest-services/middlewares/initial.middleware';
 import { ArticleController } from './rest-services/staff/media/article.controller';
-import ExpressFormidable from 'express-formidable';
 import { RadioController } from './rest-services/staff/radio.controller';
 import { EventsController } from './rest-services/staff/events.controller';
-
+import * as bodyParser from 'body-parser';
 
 class MainServer extends Server {
     private backgroundTaskHandler: BackgroundTaskHandler;
@@ -18,9 +17,8 @@ class MainServer extends Server {
     constructor () {
         super();
         this.backgroundTaskHandler = new BackgroundTaskHandler();
-        this.app.use(ExpressFormidable({
-            multiples: true
-        }));
+        this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(bodyParser.json());
     }
 
     start (port: number): void {

@@ -21,8 +21,8 @@ export class DetailedSlotComponent {
 
     setup (slot: Slot, events: Array<TimetableEvent>, isRadio: boolean): void {
         this.slot = slot;
-        this.event = this.slot.event;
         this.events = events;
+        this.event = this.events.find(event => event.eventId === this.slot.event.eventId);
         this.isRadio = isRadio;
         this.isBookingForEnabled = this.isRadio ?
             this.authService.getAuthUser().staffPermissions.canUnbookOthersRadio :

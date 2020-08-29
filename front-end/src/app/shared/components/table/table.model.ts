@@ -9,7 +9,6 @@ export interface TableCell {
 }
 
 export interface TableRow {
-    isClickable?: boolean;
     rowId: number | string;
     cells: Array<TableCell>;
     actions?: Array<UserAction>;

@@ -15,6 +15,8 @@ export class StaffPermissions {
     canApproveArticles: boolean;
     @primitiveOf(Boolean)
     canKickDjOffAir: boolean;
+    @primitiveOf(Boolean)
+    canManageEvents: boolean;
 
     constructor (source: Partial<StaffPermissions>) {
         ClassHelper.assign(this, source);

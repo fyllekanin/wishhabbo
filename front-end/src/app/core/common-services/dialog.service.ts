@@ -40,7 +40,8 @@ export class DialogService {
                     new DialogButton({
                         label: 'Cancel',
                         action: 'cancel',
-                        type: ButtonTypes.GRAY
+                        type: ButtonTypes.GRAY,
+                        isClosing: true
                     }),
                     new DialogButton({
                         label: 'Yes',

@@ -22,6 +22,10 @@ export const staffRoutes: Routes = [
             {
                 path: 'radio',
                 loadChildren: () => import('./pages/radio/radio.module').then(m => m.RadioModule)
+            },
+            {
+                path: 'events',
+                loadChildren: () => import('./pages/events/events.module').then(m => m.EventsModule)
             }
         ]
     }

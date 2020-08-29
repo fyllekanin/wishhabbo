@@ -41,9 +41,15 @@ export class StaffComponent {
                 items: [
                     {
                         label: 'Timetable',
-                        url: '/staff/events/timetable',
+                        url: `/staff/events/timetable/${day}`,
                         icon: 'fas fa-table',
                         isApplicable: user.staffPermissions.canBookEvents
+                    },
+                    {
+                        label: 'Manage Event Types',
+                        url: '/staff/events/manage',
+                        icon: 'fas fa-table',
+                        isApplicable: user.staffPermissions.canManageEvents
                     }
                 ]
             },

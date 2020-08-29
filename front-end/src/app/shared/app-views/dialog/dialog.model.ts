@@ -15,8 +15,10 @@ export class DialogButton {
     action: string;
     @primitiveOf(String)
     type: string;
+    @primitiveOf(Boolean)
+    isClosing: boolean = false;
 
-    constructor (source: DialogButton) {
+    constructor (source: Partial<DialogButton>) {
         Object.assign(this, source);
     }
 }

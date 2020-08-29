@@ -1,4 +1,4 @@
-import { ComponentRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BookingResult, ITimetable, Slot, TimetableEvent, TimeTableTypes } from './timetable.interface';
 import { HttpService } from '../../../core/http/http.service';
 import { SiteNotificationService } from '../../../core/common-services/site-notification.service';
@@ -13,11 +13,11 @@ import { SiteNotificationType } from '../../app-views/site-notification/site-not
 export class TimetableService {
     private events: Array<TimetableEvent> = [];
     private bookingActions: Array<DialogButton> = [
-        new DialogButton({ label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY }),
+        new DialogButton({ label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true }),
         new DialogButton({ label: 'Book', action: 'book', type: ButtonTypes.GREEN })
     ];
     private editingActions: Array<DialogButton> = [
-        new DialogButton({ label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY }),
+        new DialogButton({ label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true }),
         new DialogButton({ label: 'Unbook', action: 'unbook', type: ButtonTypes.BLUE }),
         new DialogButton({ label: 'Save', action: 'book', type: ButtonTypes.GREEN })
     ];
@@ -30,24 +30,28 @@ export class TimetableService {
     }
 
     async doOpenDetails (slot: Slot, isEditing: boolean, isRadio: boolean): Promise<BookingResult> {
-        const presentedHour = TimeHelper.getHours().find(hour => hour.number === slot.hour);
+        return new Promise(async res => {
+            const presentedHour = TimeHelper.getHours().find(hour => hour.number === slot.hour);
 
-        this.dialogService.open({
-            title: `${isEditing ? 'Editing' : 'Booking'} ${TimeHelper.getDay(slot.day)} - ${presentedHour}`,
-            component: DetailedSlotComponent,
-            buttons: isEditing ? this.editingActions : this.bookingActions
+            this.dialogService.onComponentInstance.pipe(take(1)).subscribe(async ref => {
+                ref.instance.setup(slot, await this.getEvents(), isRadio);
+                this.dialogService.onAction.pipe(take(1)).subscribe(action => {
+                    this.dialogService.close();
+
+                    res({
+                        proceed: action.action === 'book' || action.action === 'unbook',
+                        event: ref.instance.getEvent(),
+                        username: ref.instance.getBookFor(),
+                        isUnbooking: action.action === 'unbook'
+                    });
+                });
+            });
+            this.dialogService.open({
+                title: `${isEditing ? 'Editing' : 'Booking'} ${TimeHelper.getDay(slot.day).label} - ${presentedHour.label}`,
+                component: DetailedSlotComponent,
+                buttons: isEditing ? this.editingActions : this.bookingActions
+            });
         });
-        const ref: ComponentRef<DetailedSlotComponent> = await this.dialogService.onComponentInstance.pipe(take(1)).toPromise();
-        ref.instance.setup(slot, await this.getEvents(), isRadio);
-        const action = await this.dialogService.onAction.pipe(take(1)).toPromise();
-        this.dialogService.close();
-
-        return {
-            proceed: action.action === 'book',
-            event: ref.instance.getEvent(),
-            username: ref.instance.getBookFor(),
-            isUnbooking: action.action === 'unbook'
-        };
     }
 
     async edit (slot: Slot, isRadio: boolean): Promise<unknown> {
@@ -63,7 +67,14 @@ export class TimetableService {
     }
 
     async book (slot: Slot, isRadio: boolean): Promise<unknown> {
-        return this.httpService.post(`/staff/${isRadio ? 'radio' : 'events'}/book`, slot).toPromise()
+        const copy = { ...slot };
+        const offsetInHours = copy.hour + TimeHelper.getHourOffsetRounded();
+        const convertedHour = TimeHelper.getConvertedHour(offsetInHours);
+        const convertedDay = TimeHelper.getConvertedDay(offsetInHours, slot.day);
+        copy.hour = convertedHour;
+        copy.day = convertedDay;
+
+        return this.httpService.post(`/staff/${isRadio ? 'radio' : 'events'}/book`, copy).toPromise()
             .then(() => {
                 this.siteNotificationService.create({
                     title: 'Success',
@@ -78,7 +89,7 @@ export class TimetableService {
         return new Promise(async res => {
             const presentedHour = TimeHelper.getHours().find(hour => hour.number === slot.hour);
             const result = await this.dialogService
-                .confirm(`Do you really wanna unbook this slot on ${TimeHelper.getDay(slot.day)} - ${presentedHour}`);
+                .confirm(`Do you really wanna unbook this slot on ${TimeHelper.getDay(slot.day).label} - ${presentedHour.label}`);
             if (result) {
                 await this.httpService.delete(`/staff/${isRadio ? 'radio' : 'events'}/unbook/${slot.timetableId}`).toPromise()
                     .then(() => {
@@ -90,6 +101,7 @@ export class TimetableService {
                     })
                     .catch(error => this.siteNotificationService.onError(error.error));
             }
+            res();
         });
     }
 
@@ -103,10 +115,7 @@ export class TimetableService {
     }
 
     private async getEvents (): Promise<Array<TimetableEvent>> {
-        if (this.events) {
-            return this.events;
-        }
-        this.events = await this.httpService.get<Array<TimetableEvent>>('/staff/events/list').toPromise();
-        return this.events;
+        return await this.httpService.get<Array<TimetableEvent>>('/staff/events/list').toPromise();
     }
+
 }

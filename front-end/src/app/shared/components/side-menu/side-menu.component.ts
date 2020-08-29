@@ -13,6 +13,7 @@ export class SideMenuComponent {
     @Input()
     set model (menu: ISideMenu) {
         this.menu = menu;
+        this.menu.items = this.menu.items.filter(item => item.isApplicable);
         this.isAnyChildrenApplicable = this.menu.items.some(item => item.isApplicable);
     }
 }

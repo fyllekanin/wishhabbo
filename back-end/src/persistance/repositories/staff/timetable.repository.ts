@@ -11,8 +11,9 @@ export class TimetableRepository extends BaseRepository<TimetableEntity> {
     }
 
     getSlots (type: TimetableType): Promise<Array<TimetableEntity>> {
-        return this.repository.find({
-            where: [ { isArchived: false }, { type: type } ]
-        });
+        const query = this.repository.createQueryBuilder();
+        query.where('isArchived = :isArchived', { isArchived: 0 });
+        query.andWhere('type = :type', { type: type });
+        return query.getMany();
     }
 }

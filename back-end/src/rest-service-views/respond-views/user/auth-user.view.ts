@@ -6,6 +6,7 @@ export interface StaffPermissions {
     canWriteArticles: boolean;
     canApproveArticles: boolean;
     canKickDjOffAir: boolean;
+    canManageEvents: boolean;
 }
 
 export interface AdminPermissions {

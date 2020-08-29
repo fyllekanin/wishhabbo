@@ -11,6 +11,7 @@ import { TimetableSlot } from '../../rest-service-views/timetable.slot';
 import { ValidationValidators } from '../../validation/validation.validators';
 import { Logger } from '../../logging/log.logger';
 import { LogTypes } from '../../logging/log.types';
+import { EventEntity } from '../../persistance/entities/staff/event.entity';
 
 const middlewares = [
     AUTHORIZATION_MIDDLEWARE,
@@ -31,6 +32,53 @@ export class EventsController extends TimetableController {
         res.status(OK).json(await this.getConvertedSlots(req, slots));
     }
 
+    @Post('event')
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_MANAGE_EVENTS ])
+    ])
+    private async createEvent (req: InternalRequest, res: Response): Promise<void> {
+        const entity = EventEntity.of(req);
+        const errors = await ValidationValidators.validateEntity(entity, req.serviceConfig, req);
+        if (errors.length > 0) {
+            res.status(BAD_REQUEST).json(errors);
+            return;
+        }
+
+        await req.serviceConfig.eventsRepository.save(entity);
+        await Logger.createStaffLog(req, {
+            id: LogTypes.CREATED_EVENT,
+            contentId: entity.eventId,
+            userId: req.user.userId,
+            beforeChange: null,
+            afterChange: JSON.stringify(entity)
+        });
+        res.status(OK).json();
+    }
+
+    @Delete('event/:eventId')
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_MANAGE_EVENTS ])
+    ])
+    private async deleteEvent (req: InternalRequest, res: Response): Promise<void> {
+        const entity = await req.serviceConfig.eventsRepository.get(Number(req.params.eventId));
+        if (!entity) {
+            res.status(NOT_FOUND).json();
+            return;
+        }
+
+        await req.serviceConfig.eventsRepository.delete(entity);
+        await Logger.createStaffLog(req, {
+            id: LogTypes.DELETED_EVENT,
+            contentId: entity.eventId,
+            userId: req.user.userId,
+            beforeChange: JSON.stringify(entity),
+            afterChange: null
+        });
+        res.status(OK).json(null);
+    }
+
     @Put(':timetableId')
     @Middleware(middlewares)
     private async updateBooking (req: InternalRequest, res: Response): Promise<void> {
@@ -40,7 +88,7 @@ export class EventsController extends TimetableController {
             return;
         }
 
-        const slot = TimetableSlot.of(req, true, entity.timetableId);
+        const slot = TimetableSlot.of(req, false, entity.timetableId);
         const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req);
         if (errors.length > 0) {
             res.status(BAD_REQUEST).json(errors);
@@ -50,8 +98,6 @@ export class EventsController extends TimetableController {
         const copy = { ...entity };
         const user = slot.getUser() && slot.getUser().getUsername() ?
             await req.serviceConfig.userRepository.getUserWithUsername(slot.getUser().getUsername()) : null;
-        entity.hour = slot.getHour();
-        entity.day = slot.getDay();
         entity.eventId = slot.getEvent().eventId;
         entity.userId = user ? user.userId : entity.userId;
         const updatedEntity = await req.serviceConfig.timetableRepository.save(entity);
@@ -69,7 +115,7 @@ export class EventsController extends TimetableController {
     @Post('book')
     @Middleware(middlewares)
     private async createBooking (req: InternalRequest, res: Response): Promise<void> {
-        const slot = TimetableSlot.of(req, true, null);
+        const slot = TimetableSlot.of(req, false, null);
         const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req);
         if (errors.length > 0) {
             res.status(BAD_REQUEST).json(errors);

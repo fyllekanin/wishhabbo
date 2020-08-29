@@ -1,4 +1,5 @@
 import { IPayload } from '../payload.interface';
+import { InternalRequest } from '../../../utilities/internal.request';
 
 export class RegisterPayload implements IPayload {
     private readonly username: string;
@@ -31,8 +32,8 @@ export class RegisterPayload implements IPayload {
         return this.habbo;
     }
 
-    static of (data: any): RegisterPayload {
-        const { username, password, repassword, habbo } = data;
+    static of (req: InternalRequest): RegisterPayload {
+        const { username, password, repassword, habbo } = req.body;
         return new RegisterPayload(username, password, repassword, habbo);
     }
 }

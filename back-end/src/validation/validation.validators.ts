@@ -9,10 +9,12 @@ import { LoginPayloadValidator } from './payloads/user/login-payload.validator';
 import { ArticlePayloadValidator } from './payloads/staff/article-payload.validator';
 import { InternalRequest, ServiceConfig } from '../utilities/internal.request';
 import { TimetableSlotPayloadValidator } from './payloads/staff/timetable-slot-payload.validator';
+import { EventValidator } from './entities/staff/event.validator';
 
 export class ValidationValidators {
     private static readonly ENTITY_VALIDATORS: Array<EntityValidator<IEntity>> = [
-        new UserValidation()
+        new UserValidation(),
+        new EventValidator()
     ];
 
     private static readonly PAYLOAD_VALIDATORS: Array<PayloadValidator<IPayload>> = [

@@ -131,4 +131,10 @@ export class ErrorCodes {
         name: 'No permission for booking for others',
         description: 'You do not have permission to book for other users'
     };
+
+    static readonly EVENT_ALREADY_EXISTS: ErrorCode = {
+        code: 22,
+        name: 'Event with name already exists',
+        description: 'Event with given name already exists'
+    };
 }

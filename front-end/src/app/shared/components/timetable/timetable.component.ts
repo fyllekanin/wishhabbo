@@ -65,9 +65,15 @@ export class TimetableComponent implements OnDestroy {
         if (!result.proceed) {
             return;
         }
-        slot.event = result.event;
-        slot.user.username = result.username;
-        await this.service.edit(slot, this.isRadio());
+        if (!result.isUnbooking) {
+            slot.event = result.event;
+            slot.user.username = result.username ? result.username : slot.user.username;
+        }
+        if (result.isUnbooking) {
+            await this.service.unbook(slot, this.isRadio());
+        } else {
+            await this.service.edit(slot, this.isRadio());
+        }
         await this.doSetup();
     }
 
@@ -84,7 +90,7 @@ export class TimetableComponent implements OnDestroy {
     private async doSetup (): Promise<void> {
         this.title = this.isRadio() ? 'Radio Timetable' : 'Events Timetable';
 
-        const slots = this.data ? this.data : await this.service.fetchSlots(this.type);
+        const slots = await this.service.fetchSlots(this.type);
         this.data = this.getDataWithCurrentSlots(slots);
         this.actions = [
             { label: 'Mon', value: 1, isActive: this.day === 1 },
@@ -101,11 +107,18 @@ export class TimetableComponent implements OnDestroy {
         const offset = TimeHelper.getTimeOffsetInHours();
         data.current = data.all.map(item => {
             const copy = { ...item };
-            const convertedHour = TimeHelper.getConvertedHour(copy.hour + offset);
-            copy.hour = convertedHour;
-            copy.day = TimeHelper.getConvertedDay(convertedHour, copy.day);
+            copy.hour = TimeHelper.getConvertedHour(item.hour + offset);
+            copy.day = TimeHelper.getConvertedDay(item.hour + offset, item.day);
+            copy.event = copy.event ? copy.event : { eventId: 0, name: 'Unknown', createdAt: 0, updatedAt: 0 };
             return copy;
-        }).filter(item => item.day === this.day);
+        }).filter(item => item.day === this.day).sort((a, b) => {
+            if (a.hour > b.hour) {
+                return 1;
+            } else if (a.hour < b.hour) {
+                return -1;
+            }
+            return 0;
+        });
         return data;
     }
 
