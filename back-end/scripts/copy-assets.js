@@ -35,4 +35,4 @@ const promises = [
     })
 ];
 
-Promise.all(promises).then(() => console.log('Done copying assets'));
+Promise.all(promises).then(() => console.log('Done copying assets.'));
