@@ -20,7 +20,6 @@ class MainServer extends Server {
         this.backgroundTaskHandler = new BackgroundTaskHandler();
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(bodyParser.json());
-        dd;
         this.app.use(express.static(__dirname + '/public'));
         this.app.use(express.static(__dirname + '/resources'));
     }
