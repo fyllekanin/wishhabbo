@@ -7,10 +7,19 @@ import { StringKeyValue } from '../utilities/object.interface';
 
 export class PermissionHelper {
 
-    static getConvertedPermissionsToNumber (permissions: StringKeyValue<number>): number {
+    static getConvertedStaffPermissionsToNumber (permissions: StringKeyValue<boolean>): number {
         return Object.keys(permissions).reduce((value, key) => {
             if (permissions[key]) {
-                return value + permissions[key];
+                return value + Permissions.STAFF[key];
+            }
+            return value;
+        }, 0);
+    }
+
+    static getConvertedAdminPermissionsToNumber (permissions: StringKeyValue<boolean>): number {
+        return Object.keys(permissions).reduce((value, key) => {
+            if (permissions[key]) {
+                return value + Permissions.ADMIN[key];
             }
             return value;
         }, 0);
