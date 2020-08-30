@@ -19,6 +19,11 @@ export class CreateGroupTable1596897397992 implements MigrationInterface {
                     isUnique: true
                 },
                 {
+                    name: 'immunity',
+                    type: 'int',
+                    default: 0
+                },
+                {
                     name: 'displayName',
                     type: 'varchar',
                     isUnique: true

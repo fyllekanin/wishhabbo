@@ -15,6 +15,23 @@ export class GroupRepository {
         this.userGroupRepository = getConnection().getRepository(UserGroupEntity);
     }
 
+    async getUserIdImmunity (userId: number): Promise<number> {
+        if (SUPER_ADMINS.includes(userId)) {
+            return 101;
+        }
+        const groups = await this.getGroupsUserHave(userId);
+        return groups.reduce((prev, curr) => {
+            if (curr.immunity > prev) {
+                return curr.immunity;
+            }
+            return prev;
+        }, 0);
+    }
+
+    async getGroups (): Promise<Array<GroupEntity>> {
+        return await this.groupRepository.find();
+    }
+
     async getGroupById (groupId: number): Promise<GroupEntity> {
         return await this.groupRepository.findOne({ groupId: groupId });
     }

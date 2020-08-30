@@ -1,0 +1,118 @@
+import { Component, OnDestroy } from '@angular/core';
+import { TableActionResponse, TableHeader, TableRow } from '../../../../../../shared/components/table/table.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UnSub } from '../../../../../../shared/decorators/unsub.decorator';
+import { Unsubscribable } from 'rxjs';
+import { IPagination, IPaginationResolver } from '../../../../../../shared/components/pagination/pagination.model';
+import { ArticleClass } from '../../../../../../shared/classes/media/article.class';
+import { DialogService } from '../../../../../../core/common-services/dialog.service';
+
+@Component({
+    selector: 'app-admin-users-group-list',
+    templateUrl: 'group-list.component.html'
+})
+@UnSub()
+export class GroupListComponent implements OnDestroy {
+    private readonly ACTIONS = {
+        EDIT: 'edit',
+        DELETE: 'delete'
+    };
+
+    contentActions = [ { label: 'Create new', value: 'createNew' } ];
+    data: IPagination<ArticleClass>;
+    subscriptions: Array<Unsubscribable> = [];
+
+    rows: Array<TableRow> = [];
+    headers: Array<TableHeader> = [
+        { label: 'Name' },
+        { label: 'Immunity' },
+        { label: 'Members' },
+        { label: 'Last Modified' }
+    ];
+
+    constructor (
+        private route: Router,
+        private dialogService: DialogService,
+        activatedRoute: ActivatedRoute
+    ) {
+        this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
+    }
+
+    onAction (response: TableActionResponse): void {
+        switch (response.action.value) {
+            case this.ACTIONS.EDIT:
+                this.route.navigateByUrl(`/staff/media/articles/${response.row.rowId}`);
+                break;
+            case this.ACTIONS.DELETE:
+                this.onDelete(response.row.rowId as number);
+                break;
+            case this.ACTIONS.APPROVE:
+                this.onApprove(response.row.rowId as number);
+                break;
+            case this.ACTIONS.UNAPPROVE:
+                this.onUnapprove(response.row.rowId as number);
+                break;
+        }
+    }
+
+    onCreateNew (): void {
+        this.route.navigateByUrl(`/staff/media/articles/new`);
+    }
+
+    ngOnDestroy (): void {
+        // Empty
+    }
+
+    private async onApprove (articleId: number): Promise<void> {
+        await this.articleService.approve(articleId);
+        const article = this.data.items.find(item => item.articleId === articleId);
+        article.isApproved = true;
+        this.rows = this.getRows();
+    }
+
+    private async onUnapprove (articleId: number): Promise<void> {
+        await this.articleService.unapprove(articleId);
+        const article = this.data.items.find(item => item.articleId === articleId);
+        article.isApproved = false;
+        this.rows = this.getRows();
+    }
+
+    private async onDelete (articleId: number): Promise<void> {
+        const confirmed = await this.dialogService.confirm('Do you really wanna delete this article?');
+        if (confirmed) {
+            await this.articleService.delete(articleId);
+            this.rows = this.rows.filter(row => row.rowId !== articleId);
+        }
+    }
+
+    private onData ({ pagination }: IPaginationResolver<ArticleClass>): void {
+        this.data = pagination;
+        this.rows = this.getRows();
+    }
+
+    private getRows (): Array<TableRow> {
+        return this.data.items.map(item => ({
+            rowId: item.articleId,
+            actions: [
+                {
+                    label: 'Edit',
+                    value: this.ACTIONS.EDIT
+                },
+                {
+                    label: item.isApproved ? 'Unapprove' : 'Approve',
+                    value: item.isApproved ? this.ACTIONS.UNAPPROVE : this.ACTIONS.APPROVE
+                },
+                {
+                    label: 'Delete',
+                    value: this.ACTIONS.DELETE
+                }
+            ],
+            cells: [
+                { label: item.title },
+                { label: item.getType().name },
+                { label: item.user.username },
+                { label: item.isApproved ? 'Yes' : 'No' }
+            ]
+        }));
+    }
+}

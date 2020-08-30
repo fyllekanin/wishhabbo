@@ -2,21 +2,21 @@ import { ClassHelper, objectOf, primitiveOf } from '../../shared/helpers/class.h
 
 export class StaffPermissions {
     @primitiveOf(Boolean)
-    canBookRadio: boolean;
+    CAN_BOOK_RADIO: boolean;
     @primitiveOf(Boolean)
-    canBookEvents: boolean;
+    CAN_BOOK_EVENTS: boolean;
     @primitiveOf(Boolean)
-    canUnbookOthersRadio: boolean;
+    CAN_UNBOOK_OTHERS_RADIO: boolean;
     @primitiveOf(Boolean)
-    canUnbookOthersEvents: boolean;
+    CAN_UNBOOK_OTHERS_EVENTS: boolean;
     @primitiveOf(Boolean)
-    canWriteArticles: boolean;
+    CAN_WRITE_ARTICLES: boolean;
     @primitiveOf(Boolean)
-    canApproveArticles: boolean;
+    CAN_MANAGE_ARTICLES: boolean;
     @primitiveOf(Boolean)
-    canKickDjOffAir: boolean;
+    CAN_KICK_DJ_OFF_AIR: boolean;
     @primitiveOf(Boolean)
-    canManageEvents: boolean;
+    CAN_MANAGE_EVENT_TYPES: boolean;
 
     constructor (source: Partial<StaffPermissions>) {
         ClassHelper.assign(this, source);
@@ -29,17 +29,17 @@ export class StaffPermissions {
 
 export class AdminPermissions {
     @primitiveOf(Boolean)
-    canManageGroups: boolean;
+    CAN_MANAGE_GROUPS: boolean;
     @primitiveOf(Boolean)
-    canManageUserBasics: boolean;
+    CAN_MANAGE_USER_BASICS: boolean;
     @primitiveOf(Boolean)
-    canManageUserGroups: boolean;
+    CAN_MANAGE_USER_GROUPS: boolean;
     @primitiveOf(Boolean)
-    canManageWebsiteSettings: boolean;
+    CAN_MANAGE_WEBSITE_SETTINGS: boolean;
     @primitiveOf(Boolean)
-    canSeeLogs: boolean;
+    CAN_SEE_LOGS: boolean;
     @primitiveOf(Boolean)
-    canUploadResources: boolean;
+    CAN_UPLOAD_RESOURCES: boolean;
 
     constructor (source: Partial<AdminPermissions>) {
         ClassHelper.assign(this, source);

@@ -8,15 +8,10 @@ import { HasherUtility } from '../../utilities/hasher.utility';
 import { LoginPayload } from '../../rest-service-views/payloads/auth/login.payload';
 import { ValidationError } from '../../validation/validation.error';
 import { ErrorCodes } from '../../validation/error.codes';
-import {
-    AdminPermissions,
-    AuthUserView,
-    StaffPermissions
-} from '../../rest-service-views/respond-views/user/auth-user.view';
+import { AuthUserView } from '../../rest-service-views/respond-views/user/auth-user.view';
 import { InitialView } from '../../rest-service-views/respond-views/user/initial.view';
-import { GroupRepository } from '../../persistance/repositories/group.repository';
-import { Permissions } from '../../constants/permissions.constant';
 import { InternalRequest } from '../../utilities/internal.request';
+import { PermissionHelper } from '../../helpers/permission.helper';
 
 @Controller('api/auth')
 export class AuthenticationController {
@@ -37,8 +32,8 @@ export class AuthenticationController {
                 .withHabbo(user.habbo)
                 .withAccessToken(token.access)
                 .withRefreshToken(token.refresh)
-                .withStaffPermissions(await this.getStaffPermissions(user, req.serviceConfig.groupRepository))
-                .withAdminPermissions(await this.getAdminPermissions(user, req.serviceConfig.groupRepository))
+                .withStaffPermissions(await PermissionHelper.getConvertedStaffPermissionsForUser(user, req.serviceConfig.groupRepository))
+                .withAdminPermissions(await PermissionHelper.getConvertedAdminPermissionsForUser(user, req.serviceConfig.groupRepository))
                 .build());
             res.status(OK).json(builder.build());
         } else {
@@ -75,8 +70,8 @@ export class AuthenticationController {
             .withHabbo(user.habbo)
             .withAccessToken(token.access)
             .withRefreshToken(token.refresh)
-            .withStaffPermissions(await this.getStaffPermissions(user, req.serviceConfig.groupRepository))
-            .withAdminPermissions(await this.getAdminPermissions(user, req.serviceConfig.groupRepository))
+            .withStaffPermissions(await PermissionHelper.getConvertedStaffPermissionsForUser(user, req.serviceConfig.groupRepository))
+            .withAdminPermissions(await PermissionHelper.getConvertedAdminPermissionsForUser(user, req.serviceConfig.groupRepository))
             .build());
     }
 
@@ -146,29 +141,5 @@ export class AuthenticationController {
         });
 
         res.status(status).json(response);
-    }
-
-    private async getStaffPermissions (user: UserEntity, groupRepository: GroupRepository): Promise<StaffPermissions> {
-        return {
-            canBookRadio: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_BOOK_RADIO),
-            canBookEvents: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_BOOK_EVENTS),
-            canUnbookOthersRadio: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO),
-            canUnbookOthersEvents: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_EVENTS),
-            canWriteArticles: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_WRITE_ARTICLES),
-            canApproveArticles: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_MANAGE_ARTICLES),
-            canKickDjOffAir: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_KICK_DJ_OFF_AIR),
-            canManageEvents: await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_MANAGE_EVENTS)
-        };
-    }
-
-    private async getAdminPermissions (user: UserEntity, groupRepository: GroupRepository): Promise<AdminPermissions> {
-        return {
-            canManageGroups: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_GROUPS),
-            canManageUserBasics: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_USER_BASICS),
-            canManageUserGroups: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_USER_GROUPS),
-            canManageWebsiteSettings: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_MANAGE_WEBSITE_SETTINGS),
-            canSeeLogs: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_SEE_LOGS),
-            canUploadResources: await groupRepository.haveAdminPermission(user.userId, Permissions.ADMIN.CAN_UPLOAD_RESOURCES)
-        };
     }
 }

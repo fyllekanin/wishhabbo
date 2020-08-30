@@ -48,8 +48,8 @@ export class TimetableComponent implements OnDestroy {
             return;
         }
 
-        if ((this.authService.getAuthUser().staffPermissions.canUnbookOthersRadio && this.isRadio()) ||
-            this.authService.getAuthUser().staffPermissions.canUnbookOthersEvents && !this.isRadio()) {
+        if ((this.authService.getAuthUser().staffPermissions.CAN_UNBOOK_OTHERS_RADIO && this.isRadio()) ||
+            this.authService.getAuthUser().staffPermissions.CAN_UNBOOK_OTHERS_EVENTS && !this.isRadio()) {
             await this.doEdit(slot);
         } else {
             await this.service.unbook(slot, this.isRadio());

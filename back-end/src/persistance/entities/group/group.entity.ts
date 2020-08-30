@@ -5,9 +5,11 @@ import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 export class GroupEntity extends CreatedUpdatedAtEntity {
     @PrimaryGeneratedColumn()
     groupId: number;
-    @Column()
+    @Column({ unique: true })
     name: string;
-    @Column()
+    @Column({ default: 0 })
+    immunity: number;
+    @Column({ unique: true })
     displayName: string;
     @Column()
     description: string;

@@ -1,6 +1,6 @@
 export class Permissions {
 
-    static readonly STAFF = {
+    static readonly STAFF: { [key: string]: number } = {
         CAN_BOOK_RADIO: 1,
         CAN_BOOK_EVENTS: 2,
         CAN_UNBOOK_OTHERS_RADIO: 4,
@@ -11,7 +11,7 @@ export class Permissions {
         CAN_MANAGE_EVENTS: 128
     };
 
-    static readonly ADMIN = {
+    static readonly ADMIN: { [key: string]: number } = {
         CAN_MANAGE_GROUPS: 1,
         CAN_MANAGE_USER_BASICS: 2,
         CAN_MANAGE_USER_GROUPS: 4,

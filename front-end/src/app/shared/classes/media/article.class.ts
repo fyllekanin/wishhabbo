@@ -32,8 +32,6 @@ export const ARTICLE_DIFFICULTIES = {
 };
 
 export class ArticleClass {
-    private parsedBadges: Array<string> = [];
-
     @primitiveOf(Number)
     articleId: number;
     @objectOf(SlimUser)

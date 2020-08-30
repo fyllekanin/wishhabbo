@@ -32,7 +32,7 @@ export class StaffComponent {
                         label: 'Timetable',
                         url: `/staff/radio/timetable/${day}`,
                         icon: 'fas fa-table',
-                        isApplicable: user.staffPermissions.canBookRadio
+                        isApplicable: user.staffPermissions.CAN_BOOK_RADIO
                     }
                 ]
             },
@@ -43,13 +43,13 @@ export class StaffComponent {
                         label: 'Timetable',
                         url: `/staff/events/timetable/${day}`,
                         icon: 'fas fa-table',
-                        isApplicable: user.staffPermissions.canBookEvents
+                        isApplicable: user.staffPermissions.CAN_BOOK_EVENTS
                     },
                     {
                         label: 'Manage Event Types',
                         url: '/staff/events/manage',
                         icon: 'fas fa-table',
-                        isApplicable: user.staffPermissions.canManageEvents
+                        isApplicable: user.staffPermissions.CAN_MANAGE_EVENT_TYPES
                     }
                 ]
             },
@@ -60,7 +60,7 @@ export class StaffComponent {
                         label: 'Articles',
                         url: '/staff/media/articles/page/1',
                         icon: 'fas fa-hashtag',
-                        isApplicable: user.staffPermissions.canWriteArticles || user.staffPermissions.canApproveArticles
+                        isApplicable: user.staffPermissions.CAN_WRITE_ARTICLES || user.staffPermissions.CAN_MANAGE_ARTICLES
                     }
                 ]
             }

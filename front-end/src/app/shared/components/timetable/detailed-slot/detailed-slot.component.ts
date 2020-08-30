@@ -25,8 +25,8 @@ export class DetailedSlotComponent {
         this.event = this.events.find(event => event.eventId === this.slot.event.eventId);
         this.isRadio = isRadio;
         this.isBookingForEnabled = this.isRadio ?
-            this.authService.getAuthUser().staffPermissions.canUnbookOthersRadio :
-            this.authService.getAuthUser().staffPermissions.canUnbookOthersEvents;
+            this.authService.getAuthUser().staffPermissions.CAN_UNBOOK_OTHERS_RADIO :
+            this.authService.getAuthUser().staffPermissions.CAN_UNBOOK_OTHERS_EVENTS;
     }
 
     getEvent (): TimetableEvent {

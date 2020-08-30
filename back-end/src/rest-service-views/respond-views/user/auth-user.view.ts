@@ -1,21 +1,21 @@
 export interface StaffPermissions {
-    canBookRadio: boolean;
-    canBookEvents: boolean;
-    canUnbookOthersRadio: boolean;
-    canUnbookOthersEvents: boolean;
-    canWriteArticles: boolean;
-    canApproveArticles: boolean;
-    canKickDjOffAir: boolean;
-    canManageEvents: boolean;
+    CAN_BOOK_RADIO: boolean;
+    CAN_BOOK_EVENTS: boolean;
+    CAN_UNBOOK_OTHERS_RADIO: boolean;
+    CAN_UNBOOK_OTHERS_EVENTS: boolean;
+    CAN_WRITE_ARTICLES: boolean;
+    CAN_MANAGE_ARTICLES: boolean;
+    CAN_KICK_DJ_OFF_AIR: boolean;
+    CAN_MANAGE_EVENT_TYPES: boolean;
 }
 
 export interface AdminPermissions {
-    canManageGroups: boolean;
-    canManageUserBasics: boolean;
-    canManageUserGroups: boolean;
-    canManageWebsiteSettings: boolean;
-    canSeeLogs: boolean;
-    canUploadResources: boolean;
+    CAN_MANAGE_GROUPS: boolean;
+    CAN_MANAGE_USER_BASICS: boolean;
+    CAN_MANAGE_USER_GROUPS: boolean;
+    CAN_MANAGE_WEBSITE_SETTINGS: boolean;
+    CAN_SEE_LOGS: boolean;
+    CAN_UPLOAD_RESOURCES: boolean;
 }
 
 export class AuthUserView {
