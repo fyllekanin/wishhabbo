@@ -6,7 +6,7 @@ export class TimetableController {
 
     protected async getConvertedSlots (req: InternalRequest, slots: Array<TimetableEntity>): Promise<Array<TimetableSlot>> {
         const items: Array<TimetableSlot> = [];
-        const currentDay = new Date().getUTCDay();
+        const currentDay = new Date().getUTCDay() + 1;
         const currentHour = new Date().getUTCHours();
 
         for (let d = 1; d < 8; d++) {

@@ -14,6 +14,10 @@ export const appRoutes: Routes = [
         loadChildren: () => import('./pages/staff/staff.module').then(m => m.StaffModule)
     },
     {
+        path: 'admin',
+        loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule)
+    },
+    {
         path: '',
         pathMatch: 'full',
         redirectTo: 'default'

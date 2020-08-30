@@ -12,7 +12,7 @@ export class StaffComponent {
 
     constructor (authService: AuthService) {
         const user = authService.getAuthUser();
-        const day = new Date().getUTCDay();
+        const day = new Date().getDay() + 1;
         this.menus = [
             {
                 title: 'General',

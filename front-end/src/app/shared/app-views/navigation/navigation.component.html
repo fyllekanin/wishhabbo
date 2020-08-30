@@ -26,7 +26,7 @@
                             <a href="#">Profile</a>
                             <span class="dropdown-meny-divider"></span>
 
-                            <a href="#" *ngIf="user.doHaveAdminPermissions">AdminCP</a>
+                            <a routerLink="/admin" *ngIf="user.doHaveAdminPermissions">AdminCP</a>
                             <a routerLink="/staff" *ngIf="user.doHaveStaffPermissions">StaffCP</a>
                             <span
                                 class="dropdown-meny-divider" *ngIf="user.doHaveStaffPermissions || user.doHaveAdminPermissions"></span>

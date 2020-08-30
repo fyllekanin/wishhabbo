@@ -108,22 +108,15 @@ export class ArticlePayloadValidator implements PayloadValidator<ArticlePayload>
 
     private async validateTitle (payload: ArticlePayload, errors: Array<ValidationError>,
                                  articleRepository: ArticleRepository): Promise<void> {
-        const wheres = payload.getArticleId() ?
-            [
-                { key: 'title', operator: '=', value: payload.getTitle() },
-                { key: 'articleId', operator: '!=', value: payload.getArticleId() }
-            ]
-            :
-            [
-                { key: 'title', operator: '=', value: payload.getTitle() }
-            ];
         const items = await articleRepository.paginate({
             take: 1,
             page: 1,
-            where: wheres
+            where: [
+                { key: 'title', operator: '=', value: payload.getTitle() }
+            ]
         });
 
-        if (items.getItems().length > 0) {
+        if (items.getItems().length > 0 && items.getItems()[0].articleId !== payload.getArticleId()) {
             errors.push(ValidationError.newBuilder()
                 .withField('title')
                 .withMessage(ErrorCodes.NON_UNIQUE_ARTICLE_TITLE.description)

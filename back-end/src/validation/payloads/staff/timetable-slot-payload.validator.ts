@@ -85,12 +85,11 @@ export class TimetableSlotPayloadValidator implements PayloadValidator<Timetable
                 { key: 'isArchived', operator: '=', value: 0 },
                 { key: 'day', operator: '=', value: timetableSlot.getDay() },
                 { key: 'hour', operator: '=', value: timetableSlot.getHour() },
-                { key: 'type', operator: '=', value: type },
-                { key: 'timetableId', operator: '!=', value: timetableSlot.getTimetableId() }
+                { key: 'type', operator: '=', value: type }
             ]
         });
 
-        if (items.getItems().length > 0) {
+        if (items.getItems().length > 0 && items.getItems()[0].timetableId !== timetableSlot.getTimetableId()) {
             errors.push(ValidationError.newBuilder()
                 .withField('time')
                 .withCode(ErrorCodes.ALREADY_TAKEN_SLOT.code)

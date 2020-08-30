@@ -1,4 +1,4 @@
-import { getConnection, In, Raw, Repository } from 'typeorm';
+import { DeleteResult, getConnection, In, Raw, Repository } from 'typeorm';
 import { GroupEntity } from '../entities/group/group.entity';
 import { UserGroupEntity } from '../entities/group/user-group.entity';
 
@@ -13,6 +13,34 @@ export class GroupRepository {
     constructor () {
         this.groupRepository = getConnection().getRepository(GroupEntity);
         this.userGroupRepository = getConnection().getRepository(UserGroupEntity);
+    }
+
+    async getGroupById (groupId: number): Promise<GroupEntity> {
+        return await this.groupRepository.findOne({ groupId: groupId });
+    }
+
+    async deleteGroup (groupId: number): Promise<DeleteResult> {
+        return await this.groupRepository.delete({ groupId: groupId });
+    }
+
+    async addGroupToUser (groupId: number, userId: number): Promise<void> {
+        const entity = UserGroupEntity.newBuilder()
+            .withGroupId(groupId)
+            .withUserId(userId)
+            .build();
+
+        await this.userGroupRepository.save(entity);
+    }
+
+    async deleteGroupFromUser (groupId: number, userId: number): Promise<DeleteResult> {
+        return await this.userGroupRepository.delete({
+            userId: userId,
+            groupId: groupId
+        });
+    }
+
+    async saveGroup (entity: GroupEntity): Promise<GroupEntity> {
+        return await this.groupRepository.save(entity);
     }
 
     async haveAdminPermission (userId: number, permission: number): Promise<boolean> {
