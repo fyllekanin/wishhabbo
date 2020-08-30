@@ -1,5 +1,7 @@
 import { PermissionHelper } from '../../src/helpers/permission.helper';
 import { GroupEntity } from '../../src/persistance/entities/group/group.entity';
+import { GroupRepository } from '../../src/persistance/repositories/group.repository';
+import { UserEntity } from '../../src/persistance/entities/user/user.entity';
 
 describe('PermissionHelper', () => {
 
@@ -59,5 +61,33 @@ describe('PermissionHelper', () => {
         expect(result.CAN_MANAGE_USER_BASICS).toBeTrue();
         expect(result.CAN_MANAGE_USER_GROUPS).toBeFalse();
         expect(result.CAN_MANAGE_WEBSITE_SETTINGS).toBeFalse();
+    });
+
+    it('getConvertedStaffPermissionsForUser should return correct permissions', async () => {
+        // Given
+        const user = <UserEntity><unknown>{ userId: 1 };
+        const groupRepository = <GroupRepository><unknown>{
+            haveStaffPermission: (_userId: number, _permission: number) => true
+        };
+
+        // When
+        const result = await PermissionHelper.getConvertedStaffPermissionsForUser(user, groupRepository);
+
+        // Then
+        expect(result.CAN_UNBOOK_OTHERS_RADIO).toBeTrue();
+    });
+
+    it('getConvertedAdminPermissionsForUser should return correct permissions', async () => {
+        // Given
+        const user = <UserEntity><unknown>{ userId: 1 };
+        const groupRepository = <GroupRepository><unknown>{
+            haveAdminPermission: (_userId: number, _permission: number) => true
+        };
+
+        // When
+        const result = await PermissionHelper.getConvertedAdminPermissionsForUser(user, groupRepository);
+
+        // Then
+        expect(result.CAN_MANAGE_GROUPS).toBeTrue();
     });
 });
