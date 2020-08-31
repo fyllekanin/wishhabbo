@@ -24,7 +24,10 @@ export class DialogComponent<C> {
     title: string = null;
     buttons: Array<DialogButton> = [];
 
-    constructor (private dialogService: DialogService, private componentFactoryResolver: ComponentFactoryResolver) {
+    constructor (
+        private dialogService: DialogService,
+        private componentFactoryResolver: ComponentFactoryResolver
+    ) {
         dialogService.onOpen.subscribe(configuration => {
             this.onReset();
 
