@@ -1,5 +1,37 @@
 <app-content [header]="data.groupId ? 'Editing: ' + data.name : 'Creating: ' + data.name " [actions]="actions"
              (onAction)="onAction($event)">
 
-    Hola
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-6">
+            <label for="name" class="display-block">Name</label>
+            <input id="name" type="text" [(ngModel)]="data.name"/>
+        </div>
+        <div class="cell small-6">
+            <label for="displayName" class="display-block">
+                Display name
+                <span tooltip="Name displayed on bar etc, fallback to name if empty"><i class="fas fa-info-circle"></i></span>
+            </label>
+            <input id="displayName" type="text" [(ngModel)]="data.displayName"/>
+        </div>
+        <div class="cell small-6">
+            <label for="immunity" class="display-block">
+                Immunity
+                <span tooltip="Immunity of the group, you can only set lower then your own"><i
+                    class="fas fa-info-circle"></i></span>
+            </label>
+            <input id="immunity" type="number" min="0" max="100" [(ngModel)]="data.displayName"/>
+        </div>
+    </div>
+</app-content>
+
+<app-content header="Userbar">
+
+    Set the userbar color and style etc
+
+</app-content>
+
+<app-content header="Permissions">
+
+    Split into two boxes? admin/staff ?
+
 </app-content>

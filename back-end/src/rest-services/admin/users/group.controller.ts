@@ -23,7 +23,7 @@ export class GroupController {
         const page = Number(req.params.page);
         const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
         const groups = await req.serviceConfig.groupRepository.getGroups();
-        const filteredOnImmunity = groups.filter(group => group.immunity < immunity);
+        const filteredOnImmunity = groups.filter(group => group.immunity < immunity).sort((a, b) => a.name > b.name ? 1 : -1);
 
         const start = PaginationHelper.getSkip(page, GroupController.GROUP_PER_PAGE);
         const end = start + GroupController.GROUP_PER_PAGE;
@@ -32,7 +32,6 @@ export class GroupController {
             .withName(item.name)
             .withImmunity(item.immunity)
             .withDisplayName(item.displayName)
-            .withDescription(item.description)
             .withCreatedAt(item.createdAt)
             .withUpdatedAt(item.updatedAt));
 
@@ -61,7 +60,7 @@ export class GroupController {
             .withName(group.name)
             .withImmunity(group.immunity)
             .withDisplayName(group.displayName)
-            .withDescription(group.description)
+            .withBarStyle(group.barStyle)
             .withStaffPermissions(PermissionHelper.getConvertedStaffPermissionsToUI(group))
             .withAdminPermissions(PermissionHelper.getConvertedAdminPermissionsToUI(group))
             .withCreatedAt(group.createdAt)

@@ -29,7 +29,7 @@ export class AdminComponent {
                 items: [
                     {
                         label: 'Manage Groups',
-                        url: `/admin/groups/page/1`,
+                        url: `/admin/users/groups/page/1`,
                         icon: 'fas fa-table',
                         isApplicable: user.adminPermissions.CAN_MANAGE_GROUPS
                     }

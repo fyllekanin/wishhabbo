@@ -11,8 +11,8 @@ export class GroupEntity extends CreatedUpdatedAtEntity {
     immunity: number;
     @Column({ unique: true })
     displayName: string;
-    @Column()
-    description: string;
+    @Column({ type: 'text', default: '' })
+    barStyle: string;
     @Column()
     staffPermissions: number;
     @Column()
@@ -26,7 +26,7 @@ export class GroupEntity extends CreatedUpdatedAtEntity {
 class GroupEntityBuilder {
     name: string;
     displayName: string;
-    description: string;
+    barStyle: string;
     staffPermissions: number;
     adminPermissions: number;
 
@@ -40,8 +40,8 @@ class GroupEntityBuilder {
         return this;
     }
 
-    withDescription (description: string): GroupEntityBuilder {
-        this.description = description;
+    withBarStyle (barStyle: string): GroupEntityBuilder {
+        this.barStyle = barStyle;
         return this;
     }
 
@@ -59,7 +59,7 @@ class GroupEntityBuilder {
         const entity = new GroupEntity();
         entity.name = this.name;
         entity.displayName = this.displayName;
-        entity.description = this.description;
+        entity.barStyle = this.barStyle;
         entity.staffPermissions = this.staffPermissions;
         entity.adminPermissions = this.adminPermissions;
         return entity;

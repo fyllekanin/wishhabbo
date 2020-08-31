@@ -6,7 +6,7 @@ export class GroupView {
     private readonly name: string;
     private readonly immunity: number;
     private readonly displayName: string;
-    private readonly description: string;
+    private readonly barStyle: string;
     private readonly staffPermissions: StaffPermissions;
     private readonly adminPermissions: AdminPermissions;
     private readonly createdAt: number;
@@ -17,7 +17,7 @@ export class GroupView {
         this.name = builder.name;
         this.immunity = builder.immunity;
         this.displayName = builder.displayName;
-        this.description = builder.description;
+        this.barStyle = builder.barStyle;
         this.staffPermissions = { ...builder.staffPermissions };
         this.adminPermissions = { ...builder.adminPermissions };
         this.createdAt = builder.createdAt;
@@ -40,8 +40,8 @@ export class GroupView {
         return this.displayName;
     }
 
-    getDescription (): string {
-        return this.description;
+    getBarStyle (): string {
+        return this.barStyle;
     }
 
     getStaffPermissions (): StaffPermissions {
@@ -66,7 +66,7 @@ export class GroupView {
             .withName(req.body.name)
             .withImmunity(req.body.immunity)
             .withDisplayName(req.body.displayName)
-            .withDescription(req.body.description)
+            .withBarStyle(req.body.barStyle)
             .withStaffPermissions(req.body.staffPermissions)
             .withAdminPermissions(req.body.adminPermissions)
             .build();
@@ -82,7 +82,7 @@ class GroupViewBuilder {
     name: string;
     immunity: number;
     displayName: string;
-    description: string;
+    barStyle: string;
     staffPermissions: StaffPermissions;
     adminPermissions: AdminPermissions;
     createdAt: number;
@@ -108,8 +108,8 @@ class GroupViewBuilder {
         return this;
     }
 
-    withDescription (description: string): GroupViewBuilder {
-        this.description = description;
+    withBarStyle (barStyle: string): GroupViewBuilder {
+        this.barStyle = barStyle;
         return this;
     }
 

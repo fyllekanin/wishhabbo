@@ -17,7 +17,7 @@ export class GroupListService implements Resolve<IPagination<GroupClass>> {
     }
 
     getPage (page: number): Observable<IPagination<GroupClass>> {
-        return this.httpService.get(`/admin/groups/page/${page}`)
+        return this.httpService.get(`/admin/users/groups/page/${page}`)
             .pipe(map((data: IPagination<GroupClass>) => {
                 data.items = data.items.map(item => new GroupClass(item));
                 return data;

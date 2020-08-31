@@ -11,7 +11,7 @@ export class GroupClass {
     @primitiveOf(String)
     displayName: string;
     @primitiveOf(String)
-    description: string;
+    barStyle: string;
     @objectOf(StaffPermissions)
     staffPermissions = new StaffPermissions(null);
     @objectOf(AdminPermissions)
