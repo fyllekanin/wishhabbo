@@ -5,7 +5,7 @@ export interface TableHeader {
 }
 
 export interface TableCell {
-    label: string;
+    label: string | number;
 }
 
 export interface TableRow {

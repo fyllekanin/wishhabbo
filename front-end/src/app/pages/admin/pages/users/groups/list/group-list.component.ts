@@ -4,8 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UnSub } from '../../../../../../shared/decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
 import { IPagination, IPaginationResolver } from '../../../../../../shared/components/pagination/pagination.model';
-import { ArticleClass } from '../../../../../../shared/classes/media/article.class';
 import { DialogService } from '../../../../../../core/common-services/dialog.service';
+import { GroupClass } from '../../../../../../shared/classes/admin/group.class';
+import { TimeHelper } from '../../../../../../shared/helpers/time.helper';
+import { GroupService } from '../group/group.service';
 
 @Component({
     selector: 'app-admin-users-group-list',
@@ -19,18 +21,18 @@ export class GroupListComponent implements OnDestroy {
     };
 
     contentActions = [ { label: 'Create new', value: 'createNew' } ];
-    data: IPagination<ArticleClass>;
+    data: IPagination<GroupClass>;
     subscriptions: Array<Unsubscribable> = [];
 
     rows: Array<TableRow> = [];
     headers: Array<TableHeader> = [
         { label: 'Name' },
         { label: 'Immunity' },
-        { label: 'Members' },
         { label: 'Last Modified' }
     ];
 
     constructor (
+        private groupService: GroupService,
         private route: Router,
         private dialogService: DialogService,
         activatedRoute: ActivatedRoute
@@ -41,66 +43,42 @@ export class GroupListComponent implements OnDestroy {
     onAction (response: TableActionResponse): void {
         switch (response.action.value) {
             case this.ACTIONS.EDIT:
-                this.route.navigateByUrl(`/staff/media/articles/${response.row.rowId}`);
+                this.route.navigateByUrl(`/admin/users/groups/${response.row.rowId}`);
                 break;
             case this.ACTIONS.DELETE:
                 this.onDelete(response.row.rowId as number);
-                break;
-            case this.ACTIONS.APPROVE:
-                this.onApprove(response.row.rowId as number);
-                break;
-            case this.ACTIONS.UNAPPROVE:
-                this.onUnapprove(response.row.rowId as number);
                 break;
         }
     }
 
     onCreateNew (): void {
-        this.route.navigateByUrl(`/staff/media/articles/new`);
+        this.route.navigateByUrl(`/admin/users/groups/new`);
     }
 
     ngOnDestroy (): void {
         // Empty
     }
 
-    private async onApprove (articleId: number): Promise<void> {
-        await this.articleService.approve(articleId);
-        const article = this.data.items.find(item => item.articleId === articleId);
-        article.isApproved = true;
-        this.rows = this.getRows();
-    }
-
-    private async onUnapprove (articleId: number): Promise<void> {
-        await this.articleService.unapprove(articleId);
-        const article = this.data.items.find(item => item.articleId === articleId);
-        article.isApproved = false;
-        this.rows = this.getRows();
-    }
-
-    private async onDelete (articleId: number): Promise<void> {
-        const confirmed = await this.dialogService.confirm('Do you really wanna delete this article?');
+    private async onDelete (groupId: number): Promise<void> {
+        const confirmed = await this.dialogService.confirm('Do you really wanna delete this group?');
         if (confirmed) {
-            await this.articleService.delete(articleId);
-            this.rows = this.rows.filter(row => row.rowId !== articleId);
+            await this.groupService.delete(groupId);
+            this.rows = this.rows.filter(row => row.rowId !== groupId);
         }
     }
 
-    private onData ({ pagination }: IPaginationResolver<ArticleClass>): void {
+    private onData ({ pagination }: IPaginationResolver<GroupClass>): void {
         this.data = pagination;
         this.rows = this.getRows();
     }
 
     private getRows (): Array<TableRow> {
         return this.data.items.map(item => ({
-            rowId: item.articleId,
+            rowId: item.groupId,
             actions: [
                 {
                     label: 'Edit',
                     value: this.ACTIONS.EDIT
-                },
-                {
-                    label: item.isApproved ? 'Unapprove' : 'Approve',
-                    value: item.isApproved ? this.ACTIONS.UNAPPROVE : this.ACTIONS.APPROVE
                 },
                 {
                     label: 'Delete',
@@ -108,10 +86,9 @@ export class GroupListComponent implements OnDestroy {
                 }
             ],
             cells: [
-                { label: item.title },
-                { label: item.getType().name },
-                { label: item.user.username },
-                { label: item.isApproved ? 'Yes' : 'No' }
+                { label: item.name },
+                { label: item.immunity },
+                { label: TimeHelper.getLongDateWithTime(item.createdAt) }
             ]
         }));
     }

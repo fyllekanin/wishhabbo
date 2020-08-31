@@ -16,7 +16,7 @@ import { Logger } from '../../../logging/log.logger';
 import { LogTypes } from '../../../logging/log.types';
 import ExpressFormidable from 'express-formidable';
 
-@Controller('api/staff/article')
+@Controller('api/staff/articles')
 export class ArticleController {
 
     @Get('page/:page')
@@ -62,11 +62,6 @@ export class ArticleController {
         Permissions.STAFF.CAN_MANAGE_ARTICLES
     ]) ])
     private async getArticle (req: InternalRequest, res: Response): Promise<void> {
-        if (req.params.articleId === 'new') {
-            res.status(OK).json();
-            return;
-        }
-
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         if (!article) {
             res.status(NOT_FOUND).json();

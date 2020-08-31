@@ -25,7 +25,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         BACK: 'back'
     };
     actions: Array<UserAction> = [];
-    data: ArticleClass;
+    data = new ArticleClass(null);
     subscriptions: Array<Unsubscribable> = [];
 
     types: Array<{ label: string, value: number, isBadgeMandatory: boolean }> = [];

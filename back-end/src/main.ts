@@ -11,7 +11,7 @@ import { RadioController } from './rest-services/staff/radio.controller';
 import { EventsController } from './rest-services/staff/events.controller';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import { GroupController } from './rest-services/admin/group.controller';
+import { GroupController } from './rest-services/admin/users/group.controller';
 
 class MainServer extends Server {
     private backgroundTaskHandler: BackgroundTaskHandler;

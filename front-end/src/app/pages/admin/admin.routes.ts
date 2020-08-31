@@ -10,6 +10,10 @@ export const adminRoutes: Routes = [
             {
                 path: '',
                 component: DashboardComponent
+            },
+            {
+                path: 'users',
+                loadChildren: () => import('./pages/users/users.module').then(m => m.UsersModule)
             }
         ]
     }

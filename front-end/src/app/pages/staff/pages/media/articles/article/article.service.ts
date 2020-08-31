@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { ArticleClass } from '../../../../../../shared/classes/media/article.class';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpService } from '../../../../../../core/http/http.service';
 import { map } from 'rxjs/operators';
 import { SiteNotificationService } from '../../../../../../core/common-services/site-notification.service';
@@ -17,12 +17,15 @@ export class ArticleService implements Resolve<ArticleClass> {
     }
 
     resolve (route: ActivatedRouteSnapshot): Observable<ArticleClass> {
-        return this.httpService.get(`/staff/article/${route.params.articleId}`)
+        if (route.params.articleId === 'new') {
+            return of(new ArticleClass(null));
+        }
+        return this.httpService.get(`/staff/articles/${route.params.articleId}`)
             .pipe(map((data: ArticleClass) => new ArticleClass(data)));
     }
 
     approve (articleId: number): Promise<void> {
-        return this.httpService.put(`/staff/article/${articleId}/approve`, null).toPromise()
+        return this.httpService.put(`/staff/articles/${articleId}/approve`, null).toPromise()
             .then(() => {
                 this.siteNotificationService.create({
                     title: 'Success',
@@ -41,7 +44,7 @@ export class ArticleService implements Resolve<ArticleClass> {
     }
 
     unapprove (articleId: number): Promise<void> {
-        return this.httpService.put(`/staff/article/${articleId}/unapprove`, null).toPromise()
+        return this.httpService.put(`/staff/articles/${articleId}/unapprove`, null).toPromise()
             .then(() => {
                 this.siteNotificationService.create({
                     title: 'Success',
@@ -60,7 +63,7 @@ export class ArticleService implements Resolve<ArticleClass> {
     }
 
     delete (articleId: number): Promise<void> {
-        return this.httpService.delete(`/staff/article/${articleId}`).toPromise()
+        return this.httpService.delete(`/staff/articles/${articleId}`).toPromise()
             .then(() => {
                 this.siteNotificationService.create({
                     title: 'Success',
@@ -83,7 +86,7 @@ export class ArticleService implements Resolve<ArticleClass> {
         data.append('article', JSON.stringify(article));
         data.append('thumbnail', fileElement.files[0]);
         if (article.articleId) {
-            return this.httpService.post(`/staff/article/${article.articleId}`, data).toPromise()
+            return this.httpService.post(`/staff/articles/${article.articleId}`, data).toPromise()
                 .then(articleId => {
                     this.siteNotificationService.create({
                         title: 'Updated',
@@ -96,7 +99,7 @@ export class ArticleService implements Resolve<ArticleClass> {
                     this.siteNotificationService.onError(error.error);
                 });
         } else {
-            return this.httpService.post('/staff/article', data).toPromise()
+            return this.httpService.post('/staff/articles', data).toPromise()
                 .then(articleId => {
                     this.siteNotificationService.create({
                         title: 'Created',
