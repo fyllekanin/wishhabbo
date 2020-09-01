@@ -19,15 +19,18 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
         return payload instanceof GroupView;
     }
 
-    private async validateUniqueName (groupView: GroupView, groupRepository: GroupRepository, errors: Array<ValidationError>): Promise<void> {
+    private async validateUniqueName (groupView: GroupView, groupRepository: GroupRepository,
+                                      errors: Array<ValidationError>): Promise<void> {
 
     }
 
-    private async validateUniqueDisplayName (groupView: GroupView, groupRepository: GroupRepository, errors: Array<ValidationError>): Promise<void> {
+    private async validateUniqueDisplayName (groupView: GroupView, groupRepository: GroupRepository,
+                                             errors: Array<ValidationError>): Promise<void> {
 
     }
 
-    private async validateImmunity (groupView: GroupView, groupRepository: GroupRepository, errors: Array<ValidationError>): Promise<void> {
+    private async validateImmunity (groupView: GroupView, groupRepository: GroupRepository,
+                                    errors: Array<ValidationError>): Promise<void> {
 
     }
 
@@ -35,11 +38,13 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
 
     }
 
-    private async validateAdminPermissions (groupView: GroupView, groupRepository: GroupRepository, errors: Array<ValidationError>): Promise<void> {
+    private async validateAdminPermissions (groupView: GroupView, groupRepository: GroupRepository,
+                                            errors: Array<ValidationError>): Promise<void> {
 
     }
 
-    private async validateStaffPermissions (groupView: GroupView, groupRepository: GroupRepository, errors: Array<ValidationError>): Promise<void> {
+    private async validateStaffPermissions (groupView: GroupView, groupRepository: GroupRepository,
+                                            errors: Array<ValidationError>): Promise<void> {
 
     }
 }
