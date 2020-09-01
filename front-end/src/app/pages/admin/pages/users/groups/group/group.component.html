@@ -26,12 +26,207 @@
 
 <app-content header="Userbar">
 
-    Set the userbar color and style etc
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-6">
+            <label for="nameColor" class="display-block">Bar style</label>
+            <input id="nameColor" type="text" [(ngModel)]="data.nameColor"/>
+
+            <label>Preview:</label>
+            <span [style.color]="data.nameColor">{{data.displayName ? data.displayName : data.name}}</span>
+        </div>
+        <div class="cell small-6">
+            <label for="barStyle" class="display-block">Bar style</label>
+            <textarea id="barStyle" [(ngModel)]="data.barStyle"></textarea>
+
+            <label>Preview:</label>
+            <div class="userbar-base" [style]="data.barStyle">{{data.displayName ? data.displayName : data.name}}</div>
+        </div>
+    </div>
 
 </app-content>
 
-<app-content header="Permissions">
+<app-content header="Staff Permissions">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can book radio
+                        <span tooltip="Gives access to the radio timetable etc"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can book Events
+                        <span tooltip="Gives access to the events timetable"><i class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can unbook others on radio
+                        <span tooltip="Can edit radio timetable slots (unbook, change dj etc)"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can unbook others on events
+                        <span tooltip="Can edit events timetable slots (unbook, change host, event etc)"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can write articles
+                        <span tooltip="Gives access to write articles"><i class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can manage articles
+                        <span tooltip="Gives access to edit, delete and approve articles"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can kick DJs off air
+                        <span tooltip="Can kick the current DJ off air"><i class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can manage event types
+                        <span tooltip="Can create, edit or delete event types"><i class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+</app-content>
 
-    Split into two boxes? admin/staff ?
-
+<app-content header="Admin Permissions">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can manage user groups
+                        <span tooltip="Can create, edit etc groups based on their immunity"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can manage basic user
+                        <span tooltip="Can edit name, habbo etc on the user"><i class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can manage a users groups
+                        <span tooltip="Can add or remove groups to a user"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can manage the website settings
+                        <span tooltip="Can manage the items in website settings"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can see logs
+                        <span tooltip="Can see user, staff and admin logs"><i class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can upload resources
+                        <span tooltip="Gives access to upload resources to the site"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
 </app-content>

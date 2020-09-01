@@ -7,6 +7,7 @@ export class GroupView {
     private readonly immunity: number;
     private readonly displayName: string;
     private readonly barStyle: string;
+    private readonly nameColor: string;
     private readonly staffPermissions: StaffPermissions;
     private readonly adminPermissions: AdminPermissions;
     private readonly createdAt: number;
@@ -18,6 +19,7 @@ export class GroupView {
         this.immunity = builder.immunity;
         this.displayName = builder.displayName;
         this.barStyle = builder.barStyle;
+        this.nameColor = builder.nameColor;
         this.staffPermissions = { ...builder.staffPermissions };
         this.adminPermissions = { ...builder.adminPermissions };
         this.createdAt = builder.createdAt;
@@ -44,6 +46,10 @@ export class GroupView {
         return this.barStyle;
     }
 
+    getNameColor (): string {
+        return this.nameColor;
+    }
+
     getStaffPermissions (): StaffPermissions {
         return { ...this.staffPermissions };
     }
@@ -67,6 +73,7 @@ export class GroupView {
             .withImmunity(req.body.immunity)
             .withDisplayName(req.body.displayName)
             .withBarStyle(req.body.barStyle)
+            .withNameColor(req.body.nameColor)
             .withStaffPermissions(req.body.staffPermissions)
             .withAdminPermissions(req.body.adminPermissions)
             .build();
@@ -83,6 +90,7 @@ class GroupViewBuilder {
     immunity: number;
     displayName: string;
     barStyle: string;
+    nameColor: string;
     staffPermissions: StaffPermissions;
     adminPermissions: AdminPermissions;
     createdAt: number;
@@ -110,6 +118,11 @@ class GroupViewBuilder {
 
     withBarStyle (barStyle: string): GroupViewBuilder {
         this.barStyle = barStyle;
+        return this;
+    }
+
+    withNameColor (nameColor: string): GroupViewBuilder {
+        this.nameColor = nameColor;
         return this;
     }
 

@@ -31,8 +31,12 @@ export class CreateGroupTable1596897397992 implements MigrationInterface {
                 {
                     name: 'barStyle',
                     type: 'text',
-                    isUnique: false,
-                    default: ''
+                    isUnique: false
+                },
+                {
+                    name: 'nameColor',
+                    type: 'varchar',
+                    isNullable: true
                 },
                 {
                     name: 'staffPermissions',

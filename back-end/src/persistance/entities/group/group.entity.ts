@@ -11,11 +11,13 @@ export class GroupEntity extends CreatedUpdatedAtEntity {
     immunity: number;
     @Column({ unique: true })
     displayName: string;
-    @Column({ type: 'text', default: '' })
+    @Column({ type: 'text' })
     barStyle: string;
-    @Column()
+    @Column({ nullable: true })
+    nameColor: string;
+    @Column({ default: 0 })
     staffPermissions: number;
-    @Column()
+    @Column({ default: 0 })
     adminPermissions: number;
 
     static newBuilder (): GroupEntityBuilder {

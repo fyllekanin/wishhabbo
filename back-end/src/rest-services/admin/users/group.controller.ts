@@ -61,6 +61,7 @@ export class GroupController {
             .withImmunity(group.immunity)
             .withDisplayName(group.displayName)
             .withBarStyle(group.barStyle)
+            .withNameColor(group.nameColor)
             .withStaffPermissions(PermissionHelper.getConvertedStaffPermissionsToUI(group))
             .withAdminPermissions(PermissionHelper.getConvertedAdminPermissionsToUI(group))
             .withCreatedAt(group.createdAt)
