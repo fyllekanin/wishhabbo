@@ -1,8 +1,20 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../../created-updated-at.entity';
 
+interface IArticleEntity {
+    articleId: number;
+    userId: number;
+    title: string;
+    content: string;
+    badges: string;
+    room: string;
+    difficulty: number;
+    type: number;
+    isApproved: boolean;
+}
+
 @Entity('articles')
-export class ArticleEntity extends CreatedUpdatedAtEntity {
+export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEntity {
     @PrimaryGeneratedColumn()
     articleId: number;
     @Column()
@@ -22,6 +34,19 @@ export class ArticleEntity extends CreatedUpdatedAtEntity {
     @Column()
     isApproved: boolean;
 
+    constructor (builder: IArticleEntity) {
+        super();
+        this.articleId = builder.articleId;
+        this.userId = builder.userId;
+        this.title = builder.title;
+        this.content = builder.content;
+        this.badges = builder.badges;
+        this.room = builder.room;
+        this.difficulty = builder.difficulty;
+        this.type = builder.type;
+        this.isApproved = builder.isApproved;
+    }
+
     newBuilderFromCurrent (): Builder {
         return new Builder(this);
     }
@@ -32,76 +57,68 @@ export class ArticleEntity extends CreatedUpdatedAtEntity {
 }
 
 class Builder {
-    articleId: number;
-    userId: number;
-    title: string;
-    content: string;
-    badges: string;
-    room: string;
-    difficulty: number;
-    type: number;
-    isApproved: boolean;
+    private myData: IArticleEntity = {
+        articleId: null,
+        userId: null,
+        title: null,
+        content: null,
+        badges: null,
+        room: null,
+        difficulty: null,
+        type: null,
+        isApproved: null
+    };
 
     constructor (entity?: ArticleEntity) {
         Object.assign(this, entity);
     }
 
     withArticleId (articleId: number): Builder {
-        this.articleId = articleId;
+        this.myData.articleId = articleId;
         return this;
     }
 
     withUserId (userId: number): Builder {
-        this.userId = userId;
+        this.myData.userId = userId;
         return this;
     }
 
     withTitle (title: string): Builder {
-        this.title = title;
+        this.myData.title = title;
         return this;
     }
 
     withContent (content: string): Builder {
-        this.content = content;
+        this.myData.content = content;
         return this;
     }
 
     withBadges (badges: Array<string>): Builder {
-        this.badges = JSON.stringify(badges);
+        this.myData.badges = JSON.stringify(badges);
         return this;
     }
 
     withRoom (room: string): Builder {
-        this.room = room;
+        this.myData.room = room;
         return this;
     }
 
     withDifficulty (difficulty: number): Builder {
-        this.difficulty = difficulty;
+        this.myData.difficulty = difficulty;
         return this;
     }
 
     withType (type: number): Builder {
-        this.type = type;
+        this.myData.type = type;
         return this;
     }
 
     withIsApproved (isApproved: boolean): Builder {
-        this.isApproved = isApproved;
+        this.myData.isApproved = isApproved;
         return this;
     }
 
     build (): ArticleEntity {
-        const entity = new ArticleEntity();
-        entity.articleId = this.articleId;
-        entity.userId = this.userId;
-        entity.title = this.title;
-        entity.content = this.content;
-        entity.badges = this.badges;
-        entity.room = this.room;
-        entity.difficulty = this.difficulty;
-        entity.type = this.type;
-        entity.isApproved = this.isApproved;
-        return entity;
+        return new ArticleEntity(this.myData);
     }
 }

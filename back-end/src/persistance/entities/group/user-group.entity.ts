@@ -1,8 +1,14 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
+interface IUserGroupEntity {
+    userGroupId: number;
+    userId: number;
+    groupId: number;
+}
+
 @Entity('user_group')
-export class UserGroupEntity extends CreatedUpdatedAtEntity {
+export class UserGroupEntity extends CreatedUpdatedAtEntity implements IUserGroupEntity {
     @PrimaryGeneratedColumn()
     userGroupId: number;
     @Column()
@@ -10,29 +16,49 @@ export class UserGroupEntity extends CreatedUpdatedAtEntity {
     @Column()
     groupId: number;
 
-    static newBuilder (): UserGroupEntityBuilder {
-        return new UserGroupEntityBuilder();
+    constructor (builder: IUserGroupEntity) {
+        super();
+        this.userGroupId = builder.userGroupId;
+        this.userId = builder.userId;
+        this.groupId = builder.groupId;
+    }
+
+    newBuilderFromCurrent (): Builder {
+        return new Builder(this);
+    }
+
+    static newBuilder (): Builder {
+        return new Builder();
     }
 }
 
-class UserGroupEntityBuilder {
-    userId: number;
-    groupId: number;
+class Builder {
+    private myData: IUserGroupEntity = {
+        userGroupId: null,
+        userId: null,
+        groupId: null
+    };
 
-    withUserId (userId: number): UserGroupEntityBuilder {
-        this.userId = userId;
+    constructor (entity?: UserGroupEntity) {
+        Object.assign(this.myData, entity);
+    }
+
+    withUserGroupId (userGroupId: number): Builder {
+        this.myData.userGroupId = userGroupId;
         return this;
     }
 
-    withGroupId (groupId: number): UserGroupEntityBuilder {
-        this.groupId = groupId;
+    withUserId (userId: number): Builder {
+        this.myData.userId = userId;
+        return this;
+    }
+
+    withGroupId (groupId: number): Builder {
+        this.myData.groupId = groupId;
         return this;
     }
 
     build (): UserGroupEntity {
-        const entity = new UserGroupEntity();
-        entity.userId = this.userId;
-        entity.groupId = this.groupId;
-        return entity;
+        return new UserGroupEntity(this.myData);
     }
 }

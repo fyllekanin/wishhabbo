@@ -2,42 +2,61 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 import { InternalRequest } from '../../../utilities/internal.request';
 
+interface IEventEntity {
+    eventId: number;
+    name: string;
+}
+
 @Entity('events')
-export class EventEntity extends CreatedUpdatedAtEntity {
+export class EventEntity extends CreatedUpdatedAtEntity implements IEventEntity {
     @PrimaryGeneratedColumn()
     eventId: number;
     @Column()
     name: string;
 
-    static newBuilder (): EventEntityBuilder {
-        return new EventEntityBuilder();
+    constructor (builder: IEventEntity) {
+        super();
+        this.eventId = builder.eventId;
+        this.name = builder.name;
+    }
+
+
+    newBuilderFromCurrent (): Builder {
+        return new Builder(this);
+    }
+
+    static newBuilder (): Builder {
+        return new Builder();
     }
 
     static of (req: InternalRequest): EventEntity {
-        const entity = new EventEntity();
-        entity.name = req.body.name;
-        return entity;
+        return EventEntity.newBuilder()
+            .withName(req.body.name)
+            .build();
     }
 }
 
-class EventEntityBuilder {
-    eventId: number;
-    name: string;
+class Builder {
+    private myData: IEventEntity = {
+        eventId: null,
+        name: null
+    };
 
-    withEventId (eventId: number): EventEntityBuilder {
-        this.eventId = eventId;
+    constructor (entity?: EventEntity) {
+        Object.assign(this.myData, entity);
+    }
+
+    withEventId (eventId: number): Builder {
+        this.myData.eventId = eventId;
         return this;
     }
 
-    withName (name: string): EventEntityBuilder {
-        this.name = name;
+    withName (name: string): Builder {
+        this.myData.name = name;
         return this;
     }
 
     build (): EventEntity {
-        const entity = new EventEntity();
-        entity.eventId = this.eventId;
-        entity.name = this.name;
-        return entity;
+        return new EventEntity(this.myData);
     }
 }

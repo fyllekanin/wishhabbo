@@ -1,8 +1,19 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
+interface IGroupEntity {
+    groupId: number;
+    name: string;
+    immunity: number;
+    displayName: string;
+    barStyle: string;
+    nameColor: string;
+    staffPermissions: number;
+    adminPermissions: number;
+}
+
 @Entity('groups')
-export class GroupEntity extends CreatedUpdatedAtEntity {
+export class GroupEntity extends CreatedUpdatedAtEntity implements IGroupEntity {
     @PrimaryGeneratedColumn()
     groupId: number;
     @Column({ unique: true })
@@ -20,6 +31,18 @@ export class GroupEntity extends CreatedUpdatedAtEntity {
     @Column({ default: 0 })
     adminPermissions: number;
 
+    constructor (builder: IGroupEntity) {
+        super();
+        this.groupId = builder.groupId;
+        this.name = builder.name;
+        this.immunity = builder.immunity;
+        this.displayName = builder.displayName;
+        this.barStyle = builder.barStyle;
+        this.nameColor = builder.nameColor;
+        this.staffPermissions = builder.staffPermissions;
+        this.adminPermissions = builder.adminPermissions;
+    }
+
     newBuilderFromCurrent (): Builder {
         return new Builder(this);
     }
@@ -30,69 +53,62 @@ export class GroupEntity extends CreatedUpdatedAtEntity {
 }
 
 class Builder {
-    groupId: number;
-    name: string;
-    immunity: number;
-    displayName: string;
-    barStyle: string;
-    nameColor: string;
-    staffPermissions: number;
-    adminPermissions: number;
+    private myData: IGroupEntity = {
+        groupId: null,
+        name: null,
+        immunity: null,
+        displayName: null,
+        barStyle: null,
+        nameColor: null,
+        staffPermissions: null,
+        adminPermissions: null
+    };
 
     constructor (entity?: GroupEntity) {
-        Object.assign(this, entity);
+        Object.assign(this.myData, entity);
     }
 
     withGroupId (groupId: number): Builder {
-        this.groupId = groupId;
+        this.myData.groupId = groupId;
         return this;
     }
 
     withName (name: string): Builder {
-        this.name = name;
+        this.myData.name = name;
         return this;
     }
 
     withImmunity (immunity: number): Builder {
-        this.immunity = immunity;
+        this.myData.immunity = immunity;
         return this;
     }
 
     withDisplayName (displayName: string): Builder {
-        this.displayName = displayName;
+        this.myData.displayName = displayName;
         return this;
     }
 
     withBarStyle (barStyle: string): Builder {
-        this.barStyle = barStyle;
+        this.myData.barStyle = barStyle;
         return this;
     }
 
     withNameColor (nameColor: string): Builder {
-        this.nameColor = nameColor;
+        this.myData.nameColor = nameColor;
         return this;
     }
 
     withStaffPermissions (staffPermissions: number): Builder {
-        this.staffPermissions = staffPermissions;
+        this.myData.staffPermissions = staffPermissions;
         return this;
     }
 
     withAdminPermissions (adminPermissions: number): Builder {
-        this.adminPermissions = adminPermissions;
+        this.myData.adminPermissions = adminPermissions;
         return this;
     }
 
     build (): GroupEntity {
-        const entity = new GroupEntity();
-        entity.groupId = this.groupId;
-        entity.name = this.name;
-        entity.immunity = this.immunity;
-        entity.displayName = this.displayName;
-        entity.barStyle = this.barStyle;
-        entity.nameColor = this.nameColor;
-        entity.staffPermissions = this.staffPermissions;
-        entity.adminPermissions = this.adminPermissions;
-        return entity;
+        return new GroupEntity(this.myData);
     }
 }

@@ -6,8 +6,18 @@ export enum TimetableType {
     EVENTS = 1
 }
 
+interface ITimetableEntity {
+    timetableId: number;
+    type: number;
+    eventId: number;
+    userId: number;
+    day: number;
+    hour: number;
+    isArchived: boolean;
+}
+
 @Entity('timetable')
-export class TimetableEntity extends CreatedUpdatedAtEntity {
+export class TimetableEntity extends CreatedUpdatedAtEntity implements ITimetableEntity {
     @PrimaryGeneratedColumn()
     timetableId: number;
     @Column()
@@ -22,65 +32,79 @@ export class TimetableEntity extends CreatedUpdatedAtEntity {
     hour: number;
     @Column()
     isArchived: boolean;
+    
+    constructor (builder: ITimetableEntity) {
+        super();
+        this.timetableId = builder.timetableId;
+        this.type = builder.type;
+        this.eventId = builder.eventId;
+        this.userId = builder.userId;
+        this.day = builder.day;
+        this.hour = builder.hour;
+        this.isArchived = builder.isArchived;
+    }
 
-    static newBuilder (): TimetableEntityBuilder {
-        return new TimetableEntityBuilder();
+    newBuilderFromCurrent (): Builder {
+        return new Builder(this);
+    }
+
+    static newBuilder (): Builder {
+        return new Builder();
     }
 }
 
-class TimetableEntityBuilder {
-    timetableId: number;
-    type: number;
-    eventId: number;
-    userId: number;
-    day: number;
-    hour: number;
-    isArchived: boolean;
+class Builder {
+    private myData: ITimetableEntity = {
+        timetableId: null,
+        type: null,
+        eventId: null,
+        userId: null,
+        day: null,
+        hour: null,
+        isArchived: null
+    };
 
-    withTimetableId (timetableId: number): TimetableEntityBuilder {
-        this.timetableId = timetableId;
+    constructor (entity?: TimetableEntity) {
+        Object.assign(this.myData, entity);
+    }
+
+
+    withTimetableId (timetableId: number): Builder {
+        this.myData.timetableId = timetableId;
         return this;
     }
 
-    withType (type: number): TimetableEntityBuilder {
-        this.type = type;
+    withType (type: number): Builder {
+        this.myData.type = type;
         return this;
     }
 
-    withEventId (eventId: number): TimetableEntityBuilder {
-        this.eventId = eventId;
+    withEventId (eventId: number): Builder {
+        this.myData.eventId = eventId;
         return this;
     }
 
-    withUserId (userId: number): TimetableEntityBuilder {
-        this.userId = userId;
+    withUserId (userId: number): Builder {
+        this.myData.userId = userId;
         return this;
     }
 
-    withDay (day: number): TimetableEntityBuilder {
-        this.day = day;
+    withDay (day: number): Builder {
+        this.myData.day = day;
         return this;
     }
 
-    withHour (hour: number): TimetableEntityBuilder {
-        this.hour = hour;
+    withHour (hour: number): Builder {
+        this.myData.hour = hour;
         return this;
     }
 
-    withIsArchived (isArchived: boolean): TimetableEntityBuilder {
-        this.isArchived = isArchived;
+    withIsArchived (isArchived: boolean): Builder {
+        this.myData.isArchived = isArchived;
         return this;
     }
 
     build (): TimetableEntity {
-        const entity = new TimetableEntity();
-        entity.timetableId = this.timetableId;
-        entity.type = this.type;
-        entity.eventId = this.eventId;
-        entity.userId = this.userId;
-        entity.day = this.day;
-        entity.hour = this.hour;
-        entity.isArchived = this.isArchived;
-        return entity;
+        return new TimetableEntity(this.myData);
     }
 }

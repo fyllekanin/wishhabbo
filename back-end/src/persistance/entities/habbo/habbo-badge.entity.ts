@@ -1,8 +1,14 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
+interface IHabboBadgeEntity {
+    habboBadgeId: number;
+    badgeId: string;
+    description: string;
+}
+
 @Entity('habbo_badges')
-export class HabboBadgeEntity extends CreatedUpdatedAtEntity {
+export class HabboBadgeEntity extends CreatedUpdatedAtEntity implements IHabboBadgeEntity {
     @PrimaryGeneratedColumn()
     habboBadgeId: number;
     @Column()
@@ -10,29 +16,49 @@ export class HabboBadgeEntity extends CreatedUpdatedAtEntity {
     @Column()
     description: string;
 
-    static newBuilder (): HabboBadgeEntityBuilder {
-        return new HabboBadgeEntityBuilder();
+    constructor (builder: IHabboBadgeEntity) {
+        super();
+        this.habboBadgeId = builder.habboBadgeId;
+        this.badgeId = builder.badgeId;
+        this.description = builder.description;
+    }
+
+    newBuilderFromCurrent (): Builder {
+        return new Builder(this);
+    }
+
+    static newBuilder (): Builder {
+        return new Builder();
     }
 }
 
-class HabboBadgeEntityBuilder {
-    badgeId: string;
-    description: string;
+class Builder {
+    private myData: IHabboBadgeEntity = {
+        habboBadgeId: null,
+        badgeId: null,
+        description: null
+    };
 
-    withBadgeId (badgeId: string): HabboBadgeEntityBuilder {
-        this.badgeId = badgeId;
+    constructor (entity?: HabboBadgeEntity) {
+        Object.assign(this.myData, entity);
+    }
+
+    withHabboBadgeId (habboBadgeId: null): Builder {
+        this.myData.habboBadgeId = habboBadgeId;
         return this;
     }
 
-    withDescription (description: string): HabboBadgeEntityBuilder {
-        this.description = description;
+    withBadgeId (badgeId: string): Builder {
+        this.myData.badgeId = badgeId;
+        return this;
+    }
+
+    withDescription (description: string): Builder {
+        this.myData.description = description;
         return this;
     }
 
     build (): HabboBadgeEntity {
-        const entity = new HabboBadgeEntity();
-        entity.badgeId = this.badgeId;
-        entity.description = this.description;
-        return entity;
+        return new HabboBadgeEntity(this.myData);
     }
 }

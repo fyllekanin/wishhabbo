@@ -1,8 +1,16 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
+interface IUserEntity {
+    userId: number;
+    username: string;
+    password: string;
+    displayGroupId: number;
+    habbo: string;
+}
+
 @Entity('users')
-export class UserEntity extends CreatedUpdatedAtEntity {
+export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
     @PrimaryGeneratedColumn()
     userId: number;
     @Column()
@@ -14,6 +22,15 @@ export class UserEntity extends CreatedUpdatedAtEntity {
     @Column()
     habbo: string;
 
+    constructor (builder: IUserEntity) {
+        super();
+        this.userId = builder.userId;
+        this.username = builder.username;
+        this.password = builder.password;
+        this.displayGroupId = builder.displayGroupId;
+        this.habbo = builder.habbo;
+    }
+
     newBuilderFromCurrent (): Builder {
         return new Builder(this);
     }
@@ -24,48 +41,44 @@ export class UserEntity extends CreatedUpdatedAtEntity {
 }
 
 class Builder {
-    userId: number;
-    username: string;
-    password: string;
-    habbo: string;
-    displayGroupId: number;
+    private myData: IUserEntity = {
+        userId: null,
+        username: null,
+        password: null,
+        habbo: null,
+        displayGroupId: null
+    };
 
     constructor (entity?: UserEntity) {
         Object.assign(this, entity);
     }
 
     withUserId (userId: number): Builder {
-        this.userId = userId;
+        this.myData.userId = userId;
         return this;
     }
 
     withUsername (username: string): Builder {
-        this.username = username;
+        this.myData.username = username;
         return this;
     }
 
     withPassword (password: string): Builder {
-        this.password = password;
+        this.myData.password = password;
         return this;
     }
 
     withHabbo (habbo: string): Builder {
-        this.habbo = habbo;
+        this.myData.habbo = habbo;
         return this;
     }
 
     withDisplayGroupId (groupId: number): Builder {
-        this.displayGroupId = groupId;
+        this.myData.displayGroupId = groupId;
         return this;
     }
 
     build (): UserEntity {
-        const entity = new UserEntity();
-        entity.userId = this.userId;
-        entity.username = this.username;
-        entity.password = this.password;
-        entity.habbo = this.habbo;
-        entity.displayGroupId = this.displayGroupId;
-        return entity;
+        return new UserEntity(this.myData);
     }
 }

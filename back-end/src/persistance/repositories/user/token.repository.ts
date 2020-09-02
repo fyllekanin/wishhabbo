@@ -70,10 +70,11 @@ export class TokenRepository {
     }
 
     async getToken (user: UserEntity): Promise<TokenEntity> {
-        const entity = new TokenEntity();
-        entity.userId = user.userId;
-        entity.access = await this.getAvailableAccessToken();
-        entity.refresh = await this.getAvailableRefreshToken();
+        const entity = TokenEntity.newBuilder()
+            .withUserId(user.userId)
+            .withAccess(await this.getAvailableAccessToken())
+            .withRefresh(await this.getAvailableRefreshToken())
+            .build();
 
         await this.repository.save(entity);
         return entity;
