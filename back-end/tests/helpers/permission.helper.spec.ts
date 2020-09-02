@@ -2,12 +2,13 @@ import { PermissionHelper } from '../../src/helpers/permission.helper';
 import { GroupEntity } from '../../src/persistance/entities/group/group.entity';
 import { GroupRepository } from '../../src/persistance/repositories/group.repository';
 import { UserEntity } from '../../src/persistance/entities/user/user.entity';
+import { AdminPermissions, StaffPermissions } from '../../src/rest-service-views/respond-views/user/auth-user.view';
 
 describe('PermissionHelper', () => {
 
     it('getConvertedStaffPermissionsToNumber should return correctly converted value', () => {
         // Given
-        const obj = {
+        const obj = <StaffPermissions><unknown>{
             CAN_BOOK_RADIO: true,
             CAN_BOOK_EVENTS: false
         };
@@ -21,7 +22,7 @@ describe('PermissionHelper', () => {
 
     it('getConvertedAdminPermissionsToNumber should return correctly converted value', () => {
         // Given
-        const obj = {
+        const obj = <AdminPermissions><unknown>{
             CAN_MANAGE_USER_GROUPS: true,
             CAN_SEE_LOGS: false
         };
