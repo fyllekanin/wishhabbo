@@ -158,20 +158,21 @@ export class ArticleController {
             return;
         }
 
-        const articleCopy = { ...article };
-        article.title = payload.getTitle();
-        article.content = payload.getContent();
-        article.badges = JSON.stringify(payload.getBadges());
-        article.room = payload.getRoom();
-        article.difficulty = payload.getDifficulty();
+        const updatedArticle = article.newBuilderFromCurrent()
+            .withTitle(payload.getTitle())
+            .withContent(payload.getContent())
+            .withBadges(payload.getBadges())
+            .withRoom(payload.getRoom())
+            .withDifficulty(payload.getDifficulty())
+            .build();
 
-        const entityErrors = await ValidationValidators.validateEntity(article, req.serviceConfig, req);
+        const entityErrors = await ValidationValidators.validateEntity(updatedArticle, req.serviceConfig, req);
         if (entityErrors.length > 0) {
             res.status(BAD_REQUEST).json(entityErrors);
             return;
         }
 
-        const updatedEntity = await req.serviceConfig.articleRepository.save(article);
+        const updatedEntity = await req.serviceConfig.articleRepository.save(updatedArticle);
         if (!updatedEntity) {
             res.status(BAD_REQUEST).json();
             return;
@@ -189,8 +190,8 @@ export class ArticleController {
             id: LogTypes.UPDATED_ARTICLE,
             contentId: updatedEntity.articleId,
             userId: req.user.userId,
-            beforeChange: JSON.stringify(articleCopy),
-            afterChange: JSON.stringify(updatedEntity)
+            beforeChange: JSON.stringify(article),
+            afterChange: JSON.stringify(updatedArticle)
         });
 
         res.status(OK).json();
@@ -238,11 +239,13 @@ export class ArticleController {
             return;
         }
 
-        article.isApproved = true;
-        await req.serviceConfig.articleRepository.save(article);
+        const updatedArticle = article.newBuilderFromCurrent()
+            .withIsApproved(true)
+            .build();
+        await req.serviceConfig.articleRepository.save(updatedArticle);
         await Logger.createStaffLog(req, {
             id: LogTypes.APPROVED_ARTICLE,
-            contentId: article.articleId,
+            contentId: updatedArticle.articleId,
             userId: req.user.userId,
             beforeChange: null,
             afterChange: null
@@ -264,11 +267,13 @@ export class ArticleController {
             return;
         }
 
-        article.isApproved = false;
-        await req.serviceConfig.articleRepository.save(article);
+        const updatedArticle = article.newBuilderFromCurrent()
+            .withIsApproved(false)
+            .build();
+        await req.serviceConfig.articleRepository.save(updatedArticle);
         await Logger.createStaffLog(req, {
             id: LogTypes.UNAPPROVED_ARTICLE,
-            contentId: article.articleId,
+            contentId: updatedArticle.articleId,
             userId: req.user.userId,
             beforeChange: null,
             afterChange: null

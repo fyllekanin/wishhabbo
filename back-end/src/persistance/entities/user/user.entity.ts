@@ -14,39 +14,54 @@ export class UserEntity extends CreatedUpdatedAtEntity {
     @Column()
     habbo: string;
 
-    static newBuilder (): UserEntityBuilder {
-        return new UserEntityBuilder();
+    newBuilderFromCurrent (): Builder {
+        return new Builder(this);
+    }
+
+    static newBuilder (): Builder {
+        return new Builder();
     }
 }
 
-class UserEntityBuilder {
+class Builder {
+    userId: number;
     username: string;
     password: string;
     habbo: string;
     displayGroupId: number;
 
-    withUsername (username: string): UserEntityBuilder {
+    constructor (entity?: UserEntity) {
+        Object.assign(this, entity);
+    }
+
+    withUserId (userId: number): Builder {
+        this.userId = userId;
+        return this;
+    }
+
+    withUsername (username: string): Builder {
         this.username = username;
         return this;
     }
 
-    withPassword (password: string): UserEntityBuilder {
+    withPassword (password: string): Builder {
         this.password = password;
         return this;
     }
 
-    withHabbo (habbo: string): UserEntityBuilder {
+    withHabbo (habbo: string): Builder {
         this.habbo = habbo;
         return this;
     }
 
-    withDisplayGroupId (groupId: number): UserEntityBuilder {
+    withDisplayGroupId (groupId: number): Builder {
         this.displayGroupId = groupId;
         return this;
     }
 
     build (): UserEntity {
         const entity = new UserEntity();
+        entity.userId = this.userId;
         entity.username = this.username;
         entity.password = this.password;
         entity.habbo = this.habbo;

@@ -1,6 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../../created-updated-at.entity';
-import { SlimUserView } from '../../../../rest-service-views/respond-views/user/slim-user.view';
 
 @Entity('articles')
 export class ArticleEntity extends CreatedUpdatedAtEntity {
@@ -23,22 +22,17 @@ export class ArticleEntity extends CreatedUpdatedAtEntity {
     @Column()
     isApproved: boolean;
 
-    user: SlimUserView;
-
-    getParsedBadges (): Array<string> {
-        try {
-            return JSON.parse(this.badges);
-        } catch (e) {
-            return [];
-        }
+    newBuilderFromCurrent (): Builder {
+        return new Builder(this);
     }
 
-    static newBuilder (): ArticleEntityBuilder {
-        return new ArticleEntityBuilder();
+    static newBuilder (): Builder {
+        return new Builder();
     }
 }
 
-class ArticleEntityBuilder {
+class Builder {
+    articleId: number;
     userId: number;
     title: string;
     content: string;
@@ -48,48 +42,58 @@ class ArticleEntityBuilder {
     type: number;
     isApproved: boolean;
 
-    withUserId (userId: number): ArticleEntityBuilder {
+    constructor (entity?: ArticleEntity) {
+        Object.assign(this, entity);
+    }
+
+    withArticleId (articleId: number): Builder {
+        this.articleId = articleId;
+        return this;
+    }
+
+    withUserId (userId: number): Builder {
         this.userId = userId;
         return this;
     }
 
-    withTitle (title: string): ArticleEntityBuilder {
+    withTitle (title: string): Builder {
         this.title = title;
         return this;
     }
 
-    withContent (content: string): ArticleEntityBuilder {
+    withContent (content: string): Builder {
         this.content = content;
         return this;
     }
 
-    withBadges (badges: Array<string>): ArticleEntityBuilder {
+    withBadges (badges: Array<string>): Builder {
         this.badges = JSON.stringify(badges);
         return this;
     }
 
-    withRoom (room: string): ArticleEntityBuilder {
+    withRoom (room: string): Builder {
         this.room = room;
         return this;
     }
 
-    withDifficulty (difficulty: number): ArticleEntityBuilder {
+    withDifficulty (difficulty: number): Builder {
         this.difficulty = difficulty;
         return this;
     }
 
-    withType (type: number): ArticleEntityBuilder {
+    withType (type: number): Builder {
         this.type = type;
         return this;
     }
 
-    withIsApproved (isApproved: boolean): ArticleEntityBuilder {
+    withIsApproved (isApproved: boolean): Builder {
         this.isApproved = isApproved;
         return this;
     }
 
     build (): ArticleEntity {
         const entity = new ArticleEntity();
+        entity.articleId = this.articleId;
         entity.userId = this.userId;
         entity.title = this.title;
         entity.content = this.content;

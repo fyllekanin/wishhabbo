@@ -132,18 +132,19 @@ export class GroupController {
             return;
         }
 
-        const groupCopy = { ...group };
-        group.name = payload.getName();
-        group.immunity = payload.getImmunity();
-        group.displayName = payload.getDisplayName();
-        group.barStyle = payload.getBarStyle();
-        group.nameColor = payload.getNameColor();
-        group.staffPermissions = PermissionHelper.getConvertedStaffPermissionsToNumber(payload.getStaffPermissions());
-        group.adminPermissions = PermissionHelper.getConvertedAdminPermissionsToNumber(payload.getAdminPermissions());
+        const updatedGroup = group.newBuilderFromCurrent()
+            .withName(payload.getName())
+            .withImmunity(payload.getImmunity())
+            .withDisplayName(payload.getDisplayName())
+            .withBarStyle(payload.getBarStyle())
+            .withNameColor(payload.getNameColor())
+            .withStaffPermissions(PermissionHelper.getConvertedStaffPermissionsToNumber(payload.getStaffPermissions()))
+            .withAdminPermissions(PermissionHelper.getConvertedAdminPermissionsToNumber(payload.getAdminPermissions()))
+            .build();
 
-        await req.serviceConfig.groupRepository.saveGroup(group);
+        await req.serviceConfig.groupRepository.saveGroup(updatedGroup);
 
-        const updatedEntity = await req.serviceConfig.groupRepository.saveGroup(group).catch(reason => {
+        const updatedEntity = await req.serviceConfig.groupRepository.saveGroup(updatedGroup).catch(reason => {
             throw reason;
         });
 
@@ -151,8 +152,8 @@ export class GroupController {
             id: LogTypes.UPDATED_GROUP,
             contentId: updatedEntity.groupId,
             userId: req.user.userId,
-            beforeChange: JSON.stringify(groupCopy),
-            afterChange: JSON.stringify(updatedEntity)
+            beforeChange: JSON.stringify(group),
+            afterChange: JSON.stringify(updatedGroup)
         });
 
         res.status(OK).json();

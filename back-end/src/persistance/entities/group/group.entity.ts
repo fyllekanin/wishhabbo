@@ -20,12 +20,16 @@ export class GroupEntity extends CreatedUpdatedAtEntity {
     @Column({ default: 0 })
     adminPermissions: number;
 
-    static newBuilder (): GroupEntityBuilder {
-        return new GroupEntityBuilder();
+    newBuilderFromCurrent (): Builder {
+        return new Builder(this);
+    }
+
+    static newBuilder (): Builder {
+        return new Builder();
     }
 }
 
-class GroupEntityBuilder {
+class Builder {
     groupId: number;
     name: string;
     immunity: number;
@@ -35,48 +39,53 @@ class GroupEntityBuilder {
     staffPermissions: number;
     adminPermissions: number;
 
-    withGroupId (groupId: number): GroupEntityBuilder {
+    constructor (entity?: GroupEntity) {
+        Object.assign(this, entity);
+    }
+
+    withGroupId (groupId: number): Builder {
         this.groupId = groupId;
         return this;
     }
 
-    withName (name: string): GroupEntityBuilder {
+    withName (name: string): Builder {
         this.name = name;
         return this;
     }
 
-    withImmunity (immunity: number): GroupEntityBuilder {
+    withImmunity (immunity: number): Builder {
         this.immunity = immunity;
         return this;
     }
 
-    withDisplayName (displayName: string): GroupEntityBuilder {
+    withDisplayName (displayName: string): Builder {
         this.displayName = displayName;
         return this;
     }
 
-    withBarStyle (barStyle: string): GroupEntityBuilder {
+    withBarStyle (barStyle: string): Builder {
         this.barStyle = barStyle;
         return this;
     }
 
-    withNameColor (nameColor: string): GroupEntityBuilder {
+    withNameColor (nameColor: string): Builder {
         this.nameColor = nameColor;
         return this;
     }
 
-    withStaffPermissions (staffPermissions: number): GroupEntityBuilder {
+    withStaffPermissions (staffPermissions: number): Builder {
         this.staffPermissions = staffPermissions;
         return this;
     }
 
-    withAdminPermissions (adminPermissions: number): GroupEntityBuilder {
+    withAdminPermissions (adminPermissions: number): Builder {
         this.adminPermissions = adminPermissions;
         return this;
     }
 
     build (): GroupEntity {
         const entity = new GroupEntity();
+        entity.groupId = this.groupId;
         entity.name = this.name;
         entity.immunity = this.immunity;
         entity.displayName = this.displayName;
