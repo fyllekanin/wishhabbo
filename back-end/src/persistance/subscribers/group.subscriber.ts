@@ -6,7 +6,7 @@ import { UserRepository } from '../repositories/user/user.repository';
 @EventSubscriber()
 export class GroupSubscriber implements EntitySubscriberInterface {
 
-    listenTo (): Function {
+    listenTo (): any {
         return GroupEntity;
     }
 

@@ -7,6 +7,7 @@ export interface StaffPermissions {
     CAN_MANAGE_ARTICLES: boolean;
     CAN_KICK_DJ_OFF_AIR: boolean;
     CAN_MANAGE_EVENT_TYPES: boolean;
+    CAN_UPLOAD_RESOURCES: boolean;
 }
 
 export interface AdminPermissions {
@@ -15,7 +16,6 @@ export interface AdminPermissions {
     CAN_MANAGE_USER_GROUPS: boolean;
     CAN_MANAGE_WEBSITE_SETTINGS: boolean;
     CAN_SEE_LOGS: boolean;
-    CAN_UPLOAD_RESOURCES: boolean;
 }
 
 export class AuthUserView {

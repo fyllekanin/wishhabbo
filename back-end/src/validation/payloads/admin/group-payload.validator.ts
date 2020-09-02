@@ -71,7 +71,7 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
     }
 
     private validateNameColor (groupView: GroupView, errors: Array<ValidationError>): void {
-        if (!groupView.getNameColor().match(GroupPayloadValidator.VALID_HEX)) {
+        if (groupView.getNameColor() && !groupView.getNameColor().match(GroupPayloadValidator.VALID_HEX)) {
             errors.push(ValidationError.newBuilder()
                 .withField('immunity')
                 .withMessage(ErrorCodes.INVALID_HEX_COLOR.description)

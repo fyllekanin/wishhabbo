@@ -17,6 +17,8 @@ export class StaffPermissions {
     CAN_KICK_DJ_OFF_AIR: boolean;
     @primitiveOf(Boolean)
     CAN_MANAGE_EVENT_TYPES: boolean;
+    @primitiveOf(Boolean)
+    CAN_UPLOAD_RESOURCES: boolean;
 
     constructor (source: Partial<StaffPermissions>) {
         ClassHelper.assign(this, source);
@@ -38,8 +40,6 @@ export class AdminPermissions {
     CAN_MANAGE_WEBSITE_SETTINGS: boolean;
     @primitiveOf(Boolean)
     CAN_SEE_LOGS: boolean;
-    @primitiveOf(Boolean)
-    CAN_UPLOAD_RESOURCES: boolean;
 
     constructor (source: Partial<AdminPermissions>) {
         ClassHelper.assign(this, source);

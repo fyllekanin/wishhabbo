@@ -93,7 +93,7 @@ export class ArticleService implements Resolve<ArticleClass> {
                         message: 'Article updated',
                         type: SiteNotificationType.INFO
                     });
-                    return articleId;
+                    return article.articleId;
                 })
                 .catch(error => {
                     this.siteNotificationService.onError(error.error);

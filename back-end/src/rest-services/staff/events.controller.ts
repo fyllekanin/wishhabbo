@@ -35,7 +35,7 @@ export class EventsController extends TimetableController {
     @Post('event')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_MANAGE_EVENTS ])
+        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_MANAGE_EVENT_TYPES ])
     ])
     private async createEvent (req: InternalRequest, res: Response): Promise<void> {
         const entity = EventEntity.of(req);
@@ -59,7 +59,7 @@ export class EventsController extends TimetableController {
     @Delete('event/:eventId')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_MANAGE_EVENTS ])
+        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_MANAGE_EVENT_TYPES ])
     ])
     private async deleteEvent (req: InternalRequest, res: Response): Promise<void> {
         const entity = await req.serviceConfig.eventsRepository.get(Number(req.params.eventId));

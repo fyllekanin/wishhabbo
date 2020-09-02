@@ -6,6 +6,8 @@ import { UserAction } from '../../../../../../shared/constants/common.interfaces
 import { DialogService } from '../../../../../../core/common-services/dialog.service';
 import { GroupService } from './group.service';
 import { GroupClass } from '../../../../../../shared/classes/admin/group.class';
+import { AuthService } from '../../../../../../core/auth/auth.service';
+import { AuthUser } from '../../../../../../core/auth/auth-user.model';
 
 @Component({
     selector: 'app-admin-users-groups-group',
@@ -27,6 +29,7 @@ export class GroupComponent implements OnDestroy {
         private service: GroupService,
         private router: Router,
         private dialogService: DialogService,
+        private authService: AuthService,
         activatedRoute: ActivatedRoute
     ) {
         this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
@@ -48,6 +51,10 @@ export class GroupComponent implements OnDestroy {
                 await this.onDelete();
                 break;
         }
+    }
+
+    get authUser (): AuthUser {
+        return this.authService.getAuthUser();
     }
 
     private async onSave (): Promise<void> {

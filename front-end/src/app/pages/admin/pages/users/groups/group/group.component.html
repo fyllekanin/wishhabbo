@@ -19,7 +19,7 @@
                 <span tooltip="Immunity of the group, you can only set lower then your own"><i
                     class="fas fa-info-circle"></i></span>
             </label>
-            <input id="immunity" type="number" min="0" max="100" [(ngModel)]="data.displayName"/>
+            <input id="immunity" type="number" min="0" max="100" [(ngModel)]="data.immunity"/>
         </div>
     </div>
 </app-content>
@@ -50,7 +50,9 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input [disabled]="!authUser.staffPermissions.CAN_BOOK_RADIO" type="checkbox"
+                           [checked]="data.staffPermissions.CAN_BOOK_RADIO"
+                           (change)="data.staffPermissions.CAN_BOOK_RADIO = !data.staffPermissions.CAN_BOOK_RADIO">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can book radio
@@ -63,7 +65,9 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.staffPermissions.CAN_BOOK_EVENTS"
+                           [checked]="data.staffPermissions.CAN_BOOK_EVENTS"
+                           (change)="data.staffPermissions.CAN_BOOK_EVENTS = !data.staffPermissions.CAN_BOOK_EVENTS">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can book Events
@@ -75,7 +79,9 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.staffPermissions.CAN_UNBOOK_OTHERS_RADIO"
+                           [checked]="data.staffPermissions.CAN_UNBOOK_OTHERS_RADIO"
+                           (change)="data.staffPermissions.CAN_UNBOOK_OTHERS_RADIO = !data.staffPermissions.CAN_UNBOOK_OTHERS_RADIO">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can unbook others on radio
@@ -88,7 +94,9 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.staffPermissions.CAN_UNBOOK_OTHERS_EVENTS"
+                           [checked]="data.staffPermissions.CAN_UNBOOK_OTHERS_EVENTS"
+                           (change)="data.staffPermissions.CAN_UNBOOK_OTHERS_EVENTS = !data.staffPermissions.CAN_UNBOOK_OTHERS_EVENTS">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can unbook others on events
@@ -101,7 +109,9 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.staffPermissions.CAN_WRITE_ARTICLES"
+                           [checked]="data.staffPermissions.CAN_WRITE_ARTICLES"
+                           (change)="data.staffPermissions.CAN_WRITE_ARTICLES = !data.staffPermissions.CAN_WRITE_ARTICLES">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can write articles
@@ -113,7 +123,9 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.staffPermissions.CAN_MANAGE_ARTICLES"
+                           [checked]="data.staffPermissions.CAN_MANAGE_ARTICLES"
+                           (change)="data.staffPermissions.CAN_MANAGE_ARTICLES = !data.staffPermissions.CAN_MANAGE_ARTICLES">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can manage articles
@@ -126,7 +138,9 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.staffPermissions.CAN_KICK_DJ_OFF_AIR"
+                           [checked]="data.staffPermissions.CAN_KICK_DJ_OFF_AIR"
+                           (change)="data.staffPermissions.CAN_KICK_DJ_OFF_AIR = !data.staffPermissions.CAN_KICK_DJ_OFF_AIR">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can kick DJs off air
@@ -138,11 +152,28 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.staffPermissions.CAN_MANAGE_EVENT_TYPES"
+                           [checked]="data.staffPermissions.CAN_MANAGE_EVENT_TYPES"
+                           (change)="data.staffPermissions.CAN_MANAGE_EVENT_TYPES = !data.staffPermissions.CAN_MANAGE_EVENT_TYPES">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can manage event types
                         <span tooltip="Can create, edit or delete event types"><i class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" [disabled]="!authUser.staffPermissions.CAN_UPLOAD_RESOURCES"
+                           [checked]="data.staffPermissions.CAN_UPLOAD_RESOURCES"
+                           (change)="data.staffPermissions.CAN_UPLOAD_RESOURCES = !data.staffPermissions.CAN_UPLOAD_RESOURCES">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can upload resources
+                        <span tooltip="Gives access to upload resources to the site"><i
+                            class="fas fa-info-circle"></i></span>
                     </span>
                 </label>
             </div>
@@ -155,7 +186,9 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.adminPermissions.CAN_MANAGE_GROUPS"
+                           [checked]="data.adminPermissions.CAN_MANAGE_GROUPS"
+                           (change)="data.adminPermissions.CAN_MANAGE_GROUPS = !data.adminPermissions.CAN_MANAGE_GROUPS">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can manage user groups
@@ -168,7 +201,9 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.adminPermissions.CAN_MANAGE_USER_BASICS"
+                           [checked]="data.adminPermissions.CAN_MANAGE_USER_BASICS"
+                           (change)="data.adminPermissions.CAN_MANAGE_USER_BASICS = !data.adminPermissions.CAN_MANAGE_USER_BASICS">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can manage basic user
@@ -180,7 +215,9 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.adminPermissions.CAN_MANAGE_USER_GROUPS"
+                           [checked]="data.adminPermissions.CAN_MANAGE_USER_GROUPS"
+                           (change)="data.adminPermissions.CAN_MANAGE_USER_GROUPS = !data.adminPermissions.CAN_MANAGE_USER_GROUPS">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can manage a users groups
@@ -193,7 +230,9 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.adminPermissions.CAN_MANAGE_WEBSITE_SETTINGS"
+                           [checked]="data.adminPermissions.CAN_MANAGE_WEBSITE_SETTINGS"
+                           (change)="data.adminPermissions.CAN_MANAGE_WEBSITE_SETTINGS = !data.adminPermissions.CAN_MANAGE_WEBSITE_SETTINGS">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can manage the website settings
@@ -206,24 +245,13 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox">
+                    <input type="checkbox" [disabled]="!authUser.adminPermissions.CAN_SEE_LOGS"
+                           [checked]="data.adminPermissions.CAN_SEE_LOGS"
+                           (change)="data.adminPermissions.CAN_SEE_LOGS = !data.adminPermissions.CAN_SEE_LOGS">
                     <span class="checkbox-custom"></span>
                     <span class="label">
                         Can see logs
                         <span tooltip="Can see user, staff and admin logs"><i class="fas fa-info-circle"></i></span>
-                    </span>
-                </label>
-            </div>
-        </div>
-        <div class="cell small-6">
-            <div class="checkbox-container">
-                <label class="checkbox-label">
-                    <input type="checkbox">
-                    <span class="checkbox-custom"></span>
-                    <span class="label">
-                        Can upload resources
-                        <span tooltip="Gives access to upload resources to the site"><i
-                            class="fas fa-info-circle"></i></span>
                     </span>
                 </label>
             </div>

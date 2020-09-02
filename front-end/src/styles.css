@@ -375,6 +375,11 @@ i:focus ~ .action-list {
     opacity: 1;
 }
 
+.checkbox-label input:disabled ~ .checkbox-custom {
+    background-color: #d8d8d8;
+    border: 2px solid #ababab;
+}
+
 .checkbox-label input {
     position: absolute;
     opacity: 0;
@@ -396,18 +401,6 @@ i:focus ~ .action-list {
     -o-transition: all 0.3s ease-out;
     border: 2px solid #e6e6e6;
 }
-
-
-.checkbox-label input:checked ~ .checkbox-custom {
-    background-color: #f7f7f7;
-    border: 2px solid #e6e6e6;
-    border-radius: 5px;
-    -webkit-transform: rotate(0deg) scale(1);
-    -ms-transform: rotate(0deg) scale(1);
-    transform: rotate(0deg) scale(1);
-    opacity: 1;
-}
-
 
 .checkbox-label .checkbox-custom::after {
     position: absolute;
