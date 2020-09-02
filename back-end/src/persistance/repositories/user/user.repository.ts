@@ -11,6 +11,14 @@ export class UserRepository extends BaseRepository<UserEntity> {
         this.repository = getConnection().getRepository(UserEntity);
     }
 
+    async removeDisplayGroupId (groupId: number): Promise<void> {
+        await this.repository.update({
+            displayGroupId: groupId
+        }, {
+            displayGroupId: 0
+        });
+    }
+
     async getSlimUserById (userId: number): Promise<SlimUserView> {
         const user = await this.getUserById(userId);
         if (!user) {

@@ -176,6 +176,8 @@ export class GroupController {
             return;
         }
 
+        await req.serviceConfig.groupRepository.deleteGroup(group);
+
         await Logger.createAdminLog(req, {
             id: LogTypes.DELETED_GROUP,
             contentId: group.groupId,
