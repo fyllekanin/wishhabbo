@@ -137,4 +137,34 @@ export class ErrorCodes {
         name: 'Event with name already exists',
         description: 'Event with given name already exists'
     };
+
+    static readonly GROUP_NAME_EXISTS: ErrorCode = {
+        code: 23,
+        name: 'Group name exists',
+        description: 'Given group name already exists on another group'
+    };
+
+    static readonly GROUP_DISPLAY_NAME_EXISTS: ErrorCode = {
+        code: 24,
+        name: 'Group display name exists',
+        description: 'Given group display name already exists on another group'
+    };
+
+    static readonly IMMUNITY: ErrorCode = {
+        code: 25,
+        name: 'Immunity to low',
+        description: 'You do not have enough immunity for this'
+    };
+
+    static readonly INVALID_HEX_COLOR: ErrorCode = {
+        code: 26,
+        name: 'Invalid hex color',
+        description: 'Given hex color is not a valid format'
+    };
+
+    static readonly CAN_NOT_MODIFY_PERMISSION: ErrorCode = {
+        code: 27,
+        name: 'You can not modify this permission',
+        description: 'You can not modify permissions you do not have access to'
+    };
 }
