@@ -23,6 +23,11 @@ export class CreateUserTable1595879603141 implements MigrationInterface {
                     type: 'varchar',
                 },
                 {
+                    name: 'displayGroupId',
+                    type: 'int',
+                    default: 0
+                },
+                {
                     name: 'habbo',
                     type: 'varchar',
                     isUnique: true

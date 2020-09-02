@@ -9,6 +9,8 @@ export class UserEntity extends CreatedUpdatedAtEntity {
     username: string;
     @Column()
     password: string;
+    @Column({ default: 0 })
+    displayGroupId: number;
     @Column()
     habbo: string;
 
@@ -21,6 +23,8 @@ class UserEntityBuilder {
     username: string;
     password: string;
     habbo: string;
+    displayGroupId: number;
+:
 
     withUsername (username: string): UserEntityBuilder {
         this.username = username;
@@ -37,11 +41,17 @@ class UserEntityBuilder {
         return this;
     }
 
+    withDisplayGroupId (groupId: number): UserEntityBuilder {
+        this.displayGroupId = groupId;
+        return this;
+    }
+
     build (): UserEntity {
         const entity = new UserEntity();
         entity.username = this.username;
         entity.password = this.password;
         entity.habbo = this.habbo;
+        entity.displayGroupId = this.displayGroupId;
         return entity;
     }
 }
