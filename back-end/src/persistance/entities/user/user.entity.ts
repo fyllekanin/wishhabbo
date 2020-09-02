@@ -24,7 +24,6 @@ class UserEntityBuilder {
     password: string;
     habbo: string;
     displayGroupId: number;
-:
 
     withUsername (username: string): UserEntityBuilder {
         this.username = username;
