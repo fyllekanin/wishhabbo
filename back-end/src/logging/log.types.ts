@@ -10,5 +10,9 @@ export enum LogTypes {
     DELETED_TIMETABLE_SLOT = 8,
 
     CREATED_EVENT = 9,
-    DELETED_EVENT = 10
+    DELETED_EVENT = 10,
+
+    CREATED_GROUP = 11,
+    UPDATED_GROUP = 12,
+    DELETED_GROUP = 13
 }

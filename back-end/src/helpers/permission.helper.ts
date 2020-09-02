@@ -7,18 +7,20 @@ import { StringKeyValue } from '../utilities/object.interface';
 
 export class PermissionHelper {
 
-    static getConvertedStaffPermissionsToNumber (permissions: StringKeyValue<boolean>): number {
+    static getConvertedStaffPermissionsToNumber (permissions: StaffPermissions): number {
+        const casted = <StringKeyValue<boolean>><unknown>permissions;
         return Object.keys(permissions).reduce((value, key) => {
-            if (permissions[key]) {
+            if (casted[key]) {
                 return value + Permissions.STAFF[key];
             }
             return value;
         }, 0);
     }
 
-    static getConvertedAdminPermissionsToNumber (permissions: StringKeyValue<boolean>): number {
+    static getConvertedAdminPermissionsToNumber (permissions: AdminPermissions): number {
+        const casted = <StringKeyValue<boolean>><unknown>permissions;
         return Object.keys(permissions).reduce((value, key) => {
-            if (permissions[key]) {
+            if (casted[key]) {
                 return value + Permissions.ADMIN[key];
             }
             return value;

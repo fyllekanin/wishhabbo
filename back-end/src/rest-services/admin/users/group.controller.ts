@@ -1,14 +1,18 @@
-import { Controller, Get, Middleware } from '@overnightjs/core';
+import { Controller, Delete, Get, Middleware, Post, Put } from '@overnightjs/core';
 import { InternalRequest } from '../../../utilities/internal.request';
 import { Response } from 'express';
 import { AUTHORIZATION_MIDDLEWARE } from '../../middlewares/authorization.middleware';
 import { GET_ADMIN_PERMISSION_MIDDLEWARE } from '../../middlewares/admin-permission.middleware';
 import { Permissions } from '../../../constants/permissions.constant';
-import { NOT_FOUND, OK } from 'http-status-codes';
+import { BAD_REQUEST, NOT_FOUND, OK } from 'http-status-codes';
 import { PaginationView } from '../../../rest-service-views/respond-views/pagination.view';
 import { PaginationHelper } from '../../../helpers/pagination.helper';
 import { GroupView } from '../../../rest-service-views/group.view';
 import { PermissionHelper } from '../../../helpers/permission.helper';
+import { ValidationValidators } from '../../../validation/validation.validators';
+import { GroupEntity } from '../../../persistance/entities/group/group.entity';
+import { Logger } from '../../../logging/log.logger';
+import { LogTypes } from '../../../logging/log.types';
 
 @Controller('api/admin/users/groups')
 export class GroupController {
@@ -67,5 +71,119 @@ export class GroupController {
             .withCreatedAt(group.createdAt)
             .withUpdatedAt(group.updatedAt)
             .build());
+    }
+
+    @Post()
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_MANAGE_GROUPS ])
+    ])
+    private async createGroup (req: InternalRequest, res: Response): Promise<void> {
+        const payload = GroupView.of(req);
+        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
+        if (errors.length > 0) {
+            res.status(BAD_REQUEST).json(errors);
+            return;
+        }
+
+        const entity = GroupEntity.newBuilder()
+            .withName(payload.getName())
+            .withImmunity(payload.getImmunity())
+            .withDisplayName(payload.getDisplayName())
+            .withBarStyle(payload.getBarStyle())
+            .withNameColor(payload.getNameColor())
+            .withStaffPermissions(PermissionHelper.getConvertedStaffPermissionsToNumber(payload.getStaffPermissions()))
+            .withAdminPermissions(PermissionHelper.getConvertedAdminPermissionsToNumber(payload.getAdminPermissions()))
+            .build();
+
+        await req.serviceConfig.groupRepository.saveGroup(entity);
+
+        const updatedEntity = await req.serviceConfig.groupRepository.saveGroup(entity).catch(reason => {
+            throw reason;
+        });
+
+        await Logger.createAdminLog(req, {
+            id: LogTypes.CREATED_GROUP,
+            contentId: updatedEntity.groupId,
+            userId: req.user.userId,
+            beforeChange: null,
+            afterChange: JSON.stringify(updatedEntity)
+        });
+
+        res.status(OK).json(updatedEntity.groupId);
+    }
+
+    @Put(':groupId')
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_MANAGE_GROUPS ])
+    ])
+    private async updateGroup (req: InternalRequest, res: Response): Promise<void> {
+        const group = await req.serviceConfig.groupRepository.getGroupById(Number(req.params.groupId));
+        if (!group) {
+            res.status(NOT_FOUND).json();
+            return;
+        }
+
+        const payload = GroupView.of(req);
+        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
+        if (errors.length > 0) {
+            res.status(BAD_REQUEST).json(errors);
+            return;
+        }
+
+        const groupCopy = { ...group };
+        group.name = payload.getName();
+        group.immunity = payload.getImmunity();
+        group.displayName = payload.getDisplayName();
+        group.barStyle = payload.getBarStyle();
+        group.nameColor = payload.getNameColor();
+        group.staffPermissions = PermissionHelper.getConvertedStaffPermissionsToNumber(payload.getStaffPermissions());
+        group.adminPermissions = PermissionHelper.getConvertedAdminPermissionsToNumber(payload.getAdminPermissions());
+
+        await req.serviceConfig.groupRepository.saveGroup(group);
+
+        const updatedEntity = await req.serviceConfig.groupRepository.saveGroup(group).catch(reason => {
+            throw reason;
+        });
+
+        await Logger.createAdminLog(req, {
+            id: LogTypes.UPDATED_GROUP,
+            contentId: updatedEntity.groupId,
+            userId: req.user.userId,
+            beforeChange: JSON.stringify(groupCopy),
+            afterChange: JSON.stringify(updatedEntity)
+        });
+
+        res.status(OK).json();
+    }
+
+    @Delete(':groupId')
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_MANAGE_GROUPS ])
+    ])
+    private async deleteGroup (req: InternalRequest, res: Response): Promise<void> {
+        const group = await req.serviceConfig.groupRepository.getGroupById(Number(req.params.groupId));
+        if (!group) {
+            res.status(NOT_FOUND).json();
+            return;
+        }
+
+        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
+        if (immunity <= group.immunity) {
+            res.status(NOT_FOUND).json();
+            return;
+        }
+
+        await Logger.createAdminLog(req, {
+            id: LogTypes.DELETED_GROUP,
+            contentId: group.groupId,
+            userId: req.user.userId,
+            beforeChange: JSON.stringify(group),
+            afterChange: null
+        });
+
+        res.status(OK).json();
     }
 }

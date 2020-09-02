@@ -26,14 +26,27 @@ export class GroupEntity extends CreatedUpdatedAtEntity {
 }
 
 class GroupEntityBuilder {
+    groupId: number;
     name: string;
+    immunity: number;
     displayName: string;
     barStyle: string;
+    nameColor: string;
     staffPermissions: number;
     adminPermissions: number;
 
+    withGroupId (groupId: number): GroupEntityBuilder {
+        this.groupId = groupId;
+        return this;
+    }
+
     withName (name: string): GroupEntityBuilder {
         this.name = name;
+        return this;
+    }
+
+    withImmunity (immunity: number): GroupEntityBuilder {
+        this.immunity = immunity;
         return this;
     }
 
@@ -44,6 +57,11 @@ class GroupEntityBuilder {
 
     withBarStyle (barStyle: string): GroupEntityBuilder {
         this.barStyle = barStyle;
+        return this;
+    }
+
+    withNameColor (nameColor: string): GroupEntityBuilder {
+        this.nameColor = nameColor;
         return this;
     }
 
@@ -60,8 +78,10 @@ class GroupEntityBuilder {
     build (): GroupEntity {
         const entity = new GroupEntity();
         entity.name = this.name;
+        entity.immunity = this.immunity;
         entity.displayName = this.displayName;
         entity.barStyle = this.barStyle;
+        entity.nameColor = this.nameColor;
         entity.staffPermissions = this.staffPermissions;
         entity.adminPermissions = this.adminPermissions;
         return entity;
