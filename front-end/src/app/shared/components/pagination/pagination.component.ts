@@ -28,7 +28,9 @@ export class PaginationComponent implements OnDestroy {
         private router: Router,
         activatedRoute: ActivatedRoute
     ) {
-        this._url = `/${activatedRoute.snapshot.routeConfig.path}`;
+        const currentPath = `/${activatedRoute.snapshot.url.map(segment => segment.path).join('/')}`;
+        const prefix = this.router.url.replace(currentPath, '');
+        this._url = `${prefix}/${activatedRoute.snapshot.routeConfig.path}`;
         this.subscriptions.push(activatedRoute.queryParams.subscribe(params => this.queryParameters = params));
     }
 

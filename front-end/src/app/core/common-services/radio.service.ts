@@ -4,7 +4,7 @@ import { LocalStorageKeys } from '../../shared/constants/local-storage.constants
 @Injectable()
 export class RadioService {
     private static readonly TEMP_RADIO_INFO = {
-        HOST: 'https://wishhabbo.co/',
+        HOST: 'https://wishhabbo.co',
         PORT: '8000',
         isAzureCast: true
     };
