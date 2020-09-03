@@ -30,7 +30,7 @@ export class EditorComponent implements AfterViewInit {
             emoticonsEnabled: false,
             width: '100%',
             resizeWidth: false,
-            resizeHeight: false,
+            resizeHeight: true,
             height: '250px',
             toolbarExclude: 'code,quote,ltr,rtl,print,maximize,email,horizontalrule,cut,copy,pastetext'
         });
