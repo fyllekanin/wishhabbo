@@ -16,10 +16,10 @@ export class SeedUserTable1596650075805 implements MigrationInterface {
     }
 
     private async getEntity (username: string, password: string, habbo: string): Promise<UserEntity> {
-        const entity = new UserEntity();
-        entity.username = username;
-        entity.password = await HasherUtility.hash(password);
-        entity.habbo = habbo;
-        return entity;
+        return UserEntity.newBuilder()
+            .withUsername(username)
+            .withPassword(await HasherUtility.hash(password))
+            .withHabbo(habbo)
+            .build();
     }
 }

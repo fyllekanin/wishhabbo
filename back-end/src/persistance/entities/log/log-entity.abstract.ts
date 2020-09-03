@@ -26,6 +26,10 @@ export abstract class LogEntityAbstract extends CreatedUpdatedAtEntity implement
 
     constructor (builder: ILogEntityAbstract) {
         super();
+        if (!builder) {
+            return;
+        }
+
         this.logId = builder.logId;
         this.id = builder.id;
         this.contentId = builder.contentId;
@@ -37,12 +41,12 @@ export abstract class LogEntityAbstract extends CreatedUpdatedAtEntity implement
 
 export abstract class LogBuilder<T> {
     protected myData: ILogEntityAbstract = {
-        logId: null,
-        id: null,
-        contentId: null,
-        userId: null,
-        beforeChange: null,
-        afterChange: null
+        logId: undefined,
+        id: undefined,
+        contentId: undefined,
+        userId: undefined,
+        beforeChange: undefined,
+        afterChange: undefined
     };
 
     constructor (entity?: LogEntityAbstract) {

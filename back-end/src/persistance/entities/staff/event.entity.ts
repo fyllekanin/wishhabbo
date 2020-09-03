@@ -16,6 +16,10 @@ export class EventEntity extends CreatedUpdatedAtEntity implements IEventEntity 
 
     constructor (builder: IEventEntity) {
         super();
+        if (!builder) {
+            return;
+        }
+
         this.eventId = builder.eventId;
         this.name = builder.name;
     }
@@ -38,8 +42,8 @@ export class EventEntity extends CreatedUpdatedAtEntity implements IEventEntity 
 
 class Builder {
     private myData: IEventEntity = {
-        eventId: null,
-        name: null
+        eventId: undefined,
+        name: undefined
     };
 
     constructor (entity?: EventEntity) {

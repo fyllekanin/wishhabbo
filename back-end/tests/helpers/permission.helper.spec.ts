@@ -36,8 +36,9 @@ describe('PermissionHelper', () => {
 
     it('getConvertedStaffPermissionsToUI should return a correct StaffPermission object', () => {
         // Given
-        const entity = new GroupEntity();
-        entity.staffPermissions = 12;
+        const entity = GroupEntity.newBuilder()
+            .withStaffPermissions(12)
+            .build();
 
         // When
         const result = PermissionHelper.getConvertedStaffPermissionsToUI(entity);
@@ -51,8 +52,9 @@ describe('PermissionHelper', () => {
 
     it('getConvertedAdminPermissionsToUI should return a correct StaffPermission object', () => {
         // Given
-        const entity = new GroupEntity();
-        entity.adminPermissions = 3;
+        const entity = GroupEntity.newBuilder()
+            .withAdminPermissions(3)
+            .build();
 
         // When
         const result = PermissionHelper.getConvertedAdminPermissionsToUI(entity);

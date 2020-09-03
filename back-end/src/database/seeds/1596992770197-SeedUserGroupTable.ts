@@ -15,9 +15,9 @@ export class SeedUserGroupTable1596992770197 implements MigrationInterface {
     }
 
     private async getEntity (groupId: number, userId: number): Promise<UserGroupEntity> {
-        const entity = new UserGroupEntity();
-        entity.groupId = groupId;
-        entity.userId = userId;
-        return entity;
+        return UserGroupEntity.newBuilder()
+            .withGroupId(groupId)
+            .withUserId(userId)
+            .build();
     }
 }

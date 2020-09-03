@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { mediaRoutes } from './media.routes';
 import { ArticleListService } from './articles/list/article-list.service';
 import { ArticleService } from './articles/article/article.service';
+import { PaginationModule } from '../../../../shared/components/pagination/pagination.module';
 
 @NgModule({
     imports: [
@@ -21,7 +22,8 @@ import { ArticleService } from './articles/article/article.service';
         TableModule,
         FormsModule,
         EditorModule,
-        HabboBadgeModule
+        HabboBadgeModule,
+        PaginationModule
     ],
     declarations: [
         MediaComponent,

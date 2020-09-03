@@ -41,8 +41,8 @@ export class GroupRepository {
         });
     }
 
-    async deleteGroup (group: GroupEntity): Promise<DeleteResult> {
-        return await this.groupRepository.delete(group);
+    async deleteGroup (group: GroupEntity): Promise<GroupEntity> {
+        return await this.groupRepository.remove(group);
     }
 
     async addGroupToUser (groupId: number, userId: number): Promise<void> {

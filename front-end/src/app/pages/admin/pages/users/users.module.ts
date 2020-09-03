@@ -10,6 +10,7 @@ import { GroupComponent } from './groups/group/group.component';
 import { GroupListComponent } from './groups/list/group-list.component';
 import { GroupService } from './groups/group/group.service';
 import { usersRoutes } from './users.routes';
+import { PaginationModule } from '../../../../shared/components/pagination/pagination.module';
 
 @NgModule({
     imports: [
@@ -17,7 +18,8 @@ import { usersRoutes } from './users.routes';
         ContentModule,
         CommonModule,
         TableModule,
-        FormsModule
+        FormsModule,
+        PaginationModule
     ],
     declarations: [
         UsersComponent,

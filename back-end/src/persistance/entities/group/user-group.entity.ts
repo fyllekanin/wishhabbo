@@ -18,6 +18,10 @@ export class UserGroupEntity extends CreatedUpdatedAtEntity implements IUserGrou
 
     constructor (builder: IUserGroupEntity) {
         super();
+        if (!builder) {
+            return;
+        }
+
         this.userGroupId = builder.userGroupId;
         this.userId = builder.userId;
         this.groupId = builder.groupId;
@@ -34,9 +38,9 @@ export class UserGroupEntity extends CreatedUpdatedAtEntity implements IUserGrou
 
 class Builder {
     private myData: IUserGroupEntity = {
-        userGroupId: null,
-        userId: null,
-        groupId: null
+        userGroupId: undefined,
+        userId: undefined,
+        groupId: undefined
     };
 
     constructor (entity?: UserGroupEntity) {

@@ -33,6 +33,10 @@ export class GroupEntity extends CreatedUpdatedAtEntity implements IGroupEntity 
 
     constructor (builder: IGroupEntity) {
         super();
+        if (!builder) {
+            return;
+        }
+
         this.groupId = builder.groupId;
         this.name = builder.name;
         this.immunity = builder.immunity;
@@ -54,14 +58,14 @@ export class GroupEntity extends CreatedUpdatedAtEntity implements IGroupEntity 
 
 class Builder {
     private myData: IGroupEntity = {
-        groupId: null,
-        name: null,
-        immunity: null,
-        displayName: null,
-        barStyle: null,
-        nameColor: null,
-        staffPermissions: null,
-        adminPermissions: null
+        groupId: undefined,
+        name: undefined,
+        immunity: undefined,
+        displayName: undefined,
+        barStyle: undefined,
+        nameColor: undefined,
+        staffPermissions: undefined,
+        adminPermissions: undefined
     };
 
     constructor (entity?: GroupEntity) {

@@ -7,7 +7,7 @@ export class GroupClass {
     @primitiveOf(String)
     name: string;
     @primitiveOf(Number)
-    immunity: number;
+    immunity = 0;
     @primitiveOf(String)
     displayName: string;
     @primitiveOf(String)

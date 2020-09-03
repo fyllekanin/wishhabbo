@@ -32,9 +32,13 @@ export class TimetableEntity extends CreatedUpdatedAtEntity implements ITimetabl
     hour: number;
     @Column()
     isArchived: boolean;
-    
+
     constructor (builder: ITimetableEntity) {
         super();
+        if (!builder) {
+            return;
+        }
+
         this.timetableId = builder.timetableId;
         this.type = builder.type;
         this.eventId = builder.eventId;
@@ -55,13 +59,13 @@ export class TimetableEntity extends CreatedUpdatedAtEntity implements ITimetabl
 
 class Builder {
     private myData: ITimetableEntity = {
-        timetableId: null,
-        type: null,
-        eventId: null,
-        userId: null,
-        day: null,
-        hour: null,
-        isArchived: null
+        timetableId: undefined,
+        type: undefined,
+        eventId: undefined,
+        userId: undefined,
+        day: undefined,
+        hour: undefined,
+        isArchived: undefined
     };
 
     constructor (entity?: TimetableEntity) {

@@ -11,13 +11,17 @@ interface IHabboBadgeEntity {
 export class HabboBadgeEntity extends CreatedUpdatedAtEntity implements IHabboBadgeEntity {
     @PrimaryGeneratedColumn()
     habboBadgeId: number;
-    @Column()
+    @Column({ unique: true })
     badgeId: string;
     @Column()
     description: string;
 
     constructor (builder: IHabboBadgeEntity) {
         super();
+        if (!builder) {
+            return;
+        }
+
         this.habboBadgeId = builder.habboBadgeId;
         this.badgeId = builder.badgeId;
         this.description = builder.description;
@@ -34,9 +38,9 @@ export class HabboBadgeEntity extends CreatedUpdatedAtEntity implements IHabboBa
 
 class Builder {
     private myData: IHabboBadgeEntity = {
-        habboBadgeId: null,
-        badgeId: null,
-        description: null
+        habboBadgeId: undefined,
+        badgeId: undefined,
+        description: undefined
     };
 
     constructor (entity?: HabboBadgeEntity) {

@@ -11,7 +11,7 @@
             </div>
             <div class="cell small-3 small-offset-1 welcome">
                 <div *ngIf="!user; else isLoggedIn" class="not-logged-in">
-                    <button class="green" routerLink="/auth/login">Login</button>
+                    <button id="top-login-button" class="green" routerLink="/auth/login">Login</button>
                     <span class="slash">/</span>
                     <button class="blue">Register</button>
                 </div>

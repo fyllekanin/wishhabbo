@@ -17,11 +17,12 @@ export class SeedGroupTable1596992755524 implements MigrationInterface {
 
     private async getEntity (name: string, displayName: string,
                              staffPermissions: number, adminPermissions: number): Promise<GroupEntity> {
-        const entity = new GroupEntity();
-        entity.name = name;
-        entity.displayName = displayName;
-        entity.staffPermissions = staffPermissions;
-        entity.adminPermissions = adminPermissions;
-        return entity;
+        return GroupEntity
+            .newBuilder()
+            .withName(name)
+            .withDisplayName(displayName)
+            .withStaffPermissions(staffPermissions)
+            .withAdminPermissions(adminPermissions)
+            .build();
     }
 }

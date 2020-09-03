@@ -1,3 +1,5 @@
 <app-content header="Articles" [actions]="contentActions" (onAction)="onCreateNew()">
     <app-table [headers]="headers" [rows]="rows" (onAction)="onAction($event)"></app-table>
 </app-content>
+
+<app-pagination [page]="data.page" [total]="data.total"></app-pagination>

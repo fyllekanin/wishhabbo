@@ -36,6 +36,10 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
 
     constructor (builder: IArticleEntity) {
         super();
+        if (!builder) {
+            return;
+        }
+
         this.articleId = builder.articleId;
         this.userId = builder.userId;
         this.title = builder.title;
@@ -58,15 +62,15 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
 
 class Builder {
     private myData: IArticleEntity = {
-        articleId: null,
-        userId: null,
-        title: null,
-        content: null,
-        badges: null,
-        room: null,
-        difficulty: null,
-        type: null,
-        isApproved: null
+        articleId: undefined,
+        userId: undefined,
+        title: undefined,
+        content: undefined,
+        badges: undefined,
+        room: undefined,
+        difficulty: undefined,
+        type: undefined,
+        isApproved: undefined
     };
 
     constructor (entity?: ArticleEntity) {

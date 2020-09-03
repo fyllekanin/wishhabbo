@@ -21,6 +21,10 @@ export class TokenEntity extends CreatedUpdatedAtEntity implements ITokenEntity 
 
     constructor (builder: ITokenEntity) {
         super();
+        if (!builder) {
+            return;
+        }
+
         this.tokenId = builder.tokenId;
         this.userId = builder.userId;
         this.access = builder.access;
@@ -38,10 +42,10 @@ export class TokenEntity extends CreatedUpdatedAtEntity implements ITokenEntity 
 
 class Builder {
     private myData: ITokenEntity = {
-        tokenId: null,
-        userId: null,
-        access: null,
-        refresh: null
+        tokenId: undefined,
+        userId: undefined,
+        access: undefined,
+        refresh: undefined
     };
 
     constructor (entity?: TokenEntity) {

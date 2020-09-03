@@ -15,11 +15,12 @@ export class BadgeScannerTasks implements IBackgroundTask {
 
         const gamedata = await habboService.getGamedata();
         const items = gamedata.split('\n');
-        const entities = [];
+        const entities: Array<HabboBadgeEntity> = [];
 
         for (const item of items) {
             const badge = this.getBadge(item);
-            if (!badge || await habboRepository.doBadgeIdExist(badge.badgeId)) {
+            if (!badge || await habboRepository.doBadgeIdExist(badge.badgeId) ||
+                entities.some(i => i.badgeId.toLowerCase() === badge.badgeId.toLowerCase())) {
                 continue;
             }
 

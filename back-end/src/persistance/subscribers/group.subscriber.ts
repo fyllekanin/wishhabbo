@@ -11,9 +11,12 @@ export class GroupSubscriber implements EntitySubscriberInterface {
     }
 
     async afterRemove (event: RemoveEvent<GroupEntity>): Promise<void> {
+        if (!event.entityId) {
+            return;
+        }
         const groupRepository = new GroupRepository();
         const userRepository = new UserRepository();
-        await groupRepository.deleteUsersFromGroup(event.entity.groupId);
-        await userRepository.removeDisplayGroupId(event.entity.groupId);
+        await groupRepository.deleteUsersFromGroup(event.entityId);
+        await userRepository.removeDisplayGroupId(event.entityId);
     }
 }

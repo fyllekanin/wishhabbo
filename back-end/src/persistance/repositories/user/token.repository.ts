@@ -4,7 +4,6 @@ import { UserEntity } from '../../entities/user/user.entity';
 import { IdHelper } from '../../../helpers/id.helper';
 import { TimeUtility } from '../../../utilities/time.utility';
 import { RequestUtility } from '../../../utilities/request.utility';
-import { HasherUtility } from '../../../utilities/hasher.utility';
 import { InternalRequest } from '../../../utilities/internal.request';
 
 export class TokenRepository {
@@ -81,14 +80,14 @@ export class TokenRepository {
     }
 
     private async getAvailableAccessToken (): Promise<string> {
-        const newToken = await HasherUtility.hash(IdHelper.newUuid());
+        const newToken = IdHelper.newUuid();
         const isAvailable = await this.repository.count({ access: newToken }) === 0;
         return isAvailable ? newToken : await this.getAvailableAccessToken();
     }
 
     private async getAvailableRefreshToken (): Promise<string> {
-        const newToken = await HasherUtility.hash(IdHelper.newUuid());
+        const newToken = IdHelper.newUuid();
         const isAvailable = await this.repository.count({ refresh: newToken }) === 0;
-        return isAvailable ? newToken : await this.getAvailableAccessToken();
+        return isAvailable ? newToken : await this.getAvailableRefreshToken();
     }
 }

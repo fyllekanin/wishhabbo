@@ -24,6 +24,10 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
 
     constructor (builder: IUserEntity) {
         super();
+        if (!builder) {
+            return;
+        }
+
         this.userId = builder.userId;
         this.username = builder.username;
         this.password = builder.password;
@@ -42,11 +46,11 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
 
 class Builder {
     private myData: IUserEntity = {
-        userId: null,
-        username: null,
-        password: null,
-        habbo: null,
-        displayGroupId: null
+        userId: undefined,
+        username: undefined,
+        password: undefined,
+        habbo: undefined,
+        displayGroupId: undefined
     };
 
     constructor (entity?: UserEntity) {
