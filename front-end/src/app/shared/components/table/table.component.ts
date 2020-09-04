@@ -17,6 +17,7 @@ export class TableComponent {
     @Input()
     set rows (rows: Array<TableRow>) {
         this.myRows = rows;
+        this.myRows.forEach(row => row.actions = row.actions.filter(action => !action.isHidden));
         this.doAnyRowHaveActions = this.myRows.some(row => Array.isArray(row.actions) && row.actions.length > 0);
     }
 

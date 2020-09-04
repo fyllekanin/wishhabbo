@@ -52,4 +52,22 @@ describe('Group', () => {
 
         expect(TableClass.isRowWithCellValuePresent(0, name)).toBeFalsy();
     });
+
+    it('should be possible to update a group', () => {
+        const name = `${IdHelper.newUuid()}-name`;
+        const displayName = `${IdHelper.newUuid()}-displayName`;
+        ClickClass.clickLinkWithText('Manage Groups');
+        ClickClass.clickContentAction('Create new');
+
+        createGroup({ name: name, displayName: displayName, immunity: '50' });
+        expect(TableClass.isRowWithCellValuePresent(0, name)).toBeTruthy();
+
+        TableClass.clickTableActionWithCellValue(0, name, 'Edit');
+        const newName = `${IdHelper.newUuid()}-name`;
+        ClickClass.clickContentAction('Save');
+        ClickClass.clickContentAction('Go back');
+
+        expect(TableClass.isRowWithCellValuePresent(0, name)).toBeFalsy();
+        expect(TableClass.isRowWithCellValuePresent(0, newName)).toBeTruthy();
+    });
 });

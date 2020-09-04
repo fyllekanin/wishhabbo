@@ -7,6 +7,8 @@ export class SlimUser {
     username: string;
     @primitiveOf(String)
     habbo: string;
+    @primitiveOf(Number)
+    updatedAt: number;
 
     constructor (source: Partial<SlimUser>) {
         ClassHelper.assign(this, source);

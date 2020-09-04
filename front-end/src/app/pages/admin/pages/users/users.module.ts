@@ -11,6 +11,8 @@ import { GroupListComponent } from './groups/list/group-list.component';
 import { GroupService } from './groups/group/group.service';
 import { usersRoutes } from './users.routes';
 import { PaginationModule } from '../../../../shared/components/pagination/pagination.module';
+import { UserListComponent } from './users/list/user-list.component';
+import { UserListService } from './users/list/user-list.service';
 
 @NgModule({
     imports: [
@@ -24,11 +26,13 @@ import { PaginationModule } from '../../../../shared/components/pagination/pagin
     declarations: [
         UsersComponent,
         GroupComponent,
-        GroupListComponent
+        GroupListComponent,
+        UserListComponent
     ],
     providers: [
         GroupService,
-        GroupListService
+        GroupListService,
+        UserListService
     ],
     exports: [
         RouterModule

@@ -6,7 +6,7 @@ interface PaginationOptions {
     page: number;
     take: number;
     orderBy?: { sort: string, order?: 'ASC' | 'DESC' };
-    where?: Array<{ key: string, operator: string, value: string | number }>;
+    where?: Array<{ key: string, operator: string, value: string | number, isIn?: boolean, isNotIn?: boolean }>;
 }
 
 export class BaseRepository<T> {
@@ -46,10 +46,17 @@ export class BaseRepository<T> {
 
         const parameters: any = {};
         (options.where || []).forEach((where, index) => {
+            if (where.isIn && where.isNotIn) {
+                throw new Error('Can not have both in and not in');
+            }
+
+            const statement = where.isIn || where.isNotIn ?
+                `${where.key} ${where.isNotIn ? 'NOT' : ''} IN (:${where.key})`
+                : `${where.key} ${where.operator} :${where.key}`;
             if (index === 0) {
-                baseQuery.where(`${where.key} ${where.operator} :${where.key}`);
+                baseQuery.where(statement);
             } else {
-                baseQuery.andWhere(`${where.key} ${where.operator} :${where.key}`);
+                baseQuery.andWhere(statement);
             }
             parameters[where.key] = where.value;
         });
