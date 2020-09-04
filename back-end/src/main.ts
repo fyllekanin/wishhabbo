@@ -12,6 +12,7 @@ import { EventsController } from './rest-services/staff/events.controller';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { GroupController } from './rest-services/admin/users/group.controller';
+import { UserController } from './rest-services/admin/users/user.controller';
 
 class MainServer extends Server {
     private backgroundTaskHandler: BackgroundTaskHandler;
@@ -47,7 +48,8 @@ class MainServer extends Server {
                 new ArticleController(),
                 new RadioController(),
                 new EventsController(),
-                new GroupController()
+                new GroupController(),
+                new UserController()
             ],
             null,
             INITIAL_MIDDLEWARE

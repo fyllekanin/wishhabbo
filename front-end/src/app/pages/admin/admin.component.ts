@@ -35,7 +35,7 @@ export class AdminComponent {
                     },
                     {
                         label: 'Manage Users',
-                        url: `/admin/users/groups/page/1`,
+                        url: `/admin/users/users/page/1`,
                         icon: 'fas fa-table',
                         isApplicable: user.adminPermissions.CAN_MANAGE_USER_BASICS ||
                             user.adminPermissions.CAN_MANAGE_USER_GROUPS

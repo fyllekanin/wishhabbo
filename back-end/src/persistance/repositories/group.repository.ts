@@ -1,9 +1,9 @@
-import { DeleteResult, getConnection, In, Raw, Repository } from 'typeorm';
+import { DeleteResult, getConnection, In, MoreThanOrEqual, Raw, Repository } from 'typeorm';
 import { GroupEntity } from '../entities/group/group.entity';
 import { UserGroupEntity } from '../entities/group/user-group.entity';
 
 const SUPER_ADMINS = [
-    1
+    0
 ];
 
 export class GroupRepository {
@@ -13,6 +13,21 @@ export class GroupRepository {
     constructor () {
         this.groupRepository = getConnection().getRepository(GroupEntity);
         this.userGroupRepository = getConnection().getRepository(UserGroupEntity);
+    }
+
+    async getUserIdsWithSameOrHigherImmunity (immunity: number): Promise<Array<number>> {
+        const groups = await this.groupRepository.find({
+            immunity: MoreThanOrEqual(immunity)
+        });
+        if (groups.length === 0) {
+            return [];
+        }
+        const userGroups = await this.userGroupRepository.find({
+            where: {
+                groupId: In(groups.map(group => group.groupId))
+            }
+        });
+        return userGroups.map(userGroup => userGroup.userId);
     }
 
     async getUserIdImmunity (userId: number): Promise<number> {
