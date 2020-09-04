@@ -1,7 +1,6 @@
 import { SlimUserView } from '../../src/rest-service-views/slim-user.view';
 
 describe('SlimUserView', () => {
-
     it('should be possible to build', () => {
         // When
         const view = SlimUserView.newBuilder()
@@ -17,5 +16,4 @@ describe('SlimUserView', () => {
         expect(view.getHabbo()).toEqual('habbo');
         expect(view.getUpdatedAt()).toEqual(1);
     });
-
 });
