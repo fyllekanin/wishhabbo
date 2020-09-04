@@ -1,7 +1,7 @@
 import { UserEntity } from '../../entities/user/user.entity';
 import { getConnection, Repository } from 'typeorm';
 import { BaseRepository } from '../base.repository';
-import { SlimUserView } from '../../../rest-service-views/respond-views/user/slim-user.view';
+import { SlimUserView } from '../../../rest-service-views/slim-user.view';
 
 export class UserRepository extends BaseRepository<UserEntity> {
     protected repository: Repository<UserEntity>;

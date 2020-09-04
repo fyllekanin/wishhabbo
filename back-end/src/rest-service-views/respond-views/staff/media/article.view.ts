@@ -1,4 +1,4 @@
-import { SlimUserView } from '../../user/slim-user.view';
+import { SlimUserView } from '../../../slim-user.view';
 
 export class ArticleView {
     articleId: number;

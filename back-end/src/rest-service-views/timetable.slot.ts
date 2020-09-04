@@ -1,5 +1,5 @@
 import { InternalRequest } from '../utilities/internal.request';
-import { SlimUserView } from './respond-views/user/slim-user.view';
+import { SlimUserView } from './slim-user.view';
 import { EventEntity } from '../persistance/entities/staff/event.entity';
 import { IPayload } from './payloads/payload.interface';
 

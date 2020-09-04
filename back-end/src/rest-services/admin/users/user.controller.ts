@@ -6,7 +6,7 @@ import { GET_ADMIN_PERMISSION_MIDDLEWARE } from '../../middlewares/admin-permiss
 import { Permissions } from '../../../constants/permissions.constant';
 import { PaginationHelper } from '../../../helpers/pagination.helper';
 import { OK } from 'http-status-codes';
-import { SlimUserView } from '../../../rest-service-views/respond-views/user/slim-user.view';
+import { SlimUserView } from '../../../rest-service-views/slim-user.view';
 import { PaginationView } from '../../../rest-service-views/respond-views/pagination.view';
 
 @Controller('api/admin/users/users')
