@@ -1,4 +1,4 @@
-<app-content header="Groups" [actions]="contentActions" (onAction)="onCreateNew()">
+<app-content header="Groups" (onAction)="onCreateNew()">
     <app-table [headers]="headers" [rows]="rows" (onAction)="onAction($event)"></app-table>
 </app-content>
 
