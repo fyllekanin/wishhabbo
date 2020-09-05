@@ -99,6 +99,7 @@ class TimetableSlotBuilder {
     event: EventEntity;
     isBooked: boolean;
     isCurrentSlot: boolean;
+    isRadio: boolean;
 
     withTimetableId (timetableId: number): TimetableSlotBuilder {
         this.timetableId = timetableId;
@@ -135,6 +136,11 @@ class TimetableSlotBuilder {
         return this;
     }
 
+    withIsRadio (isRadio: boolean): TimetableSlotBuilder {
+        this.isRadio = isRadio;
+        return this;
+    }
+
     build (): TimetableSlot {
         return new TimetableSlot(
             this.timetableId,
@@ -144,7 +150,7 @@ class TimetableSlotBuilder {
             this.event,
             this.isBooked,
             this.isCurrentSlot,
-            null
+            this.isRadio
         );
     }
 }
