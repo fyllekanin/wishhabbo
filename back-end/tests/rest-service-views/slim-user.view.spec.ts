@@ -16,4 +16,21 @@ describe('SlimUserView', () => {
         expect(view.getHabbo()).toEqual('habbo');
         expect(view.getUpdatedAt()).toEqual(1);
     });
+
+    it('should set correct data in of', () => {
+        // Given
+        const user = SlimUserView.newBuilder()
+            .withUsername('username')
+            .withHabbo('habbo')
+            .withUserId(0)
+            .build();
+
+        // When
+        const result = SlimUserView.of(user);
+
+        // Then
+        expect(result.getUserId()).toEqual(user.getUserId());
+        expect(result.getUsername()).toEqual(user.getUsername());
+        expect(result.getHabbo()).toEqual(user.getHabbo());
+    });
 });
