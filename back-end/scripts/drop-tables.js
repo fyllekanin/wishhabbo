@@ -20,7 +20,7 @@ async function run() {
                     }
                     const query = result.reduce((prev, curr, index) => {
                         const tableName = curr.table_name ? curr.table_name : curr.TABLE_NAME;
-                        return prev + (index > 0 ? `,${tableName}` : ` ${tableName}`);
+                        return prev + (index > 0 ? `,\`${tableName}\`` : ` \`${tableName}\``);
                     }, 'DROP TABLE IF EXISTS');
                     connection.query(`${query};`, (err, result) => {
                         if (err) throw err;
