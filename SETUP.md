@@ -7,6 +7,8 @@ https://nodejs.org/en/
 ##### MySQL
 Easiest solution for windows users: xampp
 
+For linux: TBD
+
 https://www.apachefriends.org/index.html
 
 ### Installation
