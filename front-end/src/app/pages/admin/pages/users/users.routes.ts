@@ -6,6 +6,8 @@ import { GroupComponent } from './groups/group/group.component';
 import { GroupService } from './groups/group/group.service';
 import { UserListComponent } from './users/list/user-list.component';
 import { UserListService } from './users/list/user-list.service';
+import { UserDetailsComponent } from './users/user-details/user-details.component';
+import { UserGroupsComponent } from './users/user-groups/user-groups.component';
 
 export const usersRoutes: Routes = [
     {
@@ -32,6 +34,14 @@ export const usersRoutes: Routes = [
                 resolve: {
                     pagination: UserListService
                 }
+            },
+            {
+                path: 'users/:userId/details',
+                component: UserDetailsComponent
+            },
+            {
+                path: 'users/:userId/groups',
+                component: UserGroupsComponent
             }
         ]
     }
