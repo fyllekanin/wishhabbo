@@ -14,5 +14,7 @@ export enum LogTypes {
 
     CREATED_GROUP = 11,
     UPDATED_GROUP = 12,
-    DELETED_GROUP = 13
+    DELETED_GROUP = 13,
+
+    UPDATED_USER_DETAILS = 14
 }

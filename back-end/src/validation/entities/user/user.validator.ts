@@ -5,9 +5,9 @@ import { UserRepository } from '../../../persistance/repositories/user/user.repo
 import { ErrorCodes } from '../../error.codes';
 import { IEntity } from '../../../persistance/entities/entity.interface';
 import { ServiceConfig } from '../../../utilities/internal.request';
+import { RegexConstants } from '../../../constants/regex.constants';
 
 export class UserValidation implements EntityValidator<UserEntity> {
-    private static readonly VALID_USERNAME = /^[a-zA-Z0-9]+$/;
 
     async validate (entity: IEntity, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
         const userEntity = entity as UserEntity;
@@ -43,7 +43,7 @@ export class UserValidation implements EntityValidator<UserEntity> {
                 .withMessage('Username need to have at least one character or more')
                 .build());
         }
-        if (!entity.username.match(UserValidation.VALID_USERNAME)) {
+        if (!entity.username.match(RegexConstants.VALID_USERNAME)) {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.INVALID_USERNAME.code)
                 .withField('username')

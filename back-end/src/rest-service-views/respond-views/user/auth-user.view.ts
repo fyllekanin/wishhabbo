@@ -13,7 +13,7 @@ export interface StaffPermissions {
 export interface AdminPermissions {
     CAN_MANAGE_GROUPS: boolean;
     CAN_MANAGE_USER_BASICS: boolean;
-    CAN_MANAGE_USER_ADVANCED: boolean,
+    CAN_MANAGE_USER_ADVANCED: boolean;
     CAN_MANAGE_USER_GROUPS: boolean;
     CAN_MANAGE_WEBSITE_SETTINGS: boolean;
     CAN_SEE_LOGS: boolean;

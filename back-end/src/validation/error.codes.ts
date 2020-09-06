@@ -167,4 +167,10 @@ export class ErrorCodes {
         name: 'You can not modify this permission',
         description: 'You can not modify permissions you do not have access to'
     };
+
+    static readonly USER_WITH_HABBO_EXISTS: ErrorCode = {
+        code: 28,
+        name: 'Someone already got given habbo',
+        description: 'Another user with given habbo already exists'
+    };
 }

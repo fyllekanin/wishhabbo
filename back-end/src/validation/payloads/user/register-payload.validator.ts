@@ -6,17 +6,17 @@ import { HabboService } from '../../../external/services/habbo.service';
 import { ServiceConfig } from '../../../utilities/internal.request';
 import { PayloadValidator } from '../payload-validator.interface';
 import { UserEntity } from '../../../persistance/entities/user/user.entity';
+import { RegexConstants } from '../../../constants/regex.constants';
 
 export class RegisterPayloadValidator implements PayloadValidator<RegisterPayload> {
 
     async validate (payload: IPayload, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
         const registerPayload = payload as RegisterPayload;
-        const habboService = new HabboService();
         const errors: Array<ValidationError> = [];
 
         this.validateInvalidPassword(registerPayload, errors);
         this.validateConfirmedPassword(registerPayload, errors);
-        await this.validateHabboMotto(registerPayload, errors, habboService);
+        await this.validateHabboMotto(registerPayload, errors, serviceConfig);
 
         return errors;
     }
@@ -26,7 +26,8 @@ export class RegisterPayloadValidator implements PayloadValidator<RegisterPayloa
     }
 
     private async validateHabboMotto (registerPayload: RegisterPayload, errors: Array<ValidationError>,
-                                      habboService: HabboService): Promise<void> {
+                                      serviceConfig: ServiceConfig): Promise<void> {
+        const habboService = new HabboService();
         const habbo = await habboService.getHabbo(registerPayload.getHabbo());
         if (!habbo) {
             errors.push(ValidationError.newBuilder()
@@ -44,10 +45,18 @@ export class RegisterPayloadValidator implements PayloadValidator<RegisterPayloa
                 .withMessage(ErrorCodes.HABBO_MOTTO_INCORRECT.description)
                 .build());
         }
+
+        if (await serviceConfig.userRepository.getUserWithHabbo(registerPayload.getHabbo())) {
+            errors.push(ValidationError.newBuilder()
+                .withCode(ErrorCodes.USER_WITH_HABBO_EXISTS.code)
+                .withField('habbo')
+                .withMessage(ErrorCodes.USER_WITH_HABBO_EXISTS.description)
+                .build());
+        }
     }
 
     private validateInvalidPassword (registerPayload: RegisterPayload, errors: Array<ValidationError>): void {
-        if (!registerPayload.getPassword() || registerPayload.getPassword().length < 8) {
+        if (!registerPayload.getPassword() || !registerPayload.getPassword().match(RegexConstants.VALID_PASSWORD)) {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.INVALID_PASSWORD.code)
                 .withField('password')

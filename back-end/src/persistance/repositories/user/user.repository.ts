@@ -36,6 +36,10 @@ export class UserRepository extends BaseRepository<UserEntity> {
         return await this.repository.findOne({ username: username });
     }
 
+    async getUserWithHabbo (habbo: string): Promise<UserEntity> {
+        return await this.repository.findOne({ habbo: habbo });
+    }
+
     async getUserById (userId: number): Promise<UserEntity> {
         return await this.repository.findOne({ userId: userId });
     }
