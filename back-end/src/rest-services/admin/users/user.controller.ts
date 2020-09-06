@@ -17,7 +17,8 @@ export class UserController {
         AUTHORIZATION_MIDDLEWARE,
         GET_ADMIN_PERMISSION_MIDDLEWARE([
             Permissions.ADMIN.CAN_MANAGE_USER_BASICS,
-            Permissions.ADMIN.CAN_MANAGE_USER_GROUPS
+            Permissions.ADMIN.CAN_MANAGE_USER_GROUPS,
+            Permissions.ADMIN.CAN_MANAGE_USER_ADVANCED
         ])
     ])
     private async getUsers (req: InternalRequest, res: Response): Promise<void> {

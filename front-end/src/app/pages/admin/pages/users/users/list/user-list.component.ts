@@ -16,7 +16,7 @@ import { SlimUser } from '../../../../../../shared/classes/slim-user.class';
 @UnSub()
 export class UserListComponent implements OnDestroy {
     private readonly ACTIONS = {
-        EDIT_BASIC: 'edit_basic'
+        EDIT_DETAILS: 'edit_details'
     };
 
     data: IPagination<SlimUser>;
@@ -40,8 +40,8 @@ export class UserListComponent implements OnDestroy {
 
     onAction (response: TableActionResponse): void {
         switch (response.action.value) {
-            case this.ACTIONS.EDIT_BASIC:
-                this.route.navigateByUrl(`/admin/users/users/${response.row.rowId}`);
+            case this.ACTIONS.EDIT_DETAILS:
+                this.route.navigateByUrl(`/admin/users/users/${response.row.rowId}/details`);
                 break;
         }
     }
@@ -60,13 +60,15 @@ export class UserListComponent implements OnDestroy {
     }
 
     private getRows (): Array<TableRow> {
+        const adminPermissions = this.authService.getAuthUser().adminPermissions;
         return this.data.items.map(item => ({
             rowId: item.userId,
             actions: [
                 {
-                    label: 'Edit basic',
-                    value: this.ACTIONS.EDIT_BASIC,
-                    isHidden: !this.authService.getAuthUser().adminPermissions.CAN_MANAGE_USER_BASICS
+                    label: 'Edit details',
+                    value: this.ACTIONS.EDIT_DETAILS,
+                    isHidden: !adminPermissions.CAN_MANAGE_USER_BASICS &&
+                        !adminPermissions.CAN_AMANGE_USER_ADVANCED
                 }
             ],
             cells: [

@@ -215,6 +215,20 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
+                    <input type="checkbox" [disabled]="!authUser.adminPermissions.CAN_AMANGE_USER_ADVANCED"
+                           [checked]="data.adminPermissions.CAN_AMANGE_USER_ADVANCED"
+                           (change)="data.adminPermissions.CAN_AMANGE_USER_ADVANCED = !data.adminPermissions.CAN_AMANGE_USER_ADVANCED">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can manage advanced user
+                        <span tooltip="Can edit password"><i class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
                     <input type="checkbox" [disabled]="!authUser.adminPermissions.CAN_MANAGE_USER_GROUPS"
                            [checked]="data.adminPermissions.CAN_MANAGE_USER_GROUPS"
                            (change)="data.adminPermissions.CAN_MANAGE_USER_GROUPS = !data.adminPermissions.CAN_MANAGE_USER_GROUPS">

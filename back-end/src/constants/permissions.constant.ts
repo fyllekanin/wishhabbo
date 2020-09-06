@@ -19,6 +19,7 @@ export class Permissions {
         CAN_MANAGE_USER_BASICS: 2,
         CAN_MANAGE_USER_GROUPS: 4,
         CAN_MANAGE_WEBSITE_SETTINGS: 8,
-        CAN_SEE_LOGS: 16
+        CAN_SEE_LOGS: 16,
+        CAN_MANAGE_USER_ADVANCED: 32
     };
 }
