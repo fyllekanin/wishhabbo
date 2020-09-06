@@ -22,7 +22,7 @@ export class GroupEntity extends CreatedUpdatedAtEntity implements IGroupEntity 
     immunity: number;
     @Column({ unique: true })
     displayName: string;
-    @Column({ type: 'text' })
+    @Column({ type: 'text', nullable: true })
     barStyle: string;
     @Column({ nullable: true })
     nameColor: string;

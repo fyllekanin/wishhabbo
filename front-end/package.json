@@ -2,12 +2,12 @@
     "name": "front-end",
     "version": "0.0.0",
     "scripts": {
-        "ng": "ng",
         "start": "node node_modules/@angular/cli/bin/ng serve --live-reload --proxy-config proxy.conf.json",
         "build:prod": "node node_modules/@angular/cli/bin/ng build --prod",
         "test": "node node_modules/@angular/cli/bin/ng test",
         "lint": "node node_modules/@angular/cli/bin/ng lint",
-        "e2e": "webdriver-manager update && node ./node_modules/protractor/bin/protractor ./e2e/protractor.conf.js"
+        "e2e:jenkins": "node node_modules/@angular/cli/bin/ng e2e",
+        "e2e": "./node_modules/protractor/bin/webdriver-manager update && node ./node_modules/protractor/bin/protractor ./e2e/protractor.conf.js"
     },
     "private": true,
     "dependencies": {
