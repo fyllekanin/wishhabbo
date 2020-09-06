@@ -7,6 +7,7 @@ describe('UserDetailsPayload', () => {
         // Given
         const req = <InternalRequest><unknown>{
             body: {
+                userId: 1,
                 username: 'username',
                 habbo: 'habbo',
                 password: 'password',
@@ -18,6 +19,7 @@ describe('UserDetailsPayload', () => {
         const result = UserDetailsPayload.of(req);
 
         // Then
+        expect(result.getUserId()).toEqual(1);
         expect(result.getUsername()).toEqual('username');
         expect(result.getHabbo()).toEqual('habbo');
         expect(result.getPassword()).toEqual('password');
