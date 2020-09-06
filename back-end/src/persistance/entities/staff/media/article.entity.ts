@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../../created-updated-at.entity';
 
 interface IArticleEntity {
@@ -19,19 +19,23 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
     articleId: number;
     @Column()
     userId: number;
-    @Column()
+    @Column({ unique: true })
     title: string;
     @Column({ type: 'longtext' })
+    @Index({ fulltext: true })
     content: string;
     @Column()
+    @Index()
     badges: string;
     @Column()
     room: string;
     @Column()
     difficulty: number;
     @Column()
+    @Index()
     type: number;
     @Column()
+    @Index()
     isApproved: boolean;
 
     constructor (builder: IArticleEntity) {

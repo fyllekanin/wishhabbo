@@ -5,7 +5,7 @@
     "username": "root",
     "password": "",
     "database": "wishhabbo",
-    "synchronize": true,
+    "synchronize": false,
     "logging": false,
     "name": "default",
     "entities": [

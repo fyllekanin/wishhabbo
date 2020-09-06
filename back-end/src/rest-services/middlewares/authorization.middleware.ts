@@ -1,17 +1,15 @@
 import { NextFunction, Response } from 'express';
-import { UNAUTHORIZED } from 'http-status-codes';
 import { InternalRequest } from '../../utilities/internal.request';
+import { UNAUTHORIZED } from 'http-status-codes';
 
 export const AUTHORIZATION_MIDDLEWARE = async (req: InternalRequest, res: Response, next: NextFunction) => {
-    const entity = await req.serviceConfig.tokenRepository.getTokenFromRequest(req);
-
-    if (!entity) {
+    if (!req.user.tokenEntity) {
         res.status(UNAUTHORIZED).json({
             isTokenExisting: false
         });
         return;
     }
-    if (!req.serviceConfig.tokenRepository.isAccessTokenAlive(entity)) {
+    if (!req.serviceConfig.tokenRepository.isAccessTokenAlive(req.user.tokenEntity)) {
         res.status(UNAUTHORIZED).json({
             isTokenExisting: true
         });

@@ -5,12 +5,15 @@ import { EventEntity } from '../../entities/staff/event.entity';
 export class EventsRepository extends BaseRepository<EventEntity> {
     protected repository: Repository<EventEntity>;
 
-    constructor () {
-        super();
-        this.repository = getConnection().getRepository(EventEntity);
+    async all (): Promise<Array<EventEntity>> {
+        return this.getRepository().find();
     }
 
-    async all (): Promise<Array<EventEntity>> {
-        return this.repository.find();
+    protected getRepository (): Repository<EventEntity> {
+        if (this.repository) {
+            return this.repository;
+        }
+        this.repository = getConnection().getRepository(EventEntity);
+        return this.repository;
     }
 }

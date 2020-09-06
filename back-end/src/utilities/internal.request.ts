@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { UserEntity } from '../persistance/entities/user/user.entity';
 import { ResourceRepository } from '../persistance/repositories/resource.repository';
 import { HabboRepository } from '../persistance/repositories/habbo.repository';
 import { GroupRepository } from '../persistance/repositories/group.repository';
@@ -9,6 +8,7 @@ import { UserRepository } from '../persistance/repositories/user/user.repository
 import { LogRepository } from '../persistance/repositories/log.repository';
 import { TimetableRepository } from '../persistance/repositories/staff/timetable.repository';
 import { EventsRepository } from '../persistance/repositories/staff/events.repository';
+import { TokenEntity } from '../persistance/entities/user/token.entity';
 
 export interface ServiceConfig {
     resourceRepository: ResourceRepository;
@@ -22,7 +22,12 @@ export interface ServiceConfig {
     eventsRepository: EventsRepository;
 }
 
+export interface InternalUser {
+    userId: number;
+    tokenEntity: TokenEntity;
+}
+
 export interface InternalRequest extends Request {
-    user: UserEntity;
+    user: InternalUser;
     serviceConfig: ServiceConfig;
 }

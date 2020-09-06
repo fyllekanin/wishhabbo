@@ -5,6 +5,29 @@ export class CreateGroupTable1598189277112 implements MigrationInterface {
     async up (queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
             name: 'timetable',
+            indices: [
+                {
+                    columnNames: [ 'createdAt' ]
+                },
+                {
+                    columnNames: [ 'updatedAt' ]
+                },
+                {
+                    columnNames: [ 'type' ]
+                },
+                {
+                    columnNames: [ 'userId' ]
+                },
+                {
+                    columnNames: [ 'day' ]
+                },
+                {
+                    columnNames: [ 'hour' ]
+                },
+                {
+                    columnNames: [ 'isArchived' ]
+                }
+            ],
             columns: [
                 {
                     name: 'timetableId',

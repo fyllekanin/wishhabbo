@@ -8,7 +8,6 @@ export class BadgeScannerTasks implements IBackgroundTask {
     private static readonly SECOND_PATTERN = /badge_desc_/;
     private static readonly THIRD_PATTERN = /badge_name_/;
 
-
     async run (): Promise<void> {
         const habboRepository = new HabboRepository();
         const habboService = new HabboService();

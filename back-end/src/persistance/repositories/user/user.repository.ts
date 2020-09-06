@@ -6,13 +6,8 @@ import { SlimUserView } from '../../../rest-service-views/slim-user.view';
 export class UserRepository extends BaseRepository<UserEntity> {
     protected repository: Repository<UserEntity>;
 
-    constructor () {
-        super();
-        this.repository = getConnection().getRepository(UserEntity);
-    }
-
     async removeDisplayGroupId (groupId: number): Promise<void> {
-        await this.repository.update({
+        await this.getRepository().update({
             displayGroupId: groupId
         }, {
             displayGroupId: 0
@@ -33,14 +28,22 @@ export class UserRepository extends BaseRepository<UserEntity> {
     }
 
     async getUserWithUsername (username: string): Promise<UserEntity> {
-        return await this.repository.findOne({ username: username });
+        return await this.getRepository().findOne({ username: username });
     }
 
     async getUserWithHabbo (habbo: string): Promise<UserEntity> {
-        return await this.repository.findOne({ habbo: habbo });
+        return await this.getRepository().findOne({ habbo: habbo });
     }
 
     async getUserById (userId: number): Promise<UserEntity> {
-        return await this.repository.findOne({ userId: userId });
+        return await this.getRepository().findOne({ userId: userId });
+    }
+
+    protected getRepository (): Repository<UserEntity> {
+        if (this.repository) {
+            return this.repository;
+        }
+        this.repository = getConnection().getRepository(UserEntity);
+        return this.repository;
     }
 }

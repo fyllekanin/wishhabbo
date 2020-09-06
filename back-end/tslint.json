@@ -60,8 +60,6 @@
             true,
             "debug",
             "info",
-            "time",
-            "timeEnd",
             "trace"
         ],
         "array-type": [

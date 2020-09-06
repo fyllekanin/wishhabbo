@@ -5,6 +5,31 @@ export class CreateLogStaffTable1598094165815 implements MigrationInterface {
     async up (queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
             name: 'log_staff',
+            indices: [
+                {
+                    columnNames: [ 'createdAt' ]
+                },
+                {
+                    columnNames: [ 'updatedAt' ]
+                },
+                {
+                    columnNames: [ 'id' ]
+                },
+                {
+                    columnNames: [ 'contentId' ]
+                },
+                {
+                    columnNames: [ 'userId' ]
+                },
+                {
+                    columnNames: [ 'beforeChange' ],
+                    isFulltext: true
+                },
+                {
+                    columnNames: [ 'afterChange' ],
+                    isFulltext: true
+                }
+            ],
             columns: [
                 {
                     name: 'logId',

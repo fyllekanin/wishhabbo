@@ -15,6 +15,7 @@ import { UserListComponent } from './users/list/user-list.component';
 import { UserListService } from './users/list/user-list.service';
 import { UserGroupsComponent } from './users/user-groups/user-groups.component';
 import { UserDetailsComponent } from './users/user-details/user-details.component';
+import { UserDetailsService } from './users/user-details/user-details.service';
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import { UserDetailsComponent } from './users/user-details/user-details.componen
     providers: [
         GroupService,
         GroupListService,
-        UserListService
+        UserListService,
+        UserDetailsService
     ],
     exports: [
         RouterModule

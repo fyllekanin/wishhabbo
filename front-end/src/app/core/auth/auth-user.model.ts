@@ -35,7 +35,7 @@ export class AdminPermissions {
     @primitiveOf(Boolean)
     CAN_MANAGE_USER_BASICS: boolean;
     @primitiveOf(Boolean)
-    CAN_AMANGE_USER_ADVANCED: boolean;
+    CAN_MANAGE_USER_ADVANCED: boolean;
     @primitiveOf(Boolean)
     CAN_MANAGE_USER_GROUPS: boolean;
     @primitiveOf(Boolean)

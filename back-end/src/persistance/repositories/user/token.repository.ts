@@ -11,16 +11,12 @@ export class TokenRepository {
     private static readonly REFRESH_TOKEN_LIFE_TIME = 86400;
     repository: Repository<TokenEntity>;
 
-    constructor () {
-        this.repository = getConnection().getRepository(TokenEntity);
-    }
-
     async save (entity: TokenEntity): Promise<TokenEntity> {
-        return await this.repository.save(entity);
+        return await this.getRepository().save(entity);
     }
 
     async delete (entity: TokenEntity): Promise<DeleteResult> {
-        return await this.repository.delete({ tokenId: entity.tokenId });
+        return await this.getRepository().delete({ tokenId: entity.tokenId });
     }
 
     async getTokenFromRequest (req: InternalRequest): Promise<TokenEntity> {
@@ -29,7 +25,7 @@ export class TokenRepository {
         if (!this.isAccessTokenAlive(token) && this.isRefreshTokenAlive(token)) {
             token.access = await this.getAvailableAccessToken();
             token.refresh = await this.getAvailableRefreshToken();
-            await this.repository.save(token);
+            await this.getRepository().save(token);
         }
         return token;
     }
@@ -40,13 +36,13 @@ export class TokenRepository {
     }
 
     async getTokenWithAccessToken (accessToken: string): Promise<TokenEntity> {
-        return await this.repository.findOne({
+        return await this.getRepository().findOne({
             access: accessToken
         });
     }
 
     async getTokenWithAccessAndRefreshToken (req: InternalRequest): Promise<TokenEntity> {
-        return await this.repository.findOne({
+        return await this.getRepository().findOne({
             refresh: RequestUtility.getRefreshToken(req),
             access: RequestUtility.getAccessToken(req)
         });
@@ -61,11 +57,12 @@ export class TokenRepository {
     }
 
     async getTokens (): Promise<Array<TokenEntity>> {
-        return await this.repository.find();
+        return await this.getRepository().find();
     }
 
     async deleteExpiredTokens (): Promise<DeleteResult> {
-        return await this.repository.delete({ updatedAt: LessThan(TimeUtility.getCurrent() - TokenRepository.REFRESH_TOKEN_LIFE_TIME) });
+        return await this.getRepository()
+            .delete({ updatedAt: LessThan(TimeUtility.getCurrent() - TokenRepository.REFRESH_TOKEN_LIFE_TIME) });
     }
 
     async getToken (user: UserEntity): Promise<TokenEntity> {
@@ -75,19 +72,27 @@ export class TokenRepository {
             .withRefresh(await this.getAvailableRefreshToken())
             .build();
 
-        await this.repository.save(entity);
+        await this.getRepository().save(entity);
         return entity;
     }
 
     private async getAvailableAccessToken (): Promise<string> {
         const newToken = IdHelper.newUuid();
-        const isAvailable = await this.repository.count({ access: newToken }) === 0;
+        const isAvailable = await this.getRepository().count({ access: newToken }) === 0;
         return isAvailable ? newToken : await this.getAvailableAccessToken();
     }
 
     private async getAvailableRefreshToken (): Promise<string> {
         const newToken = IdHelper.newUuid();
-        const isAvailable = await this.repository.count({ refresh: newToken }) === 0;
+        const isAvailable = await this.getRepository().count({ refresh: newToken }) === 0;
         return isAvailable ? newToken : await this.getAvailableRefreshToken();
+    }
+
+    private getRepository (): Repository<TokenEntity> {
+        if (this.repository) {
+            return this.repository;
+        }
+        this.repository = getConnection().getRepository(TokenEntity);
+        return this.repository;
     }
 }

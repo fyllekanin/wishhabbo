@@ -5,6 +5,17 @@ export class CreateTokenTable1596049000584 implements MigrationInterface {
     async up (queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
             name: 'tokens',
+            indices: [
+                {
+                    columnNames: [ 'createdAt' ]
+                },
+                {
+                    columnNames: [ 'updatedAt' ]
+                },
+                {
+                    columnNames: [ 'userId' ]
+                }
+            ],
             columns: [
                 {
                     name: 'tokenId',
@@ -24,7 +35,7 @@ export class CreateTokenTable1596049000584 implements MigrationInterface {
                 },
                 {
                     name: 'refresh',
-                    type: 'int',
+                    type: 'varchar',
                     isUnique: true
                 },
                 {

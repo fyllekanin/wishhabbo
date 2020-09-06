@@ -5,6 +5,27 @@ export class CreateArticleTable1596886304003 implements MigrationInterface {
     async up (queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
             name: 'articles',
+            indices: [
+                {
+                    columnNames: [ 'createdAt' ]
+                },
+                {
+                    columnNames: [ 'updatedAt' ]
+                },
+                {
+                    columnNames: [ 'content' ],
+                    isFulltext: true
+                },
+                {
+                    columnNames: [ 'badges' ]
+                },
+                {
+                    columnNames: [ 'type' ]
+                },
+                {
+                    columnNames: [ 'isApproved' ]
+                }
+            ],
             columns: [
                 {
                     name: 'articleId',

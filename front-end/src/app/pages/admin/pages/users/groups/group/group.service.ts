@@ -46,7 +46,7 @@ export class GroupService implements Resolve<GroupClass> {
     save (group: GroupClass): Promise<number | unknown> {
         if (group.groupId) {
             return this.httpService.put(`/admin/users/groups/${group.groupId}`, group).toPromise()
-                .then(groupId => {
+                .then(() => {
                     this.siteNotificationService.create({
                         title: 'Updated',
                         message: 'Group updated',

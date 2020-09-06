@@ -13,6 +13,9 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { GroupController } from './rest-services/admin/users/group.controller';
 import { UserController } from './rest-services/admin/users/user.controller';
+import compression from 'compression';
+
+process.env.NODE_ENV = 'production';
 
 class MainServer extends Server {
     private backgroundTaskHandler: BackgroundTaskHandler;
@@ -22,6 +25,7 @@ class MainServer extends Server {
         this.backgroundTaskHandler = new BackgroundTaskHandler();
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(bodyParser.json());
+        this.app.use(compression());
         this.app.use(express.static(__dirname + '/public'));
         this.app.use(express.static(__dirname + '/resources'));
     }

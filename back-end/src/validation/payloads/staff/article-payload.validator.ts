@@ -4,14 +4,13 @@ import { ArticlePayload } from '../../../rest-service-views/payloads/staff/media
 import { ArticleRepository } from '../../../persistance/repositories/staff/media/article.repository';
 import { ErrorCodes } from '../../error.codes';
 import { ArticleConstants } from '../../../constants/article.constant';
-import { ServiceConfig } from '../../../utilities/internal.request';
+import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { ResourceRepository } from '../../../persistance/repositories/resource.repository';
 import { PayloadValidator } from '../payload-validator.interface';
-import { UserEntity } from '../../../persistance/entities/user/user.entity';
 
 export class ArticlePayloadValidator implements PayloadValidator<ArticlePayload> {
 
-    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
+    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
         const articlePayload = payload as ArticlePayload;
         const errors: Array<ValidationError> = [];
 

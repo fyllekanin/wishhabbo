@@ -1,19 +1,17 @@
 import { getConnection, Repository } from 'typeorm';
 import { LogEntityAbstract } from '../entities/log/log-entity.abstract';
-import { BaseRepository } from './base.repository';
 import { LogUserEntity } from '../entities/log/log-user.entity';
 import { LogStaffEntity } from '../entities/log/log-staff.entity';
 import { LogAdminEntity } from '../entities/log/log-admin.entity';
 
-export class LogRepository extends BaseRepository<LogEntityAbstract> {
+export class LogRepository {
     protected repository: Repository<LogEntityAbstract>;
 
     async save (entity: LogEntityAbstract): Promise<LogEntityAbstract> {
-        this.repository = this.getRepository(entity);
-        return await super.save(entity);
+        return await this.getRepository(entity).save(entity);
     }
 
-    private getRepository (entity: LogEntityAbstract): Repository<LogEntityAbstract> {
+    protected getRepository (entity: LogEntityAbstract): Repository<LogEntityAbstract> {
         if (entity instanceof LogUserEntity) {
             return getConnection().getRepository(LogUserEntity);
         }

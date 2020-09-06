@@ -3,31 +3,27 @@ import { GroupEntity } from '../entities/group/group.entity';
 import { UserGroupEntity } from '../entities/group/user-group.entity';
 
 const SUPER_ADMINS = [
-    0
+    1
 ];
 
 export class GroupRepository {
     private groupRepository: Repository<GroupEntity>;
     private userGroupRepository: Repository<UserGroupEntity>;
 
-    constructor () {
-        this.groupRepository = getConnection().getRepository(GroupEntity);
-        this.userGroupRepository = getConnection().getRepository(UserGroupEntity);
-    }
-
     async getUserIdsWithSameOrHigherImmunity (immunity: number): Promise<Array<number>> {
-        const groups = await this.groupRepository.find({
+        const groups = await this.getGroupRepository().find({
             immunity: MoreThanOrEqual(immunity)
         });
         if (groups.length === 0) {
-            return [];
+            return SUPER_ADMINS;
         }
-        const userGroups = await this.userGroupRepository.find({
+        const userGroups = await this.getUserGroupRepository().find({
             where: {
                 groupId: In(groups.map(group => group.groupId))
             }
         });
-        return userGroups.map(userGroup => userGroup.userId);
+        const userIds = userGroups.map(userGroup => userGroup.userId).concat(SUPER_ADMINS);
+        return [ ...new Set(userIds) ];
     }
 
     async getUserIdImmunity (userId: number): Promise<number> {
@@ -44,20 +40,20 @@ export class GroupRepository {
     }
 
     async getGroups (): Promise<Array<GroupEntity>> {
-        return await this.groupRepository.find({
+        return await this.getGroupRepository().find({
             cache: true
         });
     }
 
     async getGroupById (groupId: number): Promise<GroupEntity> {
-        return await this.groupRepository.findOne({
+        return await this.getGroupRepository().findOne({
             cache: true,
             where: { groupId: groupId }
         });
     }
 
     async deleteGroup (group: GroupEntity): Promise<GroupEntity> {
-        return await this.groupRepository.remove(group);
+        return await this.getGroupRepository().remove(group);
     }
 
     async addGroupToUser (groupId: number, userId: number): Promise<void> {
@@ -66,24 +62,24 @@ export class GroupRepository {
             .withUserId(userId)
             .build();
 
-        await this.userGroupRepository.save(entity);
+        await this.getUserGroupRepository().save(entity);
     }
 
     async deleteGroupFromUser (groupId: number, userId: number): Promise<DeleteResult> {
-        return await this.userGroupRepository.delete({
+        return await this.getUserGroupRepository().delete({
             userId: userId,
             groupId: groupId
         });
     }
 
     async deleteUsersFromGroup (groupId: number): Promise<DeleteResult> {
-        return await this.userGroupRepository.delete({
+        return await this.getUserGroupRepository().delete({
             groupId: groupId
         });
     }
 
     async saveGroup (entity: GroupEntity): Promise<GroupEntity> {
-        return await this.groupRepository.save(entity);
+        return await this.getGroupRepository().save(entity);
     }
 
     async haveAdminPermission (userId: number, permission: number): Promise<boolean> {
@@ -95,7 +91,7 @@ export class GroupRepository {
         if (groupIds.length === 0) {
             return false;
         }
-        return await this.groupRepository.count({
+        return await this.getGroupRepository().count({
             groupId: In(groupIds),
             adminPermissions: Raw(() => `(adminPermissions & ${permission})`)
         }) > 0;
@@ -110,7 +106,7 @@ export class GroupRepository {
         if (groupIds.length === 0) {
             return false;
         }
-        return await this.groupRepository.count({
+        return await this.getGroupRepository().count({
             cache: true,
             where: { groupId: In(groupIds), staffPermissions: Raw(() => `(staffPermissions & ${permission})`) }
         }) > 0;
@@ -118,17 +114,33 @@ export class GroupRepository {
 
     async getGroupsUserHave (userId: number): Promise<Array<GroupEntity>> {
         const groupIds = await this.getGroupIdsFromUser(userId);
-        return await this.groupRepository.find({
+        return await this.getGroupRepository().find({
             cache: true,
             where: { groupId: In(groupIds) }
         });
     }
 
     private async getGroupIdsFromUser (userId: number): Promise<Array<number>> {
-        const userGroups = await this.userGroupRepository.find({
+        const userGroups = await this.getUserGroupRepository().find({
             cache: true,
             where: { userId: userId }
         });
         return userGroups.map(userGroup => userGroup.groupId);
+    }
+
+    private getGroupRepository (): Repository<GroupEntity> {
+        if (this.groupRepository) {
+            return this.groupRepository;
+        }
+        this.groupRepository = getConnection().getRepository(GroupEntity);
+        return this.groupRepository;
+    }
+
+    private getUserGroupRepository (): Repository<UserGroupEntity> {
+        if (this.userGroupRepository) {
+            return this.userGroupRepository;
+        }
+        this.userGroupRepository = getConnection().getRepository(UserGroupEntity);
+        return this.userGroupRepository;
     }
 }

@@ -1,17 +1,15 @@
 import { ValidationError } from '../../validation.error';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
-import { ServiceConfig } from '../../../utilities/internal.request';
+import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { PayloadValidator } from '../payload-validator.interface';
-import { UserEntity } from '../../../persistance/entities/user/user.entity';
 import { GroupView } from '../../../rest-service-views/group.view';
 import { UserDetailsPayload } from '../../../rest-service-views/payloads/admin/users/user-details.payload';
 import { ErrorCodes } from '../../error.codes';
 import { RegexConstants } from '../../../constants/regex.constants';
-import { HabboService } from '../../../external/services/habbo.service';
 
 export class UserDetailsPayloadValidator implements PayloadValidator<GroupView> {
 
-    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
+    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
         const userDetails = payload as UserDetailsPayload;
         const errors: Array<ValidationError> = [];
 
@@ -48,7 +46,10 @@ export class UserDetailsPayloadValidator implements PayloadValidator<GroupView> 
     }
 
     private async validateValidPassword (userDetails: UserDetailsPayload, errors: Array<ValidationError>): Promise<void> {
-        if (!userDetails.getPassword() || !userDetails.getPassword().match(RegexConstants.VALID_PASSWORD)) {
+        if (!userDetails.getPassword()) {
+            return;
+        }
+        if (!userDetails.getPassword().match(RegexConstants.VALID_PASSWORD)) {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.INVALID_PASSWORD.code)
                 .withField('password')
@@ -68,10 +69,8 @@ export class UserDetailsPayloadValidator implements PayloadValidator<GroupView> 
 
     private async validateValidHabbo (userDetails: UserDetailsPayload, serviceConfig: ServiceConfig,
                                       errors: Array<ValidationError>): Promise<void> {
-        const habboService = new HabboService();
-        const habbo = await habboService.getHabbo(userDetails.getHabbo());
         const existingUserWithHabbo = await serviceConfig.userRepository.getUserWithHabbo(userDetails.getHabbo());
-        if (!habbo || existingUserWithHabbo) {
+        if (existingUserWithHabbo && existingUserWithHabbo.userId !== userDetails.getUserId()) {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.USER_WITH_HABBO_EXISTS.code)
                 .withField('habbo')

@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
 interface ITokenEntity {
@@ -13,10 +13,11 @@ export class TokenEntity extends CreatedUpdatedAtEntity implements ITokenEntity 
     @PrimaryGeneratedColumn()
     tokenId: number;
     @Column()
+    @Index()
     userId: number;
-    @Column()
+    @Column({ unique: true })
     access: string;
-    @Column()
+    @Column({ unique: true })
     refresh: string;
 
     constructor (builder: ITokenEntity) {

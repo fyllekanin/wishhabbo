@@ -6,9 +6,8 @@ export const GET_ADMIN_PERMISSION_MIDDLEWARE = (permissions: Array<number>):
     (req: InternalRequest, res: Response, next: NextFunction) => void => {
     return async (req: InternalRequest, res: Response, next: NextFunction) => {
 
-        const userId = await req.serviceConfig.tokenRepository.getUserIdFromRequest(req);
         for (const permission of permissions) {
-            if (await req.serviceConfig.groupRepository.haveAdminPermission(userId, permission)) {
+            if (await req.serviceConfig.groupRepository.haveAdminPermission(req.user.userId, permission)) {
                 next();
                 return;
             }

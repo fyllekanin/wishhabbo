@@ -4,12 +4,12 @@ import { UserEntity } from '../../../persistance/entities/user/user.entity';
 import { UserRepository } from '../../../persistance/repositories/user/user.repository';
 import { ErrorCodes } from '../../error.codes';
 import { IEntity } from '../../../persistance/entities/entity.interface';
-import { ServiceConfig } from '../../../utilities/internal.request';
+import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { RegexConstants } from '../../../constants/regex.constants';
 
 export class UserValidation implements EntityValidator<UserEntity> {
 
-    async validate (entity: IEntity, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
+    async validate (entity: IEntity, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
         const userEntity = entity as UserEntity;
         const errors: Array<ValidationError> = [];
 

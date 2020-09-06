@@ -3,14 +3,13 @@ import { IPayload } from '../../../rest-service-views/payloads/payload.interface
 import { RegisterPayload } from '../../../rest-service-views/payloads/auth/register.payload';
 import { ErrorCodes } from '../../error.codes';
 import { HabboService } from '../../../external/services/habbo.service';
-import { ServiceConfig } from '../../../utilities/internal.request';
+import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { PayloadValidator } from '../payload-validator.interface';
-import { UserEntity } from '../../../persistance/entities/user/user.entity';
 import { RegexConstants } from '../../../constants/regex.constants';
 
 export class RegisterPayloadValidator implements PayloadValidator<RegisterPayload> {
 
-    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
+    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
         const registerPayload = payload as RegisterPayload;
         const errors: Array<ValidationError> = [];
 

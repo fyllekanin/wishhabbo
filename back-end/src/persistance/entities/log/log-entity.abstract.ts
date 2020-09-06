@@ -1,4 +1,4 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
 interface ILogEntityAbstract {
@@ -14,14 +14,19 @@ export abstract class LogEntityAbstract extends CreatedUpdatedAtEntity implement
     @PrimaryGeneratedColumn()
     logId: number;
     @Column()
+    @Index()
     id: number;
     @Column()
+    @Index()
     contentId: number;
     @Column()
+    @Index()
     userId: number;
     @Column({ nullable: true, type: 'longtext' })
+    @Index({ fulltext: true })
     beforeChange: string;
     @Column({ nullable: true, type: 'longtext' })
+    @Index({ fulltext: true })
     afterChange: string;
 
     constructor (builder: ILogEntityAbstract) {

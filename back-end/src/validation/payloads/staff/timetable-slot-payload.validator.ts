@@ -1,16 +1,15 @@
 import { ValidationError } from '../../validation.error';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
-import { ServiceConfig } from '../../../utilities/internal.request';
+import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { TimetableSlot } from '../../../rest-service-views/timetable.slot';
 import { TimetableType } from '../../../persistance/entities/staff/timetable.entity';
 import { ErrorCodes } from '../../error.codes';
-import { UserEntity } from '../../../persistance/entities/user/user.entity';
 import { PayloadValidator } from '../payload-validator.interface';
 import { Permissions } from '../../../constants/permissions.constant';
 
 export class TimetableSlotPayloadValidator implements PayloadValidator<TimetableSlot> {
 
-    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
+    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
         const timetableSlot = payload as TimetableSlot;
         const errors: Array<ValidationError> = [];
 
@@ -40,7 +39,7 @@ export class TimetableSlotPayloadValidator implements PayloadValidator<Timetable
         }
     }
 
-    private async validateBookForUser (user: UserEntity, timetableSlot: TimetableSlot, serviceConfig: ServiceConfig,
+    private async validateBookForUser (user: InternalUser, timetableSlot: TimetableSlot, serviceConfig: ServiceConfig,
                                        errors: Array<ValidationError>): Promise<void> {
         if (!timetableSlot.getUser() || !timetableSlot.getUser().getUsername()) {
             return;

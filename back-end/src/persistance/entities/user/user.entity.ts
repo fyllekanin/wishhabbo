@@ -13,13 +13,13 @@ interface IUserEntity {
 export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
     @PrimaryGeneratedColumn()
     userId: number;
-    @Column()
+    @Column({ unique: true })
     username: string;
     @Column()
     password: string;
     @Column({ default: 0 })
     displayGroupId: number;
-    @Column()
+    @Column({ unique: true })
     habbo: string;
 
     constructor (builder: IUserEntity) {
@@ -54,7 +54,7 @@ class Builder {
     };
 
     constructor (entity?: UserEntity) {
-        Object.assign(this, entity);
+        Object.assign(this.myData, entity);
     }
 
     withUserId (userId: number): Builder {

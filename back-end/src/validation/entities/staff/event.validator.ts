@@ -1,15 +1,14 @@
 import { EntityValidator } from '../entity-validator.interface';
 import { ValidationError } from '../../validation.error';
-import { UserEntity } from '../../../persistance/entities/user/user.entity';
 import { IEntity } from '../../../persistance/entities/entity.interface';
-import { ServiceConfig } from '../../../utilities/internal.request';
+import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { EventEntity } from '../../../persistance/entities/staff/event.entity';
 import { EventsRepository } from '../../../persistance/repositories/staff/events.repository';
 import { ErrorCodes } from '../../error.codes';
 
 export class EventValidator implements EntityValidator<EventEntity> {
 
-    async validate (entity: IEntity, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
+    async validate (entity: IEntity, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
         const eventEntity = entity as EventEntity;
         const errors: Array<ValidationError> = [];
 

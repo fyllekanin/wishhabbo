@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
 export enum TimetableType {
@@ -21,16 +21,21 @@ export class TimetableEntity extends CreatedUpdatedAtEntity implements ITimetabl
     @PrimaryGeneratedColumn()
     timetableId: number;
     @Column()
+    @Index()
     type: number;
     @Column({ nullable: true })
     eventId: number;
     @Column()
+    @Index()
     userId: number;
     @Column()
+    @Index()
     day: number;
     @Column()
+    @Index()
     hour: number;
     @Column()
+    @Index()
     isArchived: boolean;
 
     constructor (builder: ITimetableEntity) {

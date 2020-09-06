@@ -11,7 +11,7 @@ interface IEventEntity {
 export class EventEntity extends CreatedUpdatedAtEntity implements IEventEntity {
     @PrimaryGeneratedColumn()
     eventId: number;
-    @Column()
+    @Column({ unique: true })
     name: string;
 
     constructor (builder: IEventEntity) {

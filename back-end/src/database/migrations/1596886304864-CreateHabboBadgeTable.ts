@@ -5,6 +5,14 @@ export class CreateBadgesTable1596886304003 implements MigrationInterface {
     async up (queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
             name: 'habbo_badges',
+            indices: [
+                {
+                    columnNames: [ 'createdAt' ]
+                },
+                {
+                    columnNames: [ 'updatedAt' ]
+                }
+            ],
             columns: [
                 {
                     name: 'habboBadgeId',

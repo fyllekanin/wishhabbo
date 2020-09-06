@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
 interface IGroupEntity {
@@ -19,6 +19,7 @@ export class GroupEntity extends CreatedUpdatedAtEntity implements IGroupEntity 
     @Column({ unique: true })
     name: string;
     @Column({ default: 0 })
+    @Index()
     immunity: number;
     @Column({ unique: true })
     displayName: string;
@@ -27,8 +28,10 @@ export class GroupEntity extends CreatedUpdatedAtEntity implements IGroupEntity 
     @Column({ nullable: true })
     nameColor: string;
     @Column({ default: 0 })
+    @Index()
     staffPermissions: number;
     @Column({ default: 0 })
+    @Index()
     adminPermissions: number;
 
     constructor (builder: IGroupEntity) {

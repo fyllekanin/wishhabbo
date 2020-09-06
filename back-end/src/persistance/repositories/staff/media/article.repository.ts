@@ -5,12 +5,15 @@ import { BaseRepository } from '../../base.repository';
 export class ArticleRepository extends BaseRepository<ArticleEntity> {
     protected repository: Repository<ArticleEntity>;
 
-    constructor () {
-        super();
-        this.repository = getConnection().getRepository(ArticleEntity);
+    async getByArticleId (articleId: number): Promise<ArticleEntity> {
+        return await this.getRepository().findOne({ articleId: articleId });
     }
 
-    async getByArticleId (articleId: number): Promise<ArticleEntity> {
-        return await this.repository.findOne({ articleId: articleId });
+    protected getRepository (): Repository<ArticleEntity> {
+        if (this.repository) {
+            return this.repository;
+        }
+        this.repository = getConnection().getRepository(ArticleEntity);
+        return this.repository;
     }
 }

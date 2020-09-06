@@ -68,7 +68,7 @@ export class UserListComponent implements OnDestroy {
                     label: 'Edit details',
                     value: this.ACTIONS.EDIT_DETAILS,
                     isHidden: !adminPermissions.CAN_MANAGE_USER_BASICS &&
-                        !adminPermissions.CAN_AMANGE_USER_ADVANCED
+                        !adminPermissions.CAN_MANAGE_USER_ADVANCED
                 }
             ],
             cells: [

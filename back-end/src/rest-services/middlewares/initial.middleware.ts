@@ -33,9 +33,16 @@ export const INITIAL_MIDDLEWARE = async (req: InternalRequest, res: Response, ne
         return;
     }
     if (!req.serviceConfig.tokenRepository.isAccessTokenAlive(entity)) {
+        req.user = {
+            userId: 0,
+            tokenEntity: entity
+        };
         next();
         return;
     }
-    req.user = await req.serviceConfig.userRepository.getUserById(entity.userId);
+    req.user = {
+        userId: entity.userId,
+        tokenEntity: entity
+    };
     next();
 };

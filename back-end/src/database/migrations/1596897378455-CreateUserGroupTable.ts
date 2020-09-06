@@ -5,6 +5,20 @@ export class CreateUserGroupTable1596897378455 implements MigrationInterface {
     async up (queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
             name: 'user_group',
+            indices: [
+                {
+                    columnNames: [ 'createdAt' ]
+                },
+                {
+                    columnNames: [ 'updatedAt' ]
+                },
+                {
+                    columnNames: [ 'userId' ]
+                },
+                {
+                    columnNames: [ 'groupId' ]
+                }
+            ],
             columns: [
                 {
                     name: 'userGroupId',

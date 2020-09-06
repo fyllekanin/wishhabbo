@@ -1,8 +1,7 @@
 import { ValidationError } from '../../validation.error';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
-import { ServiceConfig } from '../../../utilities/internal.request';
+import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { PayloadValidator } from '../payload-validator.interface';
-import { UserEntity } from '../../../persistance/entities/user/user.entity';
 import { GroupView } from '../../../rest-service-views/group.view';
 import { GroupRepository } from '../../../persistance/repositories/group.repository';
 import { ErrorCodes } from '../../error.codes';
@@ -13,7 +12,7 @@ import { Permissions } from '../../../constants/permissions.constant';
 export class GroupPayloadValidator implements PayloadValidator<GroupView> {
     private static readonly VALID_HEX = /#([a-zA-Z0-9]{6}|[a-zA-Z0-9]{3})/;
 
-    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: UserEntity): Promise<Array<ValidationError>> {
+    async validate (payload: IPayload, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
         const groupView = payload as GroupView;
         const errors: Array<ValidationError> = [];
 
@@ -59,7 +58,7 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
     }
 
     private async validateImmunity (groupView: GroupView, groupRepository: GroupRepository,
-                                    errors: Array<ValidationError>, user: UserEntity): Promise<void> {
+                                    errors: Array<ValidationError>, user: InternalUser): Promise<void> {
         const immunity = await groupRepository.getUserIdImmunity(user.userId);
         if (immunity <= groupView.getImmunity()) {
             errors.push(ValidationError.newBuilder()
@@ -81,7 +80,7 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
     }
 
     private async validateAdminPermissions (groupView: GroupView, groupRepository: GroupRepository,
-                                            errors: Array<ValidationError>, user: UserEntity): Promise<void> {
+                                            errors: Array<ValidationError>, user: InternalUser): Promise<void> {
         const existingGroup = await groupRepository.getGroupById(groupView.getGroupId());
         const existingPerms = existingGroup ?
             <StringKeyValue<boolean>><unknown>PermissionHelper.getConvertedAdminPermissionsToUI(existingGroup)
@@ -112,7 +111,7 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
     }
 
     private async validateStaffPermissions (groupView: GroupView, groupRepository: GroupRepository,
-                                            errors: Array<ValidationError>, user: UserEntity): Promise<void> {
+                                            errors: Array<ValidationError>, user: InternalUser): Promise<void> {
         const existingGroup = await groupRepository.getGroupById(groupView.getGroupId());
         const existingPerms = existingGroup ?
             <StringKeyValue<boolean>><unknown>PermissionHelper.getConvertedStaffPermissionsToUI(existingGroup)

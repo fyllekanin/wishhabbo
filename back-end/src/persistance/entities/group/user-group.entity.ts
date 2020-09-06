@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
 interface IUserGroupEntity {
@@ -8,12 +8,15 @@ interface IUserGroupEntity {
 }
 
 @Entity('user_group')
+@Index([ 'userId', 'groupId' ], { unique: true })
 export class UserGroupEntity extends CreatedUpdatedAtEntity implements IUserGroupEntity {
     @PrimaryGeneratedColumn()
     userGroupId: number;
     @Column()
+    @Index()
     userId: number;
     @Column()
+    @Index()
     groupId: number;
 
     constructor (builder: IUserGroupEntity) {
