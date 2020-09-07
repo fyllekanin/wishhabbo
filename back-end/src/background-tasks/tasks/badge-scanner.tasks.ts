@@ -40,13 +40,13 @@ export class BadgeScannerTasks implements IBackgroundTask {
     private getBadge (item: string): { badgeId: string, description: string } {
         if (item.match(BadgeScannerTasks.FIRST_PATTERN)) {
             const parts = item.split('_badge_desc=');
-            return { badgeId: parts[0], description: parts[1] };
+            return { badgeId: parts[0].trim(), description: parts[1].trim() };
         } else if (item.match(BadgeScannerTasks.SECOND_PATTERN)) {
             const parts = item.split('=');
-            return { badgeId: parts[0].replace('badge_desc_', ''), description: parts[1] };
+            return { badgeId: parts[0].replace('badge_desc_', '').trim(), description: parts[1].trim() };
         } else if (item.match(BadgeScannerTasks.THIRD_PATTERN)) {
             const parts = item.split('=');
-            return { badgeId: parts[0].replace('badge_name_', ''), description: parts[1] };
+            return { badgeId: parts[0].replace('badge_name_', '').trim(), description: parts[1].trim() };
         }
         return null;
     }
