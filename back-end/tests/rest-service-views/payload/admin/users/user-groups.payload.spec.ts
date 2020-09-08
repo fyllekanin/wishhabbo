@@ -8,7 +8,11 @@ describe('UserGroupsPayload', () => {
         const req = <InternalRequest><unknown>{
             body: {
                 userId: 55,
-                groupIds: [ 1, 2, 3 ],
+                groups: [
+                    { name: '1', groupId: 1, selected: true },
+                    { name: '2', groupId: 2, selected: false },
+                    { name: '3', groupId: 3, selected: true }
+                ],
                 displayGroupId: 1
             }
         };
@@ -19,7 +23,7 @@ describe('UserGroupsPayload', () => {
         // Then
         expect(result.getUserId()).toEqual(55);
         expect(result.getDisplayGroupId()).toEqual(1);
-        expect(result.getSelectedGroupIds()).toEqual([ 1, 2, 3 ]);
+        expect(result.getSelectedGroupIds()).toEqual([ 1, 3 ]);
     });
 
 });
