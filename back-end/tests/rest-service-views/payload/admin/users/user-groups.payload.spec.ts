@@ -9,9 +9,9 @@ describe('UserGroupsPayload', () => {
             body: {
                 userId: 55,
                 groups: [
-                    { name: '1', groupId: 1, selected: true },
-                    { name: '2', groupId: 2, selected: false },
-                    { name: '3', groupId: 3, selected: true }
+                    { name: '1', groupId: 1, isSelected: true },
+                    { name: '2', groupId: 2, isSelected: false },
+                    { name: '3', groupId: 3, isSelected: true }
                 ],
                 displayGroupId: 1
             }
