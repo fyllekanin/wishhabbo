@@ -13,7 +13,7 @@ import { ValidationValidators } from '../../../validation/validation.validators'
 import { HasherUtility } from '../../../utilities/hasher.utility';
 import { Logger } from '../../../logging/log.logger';
 import { LogTypes } from '../../../logging/log.types';
-import { UserGroupsView } from '../../../rest-service-views/two-way/user-groups.view';
+import { UserGroupsView, UserGroupsViewGroup } from '../../../rest-service-views/two-way/user-groups.view';
 
 @Controller('api/admin/users/users')
 export class UserController {
@@ -95,8 +95,17 @@ export class UserController {
         }
 
         const groupIds = await req.serviceConfig.groupRepository.getGroupIdsFromUser(user.userId);
-        const groups: Array<{ name: string, groupId: number }> = await req.serviceConfig.groupRepository.getGroupsByIds(groupIds)
-            .then(items => items.map(group => ({ name: group.name, groupId: group.groupId })));
+        const groups: Array<UserGroupsViewGroup> =
+            await req.serviceConfig.groupRepository.getGroups()
+                .then(items => items
+                    .sort((a, b) => a.name > b.name ? 1 : -1)
+                    .filter(group => group.immunity < immunity)
+                    .map(group => ({
+                            name: group.name,
+                            groupId: group.groupId,
+                            isSelected: groupIds.includes(group.groupId)
+                        })
+                    ));
 
         res.status(OK).json(UserGroupsView.newBuilder()
             .withUsername(user.username)
@@ -131,7 +140,8 @@ export class UserController {
 
         const groupIdsBefore = await req.serviceConfig.groupRepository.getGroupIdsFromUser(user.userId);
         await req.serviceConfig.groupRepository.deleteGroupsFromUser(user.userId);
-        const promises = payload.getGroupIds().map(groupId => req.serviceConfig.groupRepository.addGroupToUser(groupId, user.userId));
+        const promises = payload.getSelectedGroupIds()
+            .map(groupId => req.serviceConfig.groupRepository.addGroupToUser(groupId, user.userId));
         await Promise.all(promises);
         user.displayGroupId = payload.getDisplayGroupId();
         await req.serviceConfig.userRepository.save(user);
@@ -141,7 +151,7 @@ export class UserController {
             contentId: user.userId,
             userId: req.user.userId,
             beforeChange: JSON.stringify(groupIdsBefore),
-            afterChange: JSON.stringify(payload.getGroupIds())
+            afterChange: JSON.stringify(payload.getSelectedGroupIds())
         });
         res.status(OK).json();
     }

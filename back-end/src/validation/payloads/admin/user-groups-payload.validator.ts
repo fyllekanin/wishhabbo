@@ -24,7 +24,7 @@ export class UserGroupsPayloadValidator implements PayloadValidator<UserGroupsVi
     private async validateGroupsAdded (payload: UserGroupsView, serviceConfig: ServiceConfig,
                                        user: InternalUser, errors: Array<ValidationError>): Promise<void> {
         const immunity = await serviceConfig.groupRepository.getUserIdImmunity(user.userId);
-        for (const groupId of payload.getGroupIds()) {
+        for (const groupId of payload.getSelectedGroupIds()) {
             const group = await serviceConfig.groupRepository.getGroupById(groupId);
             if (group.immunity >= immunity) {
                 errors.push(ValidationError.newBuilder()
@@ -38,7 +38,7 @@ export class UserGroupsPayloadValidator implements PayloadValidator<UserGroupsVi
     }
 
     private async validateDisplayGroupId (payload: UserGroupsView, errors: Array<ValidationError>): Promise<void> {
-        if (payload.getDisplayGroupId() && payload.getGroupIds().every(groupId => groupId !== payload.getDisplayGroupId())) {
+        if (payload.getDisplayGroupId() && payload.getSelectedGroupIds().every(groupId => groupId !== payload.getDisplayGroupId())) {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.INVALID_DISPLAY_GROUP.code)
                 .withField('displayGroupId')

@@ -1,10 +1,16 @@
 import { IPayload } from '../payloads/payload.interface';
 import { InternalRequest } from '../../utilities/internal.request';
 
+export interface UserGroupsViewGroup {
+    name: string;
+    groupId: number;
+    isSelected: boolean;
+}
+
 export class UserGroupsView implements IPayload {
     private readonly username: string;
     private readonly userId: number;
-    private readonly groups: Array<{ name: string, groupId: number }>;
+    private readonly groups: Array<UserGroupsViewGroup>;
     private readonly displayGroupId: number;
 
     constructor (builder: Builder) {
@@ -26,8 +32,8 @@ export class UserGroupsView implements IPayload {
         return [ ...this.groups ];
     }
 
-    getGroupIds (): Array<number> {
-        return this.groups.map(group => group.groupId);
+    getSelectedGroupIds (): Array<number> {
+        return this.groups.filter(group => group.isSelected).map(group => group.groupId);
     }
 
     getDisplayGroupId (): number {
@@ -50,7 +56,7 @@ export class UserGroupsView implements IPayload {
 class Builder {
     username: string;
     userId: number;
-    groups: Array<{ name: string, groupId: number }>;
+    groups: Array<UserGroupsViewGroup>;
     displayGroupId: number;
 
     withUsername (username: string): Builder {
@@ -63,7 +69,7 @@ class Builder {
         return this;
     }
 
-    withGroups (groups: Array<{ name: string, groupId: number }>): Builder {
+    withGroups (groups: Array<UserGroupsViewGroup>): Builder {
         this.groups = groups;
         return this;
     }

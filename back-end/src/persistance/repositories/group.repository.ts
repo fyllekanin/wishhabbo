@@ -52,13 +52,6 @@ export class GroupRepository {
         });
     }
 
-    async getGroupsByIds (groupIds: Array<number>): Promise<Array<GroupEntity>> {
-        return await this.getGroupRepository().find({
-            cache: true,
-            where: { groupId: In(groupIds) }
-        });
-    }
-
     async deleteGroup (group: GroupEntity): Promise<GroupEntity> {
         return await this.getGroupRepository().remove(group);
     }

@@ -19,7 +19,7 @@ describe('UserGroupsPayload', () => {
         // Then
         expect(result.getUserId()).toEqual(55);
         expect(result.getDisplayGroupId()).toEqual(1);
-        expect(result.getGroupIds()).toEqual([ 1, 2, 3 ]);
+        expect(result.getSelectedGroupIds()).toEqual([ 1, 2, 3 ]);
     });
 
 });
