@@ -6,14 +6,14 @@ import { GET_ADMIN_PERMISSION_MIDDLEWARE } from '../../middlewares/admin-permiss
 import { Permissions } from '../../../constants/permissions.constant';
 import { PaginationHelper } from '../../../helpers/pagination.helper';
 import { BAD_REQUEST, NOT_FOUND, OK } from 'http-status-codes';
-import { SlimUserView } from '../../../rest-service-views/slim-user.view';
+import { SlimUserView } from '../../../rest-service-views/two-way/slim-user.view';
 import { PaginationView } from '../../../rest-service-views/respond-views/pagination.view';
 import { UserDetailsPayload } from '../../../rest-service-views/payloads/admin/users/user-details.payload';
 import { ValidationValidators } from '../../../validation/validation.validators';
 import { HasherUtility } from '../../../utilities/hasher.utility';
 import { Logger } from '../../../logging/log.logger';
 import { LogTypes } from '../../../logging/log.types';
-import { UserGroupsPayload } from '../../../rest-service-views/payloads/admin/users/user-groups.payload';
+import { UserGroupsView } from '../../../rest-service-views/two-way/user-groups.view';
 
 @Controller('api/admin/users/users')
 export class UserController {
@@ -78,6 +78,34 @@ export class UserController {
             .build());
     }
 
+    @Get(':userId/groups')
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_ADMIN_PERMISSION_MIDDLEWARE([
+            Permissions.ADMIN.CAN_MANAGE_USER_GROUPS
+        ])
+    ])
+    private async getUserGroups (req: InternalRequest, res: Response): Promise<void> {
+        const user = await req.serviceConfig.userRepository.getUserById(Number(req.params.userId));
+        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
+        const userImmunity = user ? await req.serviceConfig.groupRepository.getUserIdImmunity(user.userId) : 0;
+        if (!user || userImmunity >= immunity) {
+            res.status(NOT_FOUND).json();
+            return;
+        }
+
+        const groupIds = await req.serviceConfig.groupRepository.getGroupIdsFromUser(user.userId);
+        const groups: Array<{ name: string, groupId: number }> = await req.serviceConfig.groupRepository.getGroupsByIds(groupIds)
+            .then(items => items.map(group => ({ name: group.name, groupId: group.groupId })));
+
+        res.status(OK).json(UserGroupsView.newBuilder()
+            .withUsername(user.username)
+            .withUserId(user.userId)
+            .withDisplayGroupId(user.displayGroupId)
+            .withGroups(groups)
+            .build());
+    }
+
     @Put(':userId/groups')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
@@ -86,7 +114,7 @@ export class UserController {
         ])
     ])
     private async updateUserGroups (req: InternalRequest, res: Response): Promise<void> {
-        const payload = UserGroupsPayload.of(req);
+        const payload = UserGroupsView.of(req);
         const user = await req.serviceConfig.userRepository.getUserById(payload.getUserId());
         const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
         const userImmunity = user ? await req.serviceConfig.groupRepository.getUserIdImmunity(user.userId) : 0;

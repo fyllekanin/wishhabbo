@@ -1,5 +1,5 @@
-import { AdminPermissions, StaffPermissions } from './respond-views/user/auth-user.view';
-import { InternalRequest } from '../utilities/internal.request';
+import { AdminPermissions, StaffPermissions } from '../respond-views/user/auth-user.view';
+import { InternalRequest } from '../../utilities/internal.request';
 
 export class GroupView {
     private readonly groupId: number;

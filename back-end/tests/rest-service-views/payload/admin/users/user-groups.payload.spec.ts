@@ -1,5 +1,5 @@
 import { InternalRequest } from '../../../../../src/utilities/internal.request';
-import { UserGroupsPayload } from '../../../../../src/rest-service-views/payloads/admin/users/user-groups.payload';
+import { UserGroupsView } from '../../../../../src/rest-service-views/two-way/user-groups.view';
 
 describe('UserGroupsPayload', () => {
 
@@ -14,7 +14,7 @@ describe('UserGroupsPayload', () => {
         };
 
         // When
-        const result = UserGroupsPayload.of(req);
+        const result = UserGroupsView.of(req);
 
         // Then
         expect(result.getUserId()).toEqual(55);

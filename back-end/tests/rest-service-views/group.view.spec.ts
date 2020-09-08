@@ -1,4 +1,4 @@
-import { GroupView } from '../../src/rest-service-views/group.view';
+import { GroupView } from '../../src/rest-service-views/two-way/group.view';
 import { InternalRequest } from '../../src/utilities/internal.request';
 import { AdminPermissions, StaffPermissions } from '../../src/rest-service-views/respond-views/user/auth-user.view';
 

@@ -2,7 +2,7 @@ import { ValidationError } from '../../validation.error';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
 import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { PayloadValidator } from '../payload-validator.interface';
-import { GroupView } from '../../../rest-service-views/group.view';
+import { GroupView } from '../../../rest-service-views/two-way/group.view';
 import { GroupRepository } from '../../../persistance/repositories/group.repository';
 import { ErrorCodes } from '../../error.codes';
 import { StringKeyValue } from '../../../utilities/object.interface';

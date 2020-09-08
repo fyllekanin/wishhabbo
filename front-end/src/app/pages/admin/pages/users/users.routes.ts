@@ -9,6 +9,7 @@ import { UserListService } from './users/list/user-list.service';
 import { UserDetailsComponent } from './users/user-details/user-details.component';
 import { UserGroupsComponent } from './users/user-groups/user-groups.component';
 import { UserDetailsService } from './users/user-details/user-details.service';
+import { UserGroupsService } from './users/user-groups/user-groups.service';
 
 export const usersRoutes: Routes = [
     {
@@ -45,7 +46,10 @@ export const usersRoutes: Routes = [
             },
             {
                 path: 'users/:userId/groups',
-                component: UserGroupsComponent
+                component: UserGroupsComponent,
+                resolve: {
+                    data: UserGroupsService
+                }
             }
         ]
     }

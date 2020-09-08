@@ -2,13 +2,13 @@ import { ValidationError } from '../../validation.error';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
 import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { PayloadValidator } from '../payload-validator.interface';
-import { UserGroupsPayload } from '../../../rest-service-views/payloads/admin/users/user-groups.payload';
+import { UserGroupsView } from '../../../rest-service-views/two-way/user-groups.view';
 import { ErrorCodes } from '../../error.codes';
 
-export class UserGroupsPayloadValidator implements PayloadValidator<UserGroupsPayload> {
+export class UserGroupsPayloadValidator implements PayloadValidator<UserGroupsView> {
 
     async validate (payload: IPayload, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
-        const userGroupsPayload = payload as UserGroupsPayload;
+        const userGroupsPayload = payload as UserGroupsView;
         const errors: Array<ValidationError> = [];
 
         await this.validateGroupsAdded(userGroupsPayload, serviceConfig, user, errors);
@@ -18,10 +18,10 @@ export class UserGroupsPayloadValidator implements PayloadValidator<UserGroupsPa
     }
 
     isValidEntity (payload: IPayload): boolean {
-        return payload instanceof UserGroupsPayload;
+        return payload instanceof UserGroupsView;
     }
 
-    private async validateGroupsAdded (payload: UserGroupsPayload, serviceConfig: ServiceConfig,
+    private async validateGroupsAdded (payload: UserGroupsView, serviceConfig: ServiceConfig,
                                        user: InternalUser, errors: Array<ValidationError>): Promise<void> {
         const immunity = await serviceConfig.groupRepository.getUserIdImmunity(user.userId);
         for (const groupId of payload.getGroupIds()) {
@@ -37,7 +37,7 @@ export class UserGroupsPayloadValidator implements PayloadValidator<UserGroupsPa
         }
     }
 
-    private async validateDisplayGroupId (payload: UserGroupsPayload, errors: Array<ValidationError>): Promise<void> {
+    private async validateDisplayGroupId (payload: UserGroupsView, errors: Array<ValidationError>): Promise<void> {
         if (payload.getDisplayGroupId() && payload.getGroupIds().every(groupId => groupId !== payload.getDisplayGroupId())) {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.INVALID_DISPLAY_GROUP.code)

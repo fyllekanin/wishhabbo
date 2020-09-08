@@ -1,7 +1,7 @@
-import { InternalRequest } from '../utilities/internal.request';
+import { InternalRequest } from '../../utilities/internal.request';
 import { SlimUserView } from './slim-user.view';
-import { EventEntity } from '../persistance/entities/staff/event.entity';
-import { IPayload } from './payloads/payload.interface';
+import { EventEntity } from '../../persistance/entities/staff/event.entity';
+import { IPayload } from '../payloads/payload.interface';
 
 export class TimetableSlot implements IPayload {
     private readonly timetableId: number;

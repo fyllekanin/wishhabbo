@@ -1,6 +1,6 @@
-import { TimetableSlot } from '../../src/rest-service-views/timetable.slot';
+import { TimetableSlot } from '../../src/rest-service-views/two-way/timetable.slot';
 import { InternalRequest } from '../../src/utilities/internal.request';
-import { SlimUserView } from '../../src/rest-service-views/slim-user.view';
+import { SlimUserView } from '../../src/rest-service-views/two-way/slim-user.view';
 
 describe('TimetableSlot', () => {
 

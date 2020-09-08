@@ -7,7 +7,7 @@ import { GET_STAFF_PERMISSION_MIDDLEWARE } from '../middlewares/staff-permission
 import { Permissions } from '../../constants/permissions.constant';
 import { TimetableController } from './timetable.controller';
 import { TimetableEntity, TimetableType } from '../../persistance/entities/staff/timetable.entity';
-import { TimetableSlot } from '../../rest-service-views/timetable.slot';
+import { TimetableSlot } from '../../rest-service-views/two-way/timetable.slot';
 import { ValidationValidators } from '../../validation/validation.validators';
 import { Logger } from '../../logging/log.logger';
 import { LogTypes } from '../../logging/log.types';

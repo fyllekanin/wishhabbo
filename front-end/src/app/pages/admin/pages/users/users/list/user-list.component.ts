@@ -16,7 +16,8 @@ import { SlimUser } from '../../../../../../shared/classes/slim-user.class';
 @UnSub()
 export class UserListComponent implements OnDestroy {
     private readonly ACTIONS = {
-        EDIT_DETAILS: 'edit_details'
+        EDIT_DETAILS: 'edit_details',
+        EDIT_GROUPS: 'edit_groups'
     };
 
     data: IPagination<SlimUser>;
@@ -43,11 +44,10 @@ export class UserListComponent implements OnDestroy {
             case this.ACTIONS.EDIT_DETAILS:
                 this.route.navigateByUrl(`/admin/users/users/${response.row.rowId}/details`);
                 break;
+            case this.ACTIONS.EDIT_GROUPS:
+                this.route.navigateByUrl(`/admin/users/users/${response.row.rowId}/groups`);
+                break;
         }
-    }
-
-    onCreateNew (): void {
-        this.route.navigateByUrl(`/admin/users/users/new`);
     }
 
     ngOnDestroy (): void {
@@ -69,6 +69,11 @@ export class UserListComponent implements OnDestroy {
                     value: this.ACTIONS.EDIT_DETAILS,
                     isHidden: !adminPermissions.CAN_MANAGE_USER_BASICS &&
                         !adminPermissions.CAN_MANAGE_USER_ADVANCED
+                },
+                {
+                    label: 'Edit groups',
+                    value: this.ACTIONS.EDIT_GROUPS,
+                    isHidden: !adminPermissions.CAN_MANAGE_USER_GROUPS
                 }
             ],
             cells: [
