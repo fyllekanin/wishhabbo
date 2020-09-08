@@ -1,12 +1,13 @@
 import { TimetableEntity } from '../../persistance/entities/staff/timetable.entity';
 import { TimetableSlot } from '../../rest-service-views/timetable.slot';
 import { InternalRequest } from '../../utilities/internal.request';
+import { TimeUtility } from '../../utilities/time.utility';
 
 export class TimetableController {
 
     protected async getConvertedSlots (req: InternalRequest, slots: Array<TimetableEntity>): Promise<Array<TimetableSlot>> {
         const items: Array<TimetableSlot> = [];
-        const currentDay = new Date().getUTCDay() + 1;
+        const currentDay = TimeUtility.getCurrentDay();
         const currentHour = new Date().getUTCHours();
 
         for (let d = 1; d < 8; d++) {
