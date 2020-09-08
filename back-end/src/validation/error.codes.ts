@@ -173,4 +173,16 @@ export class ErrorCodes {
         name: 'Someone already got given habbo',
         description: 'Another user with given habbo already exists'
     };
+
+    static readonly INVALID_GROUP_TO_ADD: ErrorCode = {
+        code: 29,
+        name: 'Group have to high immunity',
+        description: 'Given group have higher immunity then user trying to add it'
+    };
+
+    static readonly INVALID_DISPLAY_GROUP: ErrorCode = {
+        code: 30,
+        name: 'Invalid display group',
+        description: 'Given display group is not a group the user have'
+    };
 }

@@ -5,9 +5,15 @@ import { AUTHORIZATION_MIDDLEWARE } from '../../middlewares/authorization.middle
 import { GET_ADMIN_PERMISSION_MIDDLEWARE } from '../../middlewares/admin-permission.middleware';
 import { Permissions } from '../../../constants/permissions.constant';
 import { PaginationHelper } from '../../../helpers/pagination.helper';
-import { NOT_FOUND, OK } from 'http-status-codes';
+import { BAD_REQUEST, NOT_FOUND, OK } from 'http-status-codes';
 import { SlimUserView } from '../../../rest-service-views/slim-user.view';
 import { PaginationView } from '../../../rest-service-views/respond-views/pagination.view';
+import { UserDetailsPayload } from '../../../rest-service-views/payloads/admin/users/user-details.payload';
+import { ValidationValidators } from '../../../validation/validation.validators';
+import { HasherUtility } from '../../../utilities/hasher.utility';
+import { Logger } from '../../../logging/log.logger';
+import { LogTypes } from '../../../logging/log.types';
+import { UserGroupsPayload } from '../../../rest-service-views/payloads/admin/users/user-groups.payload';
 
 @Controller('api/admin/users/users')
 export class UserController {
@@ -72,6 +78,46 @@ export class UserController {
             .build());
     }
 
+    @Put(':userId/groups')
+    @Middleware([
+        AUTHORIZATION_MIDDLEWARE,
+        GET_ADMIN_PERMISSION_MIDDLEWARE([
+            Permissions.ADMIN.CAN_MANAGE_USER_GROUPS
+        ])
+    ])
+    private async updateUserGroups (req: InternalRequest, res: Response): Promise<void> {
+        const payload = UserGroupsPayload.of(req);
+        const user = await req.serviceConfig.userRepository.getUserById(payload.getUserId());
+        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
+        const userImmunity = user ? await req.serviceConfig.groupRepository.getUserIdImmunity(user.userId) : 0;
+        if (!user || userImmunity >= immunity) {
+            res.status(NOT_FOUND).json();
+            return;
+        }
+
+        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
+        if (errors.length > 0) {
+            res.status(BAD_REQUEST).json(errors);
+            return;
+        }
+
+        const groupIdsBefore = await req.serviceConfig.groupRepository.getGroupIdsFromUser(user.userId);
+        await req.serviceConfig.groupRepository.deleteGroupsFromUser(user.userId);
+        const promises = payload.getGroupIds().map(groupId => req.serviceConfig.groupRepository.addGroupToUser(groupId, user.userId));
+        await Promise.all(promises);
+        user.displayGroupId = payload.getDisplayGroupId();
+        await req.serviceConfig.userRepository.save(user);
+
+        await Logger.createAdminLog(req, {
+            id: LogTypes.UPDATED_USER_GROUPS,
+            contentId: user.userId,
+            userId: req.user.userId,
+            beforeChange: JSON.stringify(groupIdsBefore),
+            afterChange: JSON.stringify(payload.getGroupIds())
+        });
+        res.status(OK).json();
+    }
+
     @Put(':userId/details')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
@@ -81,18 +127,14 @@ export class UserController {
         ])
     ])
     private async updateUserDetails (req: InternalRequest, res: Response): Promise<void> {
-        /*console.time('updateUser1');
-        console.time('updateUser2');
-        console.time('updateUser3');
         const payload = UserDetailsPayload.of(req);
-        const user = await req.serviceConfig.getUserRepository.getUserById(payload.getUserId());
-        const immunity = await req.serviceConfig.getGroupRepository.getUserIdImmunity(req.user.userId);
-        const userImmunity = user ? await req.serviceConfig.getGroupRepository.getUserIdImmunity(user.userId) : 0;
+        const user = await req.serviceConfig.userRepository.getUserById(payload.getUserId());
+        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
+        const userImmunity = user ? await req.serviceConfig.groupRepository.getUserIdImmunity(user.userId) : 0;
         if (!user || userImmunity >= immunity) {
             res.status(NOT_FOUND).json();
             return;
         }
-        console.timeEnd('updateUser1');
         const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
         if (errors.length > 0) {
             res.status(BAD_REQUEST).json(errors);
@@ -103,14 +145,13 @@ export class UserController {
             .withUsername(payload.getUsername())
             .withHabbo(payload.getHabbo());
 
-        if (await req.serviceConfig.getGroupRepository.haveAdminPermission(req.user.userId, Permissions.ADMIN.CAN_MANAGE_USER_ADVANCED)) {
+        if (await req.serviceConfig.groupRepository.haveAdminPermission(req.user.userId, Permissions.ADMIN.CAN_MANAGE_USER_ADVANCED)) {
             builder.withPassword(await HasherUtility.hash(payload.getPassword()));
         }
-        console.timeEnd('updateUser2');
         const updated = builder.build();
         const isPasswordUpdated = Boolean(payload.getPassword());
 
-        await req.serviceConfig.getUserRepository.save(updated);
+        await req.serviceConfig.userRepository.save(updated);
         await Logger.createAdminLog(req, {
             id: LogTypes.UPDATED_USER_DETAILS,
             contentId: updated.userId,
@@ -120,7 +161,6 @@ export class UserController {
             afterChange: JSON.stringify(updated.newBuilderFromCurrent()
                 .withPassword(isPasswordUpdated ? 'changed' : null).build())
         });
-        console.timeEnd('updateUser3');*/
         res.status(OK).json();
     }
 }

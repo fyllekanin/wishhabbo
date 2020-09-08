@@ -2,12 +2,11 @@ import { ValidationError } from '../../validation.error';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
 import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { PayloadValidator } from '../payload-validator.interface';
-import { GroupView } from '../../../rest-service-views/group.view';
 import { UserDetailsPayload } from '../../../rest-service-views/payloads/admin/users/user-details.payload';
 import { ErrorCodes } from '../../error.codes';
 import { RegexConstants } from '../../../constants/regex.constants';
 
-export class UserDetailsPayloadValidator implements PayloadValidator<GroupView> {
+export class UserDetailsPayloadValidator implements PayloadValidator<UserDetailsPayload> {
 
     async validate (payload: IPayload, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
         const userDetails = payload as UserDetailsPayload;

@@ -72,6 +72,12 @@ export class GroupRepository {
         });
     }
 
+    async deleteGroupsFromUser (userId: number): Promise<void> {
+        await this.getUserGroupRepository().delete({
+            userId: userId
+        });
+    }
+
     async deleteUsersFromGroup (groupId: number): Promise<DeleteResult> {
         return await this.getUserGroupRepository().delete({
             groupId: groupId
@@ -120,7 +126,7 @@ export class GroupRepository {
         });
     }
 
-    private async getGroupIdsFromUser (userId: number): Promise<Array<number>> {
+    async getGroupIdsFromUser (userId: number): Promise<Array<number>> {
         const userGroups = await this.getUserGroupRepository().find({
             cache: true,
             where: { userId: userId }
