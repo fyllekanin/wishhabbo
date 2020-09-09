@@ -24,12 +24,12 @@ export class StaffListController {
         const staffListModel = await req.serviceConfig.settingRepository.getKeyValue<StaffListModel>(SettingKey.STAFF_LIST);
         const selectedGroupIds = staffListModel && Array.isArray(staffListModel.entries) ? staffListModel.entries : [];
         const groups: Array<StaffListViewEntry> = await req.serviceConfig.groupRepository.getGroups()
-            .then(groups => groups.map(group => {
-                const selectedGroup = selectedGroupIds.find(item => item.groupId === group.groupId);
+            .then(items => items.map(item => {
+                const selectedGroup = selectedGroupIds.find(item => item.groupId === item.groupId);
                 return <StaffListViewEntry>{
-                    groupId: group.groupId,
-                    name: group.name,
-                    nameColor: group.nameColor,
+                    groupId: item.groupId,
+                    name: item.name,
+                    nameColor: item.nameColor,
                     displayOrder: selectedGroup ? selectedGroup.displayOrder : 0,
                     isSelected: Boolean(selectedGroup)
                 };
