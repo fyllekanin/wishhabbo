@@ -21,7 +21,7 @@ export class SettingEntity<T> extends CreatedUpdatedAtEntity implements ISetting
     @Column({ type: 'longtext' })
     value: string;
 
-    constructor (builder: ISettingEntity) {
+    constructor (builder?: ISettingEntity) {
         super();
         if (!builder) {
             return;
