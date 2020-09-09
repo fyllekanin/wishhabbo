@@ -9,6 +9,7 @@ import { LogRepository } from '../persistance/repositories/log.repository';
 import { TimetableRepository } from '../persistance/repositories/staff/timetable.repository';
 import { EventsRepository } from '../persistance/repositories/staff/events.repository';
 import { TokenEntity } from '../persistance/entities/user/token.entity';
+import { SettingRepository } from '../persistance/repositories/setting.repository';
 
 export interface ServiceConfig {
     resourceRepository: ResourceRepository;
@@ -20,6 +21,7 @@ export interface ServiceConfig {
     logRepository: LogRepository;
     timetableRepository: TimetableRepository;
     eventsRepository: EventsRepository;
+    settingRepository: SettingRepository;
 }
 
 export interface InternalUser {
