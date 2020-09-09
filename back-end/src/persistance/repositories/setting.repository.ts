@@ -1,5 +1,5 @@
 import { getConnection, Repository } from 'typeorm';
-import { SettingEntity } from '../entities/setting.entity';
+import { SettingEntity } from '../entities/settings/setting.entity';
 
 export class SettingRepository {
     private repository: Repository<SettingEntity<unknown>>;
