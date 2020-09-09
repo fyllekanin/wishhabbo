@@ -185,4 +185,10 @@ export class ErrorCodes {
         name: 'Invalid display group',
         description: 'Given display group is not a group the user have'
     };
+
+    static readonly GROUP_DO_NOT_EXIST: ErrorCode = {
+        code: 31,
+        name: 'Group does not exist',
+        description: 'Given group does not exist'
+    };
 }

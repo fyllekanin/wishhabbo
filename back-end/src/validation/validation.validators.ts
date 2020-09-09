@@ -13,6 +13,7 @@ import { EventValidator } from './entities/staff/event.validator';
 import { GroupPayloadValidator } from './payloads/admin/group-payload.validator';
 import { UserDetailsPayloadValidator } from './payloads/admin/user-details-payload.validator';
 import { UserGroupsPayloadValidator } from './payloads/admin/user-groups-payload.validator';
+import { StaffListPayloadValidator } from './payloads/admin/staff-list-payload.validator';
 
 export class ValidationValidators {
     private static readonly ENTITY_VALIDATORS: Array<EntityValidator<IEntity>> = [
@@ -27,7 +28,8 @@ export class ValidationValidators {
         new TimetableSlotPayloadValidator(),
         new GroupPayloadValidator(),
         new UserDetailsPayloadValidator(),
-        new UserGroupsPayloadValidator()
+        new UserGroupsPayloadValidator(),
+        new StaffListPayloadValidator()
     ];
 
     static async validateEntity<T> (entity: T, serviceConfig: ServiceConfig, req: InternalRequest): Promise<Array<ValidationError>> {

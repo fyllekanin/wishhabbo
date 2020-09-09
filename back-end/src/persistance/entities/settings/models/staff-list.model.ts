@@ -1,8 +1,8 @@
 import { SettingKey } from '../setting.entity';
 
-export class StaffListEntry {
+export interface StaffListEntry {
     groupId: number;
-    order: number;
+    displayOrder: number;
 }
 
 export class StaffListModel {
