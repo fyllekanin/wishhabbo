@@ -21,7 +21,8 @@ export class StaffListPayloadValidator implements PayloadValidator<StaffListView
         return payload instanceof StaffListView;
     }
 
-    private async validateValidGroups (payload: StaffListView, groupRepository: GroupRepository, errors: Array<ValidationError>): Promise<void> {
+    private async validateValidGroups (payload: StaffListView, groupRepository: GroupRepository,
+                                       errors: Array<ValidationError>): Promise<void> {
         for (const group of payload.getSelectedGroups()) {
             const item = await groupRepository.getGroupById(group.groupId);
             if (!item) {
