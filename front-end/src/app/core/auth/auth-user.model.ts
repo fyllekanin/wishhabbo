@@ -39,9 +39,9 @@ export class AdminPermissions {
     @primitiveOf(Boolean)
     CAN_MANAGE_USER_GROUPS: boolean;
     @primitiveOf(Boolean)
-    CAN_MANAGE_WEBSITE_SETTINGS: boolean;
-    @primitiveOf(Boolean)
     CAN_SEE_LOGS: boolean;
+    @primitiveOf(Boolean)
+    CAN_EDIT_STAFF_LIST: boolean;
 
     constructor (source: Partial<AdminPermissions>) {
         ClassHelper.assign(this, source);
