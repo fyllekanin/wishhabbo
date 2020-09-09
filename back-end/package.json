@@ -13,8 +13,8 @@
         "dev:start": "node node_modules/npm-run-all/bin/npm-run-all/index build start",
         "dev": "node node_modules/nodemon/bin/nodemon --watch src -e ts,ejs --exec npm run dev:start",
         "start": "node .",
-        "re:migrate": "node scripts/drop-tables.js && tsc && node node_modules/typeorm/cli migration:run",
-        "migrate": "tsc && node node_modules/typeorm/cli migration:run"
+        "re:migrate": "node node_modules/ts-node/dist/bin scripts/drop-tables.js && tsc && node node_modules/ts-node/dist/bin node_modules/typeorm/cli migration:run --config ./src/environments/database",
+        "migrate": "tsc && node node_modules/ts-node/dist/bin node_modules/typeorm/cli migration:run --config ./src/environments/database"
     },
     "author": "",
     "license": "ISC",

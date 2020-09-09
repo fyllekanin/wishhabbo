@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { createConnection } from 'typeorm';
+import { ConnectionOptions, createConnection } from 'typeorm';
 import { Server } from '@overnightjs/core';
 import { AuthenticationController } from './rest-services/auth/authentication.controller';
 import { PageController } from './rest-services/page.controller';
@@ -14,6 +14,7 @@ import * as bodyParser from 'body-parser';
 import { GroupController } from './rest-services/admin/users/group.controller';
 import { UserController } from './rest-services/admin/users/user.controller';
 import compression from 'compression';
+import Database from './environments/database';
 
 process.env.NODE_ENV = 'production';
 
@@ -31,7 +32,7 @@ class MainServer extends Server {
     }
 
     start (port: number): void {
-        createConnection().then(() => {
+        createConnection(Database as ConnectionOptions).then(() => {
             this.setupControllers();
             this.app.use('*', (req, res) => {
                 res.sendFile(__dirname + '/public/index.html');

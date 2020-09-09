@@ -26,13 +26,12 @@
                         "styles": [
                             "src/assets/css/all.min.css",
                             "src/assets/css/foundation.css",
-                            "src/assets/editor/themes/content/default.css",
-                            "src/assets/editor/themes/default.css",
+                            "src/assets/editor/theme/default/wbbtheme.css",
                             "src/styles.css"
                         ],
                         "scripts": [
-                            "src/assets/editor/sceditor.js",
-                            "src/assets/editor/formats/bbcode.js"
+                            "node_modules/jquery/dist/jquery.min.js",
+                            "src/assets/editor/jquery.wysibb.js"
                         ]
                     },
                     "configurations": {
@@ -97,13 +96,12 @@
                         "styles": [
                             "src/assets/css/all.min.css",
                             "src/assets/css/foundation.css",
-                            "src/assets/editor/themes/content/default.css",
-                            "src/assets/editor/themes/default.css",
+                            "src/assets/editor/theme/default/wbbtheme.css",
                             "src/styles.css"
                         ],
                         "scripts": [
-                            "src/assets/editor/sceditor.js",
-                            "src/assets/editor/formats/bbcode.js"
+                            "node_modules/jquery/dist/jquery.min.js",
+                            "src/assets/editor/jquery.wysibb.js"
                         ]
                     }
                 },
