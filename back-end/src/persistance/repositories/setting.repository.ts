@@ -6,7 +6,7 @@ export class SettingRepository extends BaseRepository<SettingEntity<unknown>> {
     protected repository: Repository<SettingEntity<unknown>>;
 
     async getKeyValue<T> (key: SettingKey): Promise<T> {
-        const entity = await this.repository.findOne({ key: key });
+        const entity = await this.getRepository().findOne({ key: key });
         if (!entity) {
             return null;
         }
@@ -14,9 +14,11 @@ export class SettingRepository extends BaseRepository<SettingEntity<unknown>> {
     }
 
     async getSetting<T> (key: SettingKey): Promise<SettingEntity<T>> {
-        const entity = await this.repository.findOne({ key: key });
+        const entity = await this.getRepository().findOne({ key: key });
         if (!entity) {
-            return new SettingEntity<T>();
+            const newEntity = new SettingEntity<T>();
+            newEntity.key = key;
+            return newEntity;
         }
         return entity as SettingEntity<T>;
     }

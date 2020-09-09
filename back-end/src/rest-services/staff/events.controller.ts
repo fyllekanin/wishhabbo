@@ -39,7 +39,7 @@ export class EventsController extends TimetableController {
     ])
     private async createEvent (req: InternalRequest, res: Response): Promise<void> {
         const entity = EventEntity.of(req);
-        const errors = await ValidationValidators.validateEntity(entity, req.serviceConfig, req);
+        const errors = await ValidationValidators.validateEntity(entity, req.serviceConfig, req.user);
         if (errors.length > 0) {
             res.status(BAD_REQUEST).json(errors);
             return;
@@ -89,7 +89,7 @@ export class EventsController extends TimetableController {
         }
 
         const slot = TimetableSlot.of(req, false, entity.timetableId);
-        const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req);
+        const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req.user);
         if (errors.length > 0) {
             res.status(BAD_REQUEST).json(errors);
             return;
@@ -116,7 +116,7 @@ export class EventsController extends TimetableController {
     @Middleware(middlewares)
     private async createBooking (req: InternalRequest, res: Response): Promise<void> {
         const slot = TimetableSlot.of(req, false, null);
-        const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req);
+        const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req.user);
         if (errors.length > 0) {
             res.status(BAD_REQUEST).json(errors);
             return;

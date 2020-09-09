@@ -22,10 +22,10 @@ export class StaffListController {
     ])
     private async getStaffList (req: InternalRequest, res: Response): Promise<void> {
         const staffListModel = await req.serviceConfig.settingRepository.getKeyValue<StaffListModel>(SettingKey.STAFF_LIST);
-        const selectedGroupIds = staffListModel && Array.isArray(staffListModel.entries) ? staffListModel.entries : [];
+        const selectedGroups = staffListModel && Array.isArray(staffListModel.entries) ? staffListModel.entries : [];
         const groups: Array<StaffListViewEntry> = await req.serviceConfig.groupRepository.getGroups()
             .then(items => items.map(item => {
-                const selectedGroup = selectedGroupIds.find(item => item.groupId === item.groupId);
+                const selectedGroup = selectedGroups.find(selected => selected.groupId === item.groupId);
                 return <StaffListViewEntry>{
                     groupId: item.groupId,
                     name: item.name,
@@ -47,9 +47,9 @@ export class StaffListController {
     ])
     private async updateStaffList (req: InternalRequest, res: Response): Promise<void> {
         const payload = StaffListView.of(req);
-        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
+        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         const setting = await req.serviceConfig.settingRepository.getSetting(SettingKey.STAFF_LIST);
-        if (errors) {
+        if (errors.length > 0) {
             res.status(BAD_REQUEST).json(errors);
             return;
         }
@@ -65,7 +65,7 @@ export class StaffListController {
 
         await Logger.createAdminLog(req, {
             id: LogTypes.UPDATED_STAFF_LIST,
-            contentId: SettingKey.STAFF_LIST,
+            contentId: updated.settingId,
             userId: req.user.userId,
             beforeChange: JSON.stringify(setting),
             afterChange: JSON.stringify(updated)

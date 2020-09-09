@@ -93,7 +93,7 @@ export class ArticleController {
     ])
     private async createArticle (req: InternalRequest, res: Response): Promise<void> {
         const payload = ArticlePayload.of(JSON.parse(req.fields.article as string), req.files.thumbnail, null);
-        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
+        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
             return;
@@ -107,7 +107,7 @@ export class ArticleController {
             .withRoom(payload.getRoom())
             .withDifficulty(payload.getDifficulty())
             .build();
-        const entityErrors = await ValidationValidators.validateEntity(article, req.serviceConfig, req);
+        const entityErrors = await ValidationValidators.validateEntity(article, req.serviceConfig, req.user);
         if (entityErrors.length > 0) {
             res.status(BAD_REQUEST).json(entityErrors);
             return;
@@ -152,7 +152,7 @@ export class ArticleController {
         }
 
         const payload = ArticlePayload.of(JSON.parse(req.fields.article as string), req.files.thumbnail, article.articleId);
-        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
+        const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         if (payloadErrors.length > 0) {
             res.status(BAD_REQUEST).json(payloadErrors);
             return;
@@ -166,7 +166,7 @@ export class ArticleController {
             .withDifficulty(payload.getDifficulty())
             .build();
 
-        const entityErrors = await ValidationValidators.validateEntity(updatedArticle, req.serviceConfig, req);
+        const entityErrors = await ValidationValidators.validateEntity(updatedArticle, req.serviceConfig, req.user);
         if (entityErrors.length > 0) {
             res.status(BAD_REQUEST).json(entityErrors);
             return;

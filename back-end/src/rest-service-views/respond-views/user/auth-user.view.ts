@@ -16,7 +16,7 @@ export interface AdminPermissions {
     CAN_MANAGE_USER_ADVANCED: boolean;
     CAN_MANAGE_USER_GROUPS: boolean;
     CAN_SEE_LOGS: boolean;
-    CAN_EDIT_STAFF_LIST: boolean;
+    CAN_MANAGE_STAFF_LIST: boolean;
 }
 
 export class AuthUserView {

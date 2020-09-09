@@ -132,7 +132,7 @@ export class UserController {
             return;
         }
 
-        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
+        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         if (errors.length > 0) {
             res.status(BAD_REQUEST).json(errors);
             return;
@@ -173,7 +173,7 @@ export class UserController {
             res.status(NOT_FOUND).json();
             return;
         }
-        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req);
+        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         if (errors.length > 0) {
             res.status(BAD_REQUEST).json(errors);
             return;

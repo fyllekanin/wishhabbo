@@ -7,7 +7,7 @@ import { PayloadValidator } from './payloads/payload-validator.interface';
 import { IPayload } from '../rest-service-views/payloads/payload.interface';
 import { LoginPayloadValidator } from './payloads/user/login-payload.validator';
 import { ArticlePayloadValidator } from './payloads/staff/article-payload.validator';
-import { InternalRequest, ServiceConfig } from '../utilities/internal.request';
+import { InternalUser, ServiceConfig } from '../utilities/internal.request';
 import { TimetableSlotPayloadValidator } from './payloads/staff/timetable-slot-payload.validator';
 import { EventValidator } from './entities/staff/event.validator';
 import { GroupPayloadValidator } from './payloads/admin/group-payload.validator';
@@ -32,11 +32,11 @@ export class ValidationValidators {
         new StaffListPayloadValidator()
     ];
 
-    static async validateEntity<T> (entity: T, serviceConfig: ServiceConfig, req: InternalRequest): Promise<Array<ValidationError>> {
+    static async validateEntity<T> (entity: T, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
         const validValidators = ValidationValidators.ENTITY_VALIDATORS.filter(validator => validator.isValidEntity(entity));
         const promises: Array<Promise<Array<ValidationError>>> = [];
         validValidators.forEach(validator => {
-            promises.push(validator.validate(entity, serviceConfig, req.user));
+            promises.push(validator.validate(entity, serviceConfig, user));
         });
 
         return Promise.all(promises).then(errorLists => {
@@ -46,11 +46,11 @@ export class ValidationValidators {
         });
     }
 
-    static async validatePayload<T> (payload: T, serviceConfig: ServiceConfig, req: InternalRequest): Promise<Array<ValidationError>> {
+    static async validatePayload<T> (payload: T, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
         const validValidators = ValidationValidators.PAYLOAD_VALIDATORS.filter(validator => validator.isValidEntity(payload));
         const promises: Array<Promise<Array<ValidationError>>> = [];
         validValidators.forEach(validator => {
-            promises.push(validator.validate(payload, serviceConfig, req.user));
+            promises.push(validator.validate(payload, serviceConfig, user));
         });
 
         return Promise.all(promises).then(errorLists => {

@@ -9,19 +9,19 @@ export = {
     logging: false,
     name: 'default',
     entities: [
-        'src/persistance/entities/**/*.ts'
+        'dist/persistance/entities/**/*.js'
     ],
     migrationsTableName: 'migrations',
     migrations: [
-        'src/database/migrations/**/*.ts',
-        'src/database/seeds/**/*.ts'
+        'dist/database/migrations/**/*.js',
+        'dist/database/seeds/**/*.js'
     ],
     subscribers: [
-        'src/persistance/subscribers/**/*.ts'
+        'dist/persistance/subscribers/**/*.js'
     ],
     cli: {
-        entitiesDir: 'src/persistance/entities',
-        migrationsDir: 'src/database/migrations',
-        subscribersDir: 'src/persistance/subscriber'
+        entitiesDir: 'dist/persistance/entities',
+        migrationsDir: 'dist/database/migrations',
+        subscribersDir: 'dist/persistance/subscriber'
     }
 };

@@ -37,7 +37,7 @@ export class RadioController extends TimetableController {
         }
 
         const slot = TimetableSlot.of(req, true, entity.timetableId);
-        const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req);
+        const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req.user);
         if (errors.length > 0) {
             res.status(BAD_REQUEST).json(errors);
             return;
@@ -63,7 +63,7 @@ export class RadioController extends TimetableController {
     @Middleware(middlewares)
     private async createBooking (req: InternalRequest, res: Response): Promise<void> {
         const slot = TimetableSlot.of(req, true, null);
-        const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req);
+        const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req.user);
         if (errors.length > 0) {
             res.status(BAD_REQUEST).json(errors);
             return;

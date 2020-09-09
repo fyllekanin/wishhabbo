@@ -21,6 +21,12 @@ export class AdminComponent {
                         url: '/admin',
                         icon: 'fas fa-home',
                         isApplicable: true
+                    },
+                    {
+                        label: 'Website Settings',
+                        url: '/admin/website-settings/list',
+                        icon: 'fas fa-home',
+                        isApplicable: user.adminPermissions.CAN_MANAGE_STAFF_LIST
                     }
                 ]
             },

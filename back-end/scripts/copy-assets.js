@@ -20,17 +20,6 @@ const promises = [
             }
             res();
         });
-    }),
-    new Promise(res => {
-        fs.readFile('ormconfig.json', 'utf8', (err, data) => {
-            const newContent = data.replace(/dist\//g, '');
-            fs.writeFile('dist/ormconfig.json', newContent, 'utf8', err => {
-                if (err) {
-                    return console.error(err);
-                }
-                res();
-            });
-        });
     })
 ];
 

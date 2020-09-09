@@ -60,7 +60,7 @@ class Builder<T> {
         Object.assign(this.myData, entity);
     }
 
-    withSettingKey (settingKey: number): Builder<T> {
+    withSettingId (settingKey: number): Builder<T> {
         this.myData.settingId = settingKey;
         return this;
     }

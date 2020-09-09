@@ -14,6 +14,10 @@ export const adminRoutes: Routes = [
             {
                 path: 'users',
                 loadChildren: () => import('./pages/users/users.module').then(m => m.UsersModule)
+            },
+            {
+                path: 'website-settings',
+                loadChildren: () => import('./pages/website-settings/website-settings.module').then(m => m.WebsiteSettingsModule)
             }
         ]
     }

@@ -20,6 +20,6 @@ export class Permissions {
         CAN_MANAGE_USER_GROUPS: 4,
         CAN_SEE_LOGS: 8,
         CAN_MANAGE_USER_ADVANCED: 16,
-        CAN_EDIT_STAFF_LIST: 32
+        CAN_MANAGE_STAFF_LIST: 32
     };
 }

@@ -244,12 +244,12 @@
         <div class="cell small-6">
             <div class="checkbox-container">
                 <label class="checkbox-label">
-                    <input type="checkbox" [disabled]="!authUser.adminPermissions.CAN_EDIT_STAFF_LIST"
-                           [checked]="data.adminPermissions.CAN_EDIT_STAFF_LIST"
-                           (change)="data.adminPermissions.CAN_EDIT_STAFF_LIST = !data.adminPermissions.CAN_EDIT_STAFF_LIST">
+                    <input type="checkbox" [disabled]="!authUser.adminPermissions.CAN_MANAGE_STAFF_LIST"
+                           [checked]="data.adminPermissions.CAN_MANAGE_STAFF_LIST"
+                           (change)="data.adminPermissions.CAN_MANAGE_STAFF_LIST = !data.adminPermissions.CAN_MANAGE_STAFF_LIST">
                     <span class="checkbox-custom"></span>
                     <span class="label">
-                        Can edit staff list
+                        Can manage staff list
                         <span tooltip="Can add or remove groups from the staff list"><i
                             class="fas fa-info-circle"></i></span>
                     </span>

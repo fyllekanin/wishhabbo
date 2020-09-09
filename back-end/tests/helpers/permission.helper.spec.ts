@@ -63,7 +63,7 @@ describe('PermissionHelper', () => {
         expect(result.CAN_MANAGE_GROUPS).toBeTrue();
         expect(result.CAN_MANAGE_USER_BASICS).toBeTrue();
         expect(result.CAN_MANAGE_USER_GROUPS).toBeFalse();
-        expect(result.CAN_EDIT_STAFF_LIST).toBeFalse();
+        expect(result.CAN_MANAGE_STAFF_LIST).toBeFalse();
     });
 
     it('getConvertedStaffPermissionsForUser should return correct permissions', async () => {
