@@ -1,4 +1,4 @@
-import { TimetableSlot } from '../../src/rest-service-views/two-way/timetable.slot';
+import { TimetableSlot } from '../../src/rest-service-views/two-way/staff/timetable.slot';
 import { InternalRequest } from '../../src/utilities/internal.request';
 import { SlimUserView } from '../../src/rest-service-views/two-way/slim-user.view';
 

@@ -13,7 +13,7 @@ import { ValidationValidators } from '../../../validation/validation.validators'
 import { HasherUtility } from '../../../utilities/hasher.utility';
 import { Logger } from '../../../logging/log.logger';
 import { LogTypes } from '../../../logging/log.types';
-import { UserGroupsView, UserGroupsViewGroup } from '../../../rest-service-views/two-way/user-groups.view';
+import { UserGroupsView, UserGroupsViewGroup } from '../../../rest-service-views/two-way/admin/user-groups.view';
 
 @Controller('api/admin/users/users')
 export class UserController {

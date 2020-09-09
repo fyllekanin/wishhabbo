@@ -1,7 +1,7 @@
 import { ValidationError } from '../../validation.error';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
 import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
-import { TimetableSlot } from '../../../rest-service-views/two-way/timetable.slot';
+import { TimetableSlot } from '../../../rest-service-views/two-way/staff/timetable.slot';
 import { TimetableType } from '../../../persistance/entities/staff/timetable.entity';
 import { ErrorCodes } from '../../error.codes';
 import { PayloadValidator } from '../payload-validator.interface';

@@ -1,5 +1,5 @@
-import { IPayload } from '../payloads/payload.interface';
-import { InternalRequest } from '../../utilities/internal.request';
+import { IPayload } from '../../payloads/payload.interface';
+import { InternalRequest } from '../../../utilities/internal.request';
 
 export interface UserGroupsViewGroup {
     name: string;

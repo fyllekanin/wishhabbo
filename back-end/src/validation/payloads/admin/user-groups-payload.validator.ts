@@ -2,7 +2,7 @@ import { ValidationError } from '../../validation.error';
 import { IPayload } from '../../../rest-service-views/payloads/payload.interface';
 import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { PayloadValidator } from '../payload-validator.interface';
-import { UserGroupsView } from '../../../rest-service-views/two-way/user-groups.view';
+import { UserGroupsView } from '../../../rest-service-views/two-way/admin/user-groups.view';
 import { ErrorCodes } from '../../error.codes';
 
 export class UserGroupsPayloadValidator implements PayloadValidator<UserGroupsView> {

@@ -1,5 +1,5 @@
 import { TimetableEntity } from '../../persistance/entities/staff/timetable.entity';
-import { TimetableSlot } from '../../rest-service-views/two-way/timetable.slot';
+import { TimetableSlot } from '../../rest-service-views/two-way/staff/timetable.slot';
 import { InternalRequest } from '../../utilities/internal.request';
 import { TimeUtility } from '../../utilities/time.utility';
 

@@ -7,7 +7,7 @@ import { Permissions } from '../../../constants/permissions.constant';
 import { BAD_REQUEST, NOT_FOUND, OK } from 'http-status-codes';
 import { PaginationView } from '../../../rest-service-views/respond-views/pagination.view';
 import { PaginationHelper } from '../../../helpers/pagination.helper';
-import { GroupView } from '../../../rest-service-views/two-way/group.view';
+import { GroupView } from '../../../rest-service-views/two-way/admin/group.view';
 import { PermissionHelper } from '../../../helpers/permission.helper';
 import { ValidationValidators } from '../../../validation/validation.validators';
 import { GroupEntity } from '../../../persistance/entities/group/group.entity';
