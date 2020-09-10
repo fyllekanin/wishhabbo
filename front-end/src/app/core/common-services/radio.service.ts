@@ -74,7 +74,9 @@ export class RadioService {
 
     private getRadioUrl (): string {
         if (this.radioSettings.isAzuraCast) {
-            return `${this.radioSettings.host}/radio/${this.radioSettings.port}/${this.radioSettings.mountPoint}`;
+            const mountPoint = this.radioSettings.mountPoint.includes('/') ?
+                this.radioSettings.mountPoint.replace('/', '') : this.radioSettings.mountPoint;
+            return `${this.radioSettings.host}/radio/${this.radioSettings.port}/${mountPoint}`;
         }
         return null;
     }

@@ -15,6 +15,7 @@ import { PermissionHelper } from '../../helpers/permission.helper';
 import { SettingKey } from '../../persistance/entities/settings/setting.entity';
 import { RadioSettingsView } from '../../rest-service-views/two-way/admin/radio-settings.view';
 import { SettingRepository } from '../../persistance/repositories/setting.repository';
+import { RadioSettingsModel } from '../../persistance/entities/settings/models/radio-settings.model';
 
 @Controller('api/auth')
 export class AuthenticationController {
@@ -150,15 +151,14 @@ export class AuthenticationController {
     }
 
     private async getRadioSettings (settingRepository: SettingRepository): Promise<RadioSettingsView> {
-        const radioSettings = await settingRepository.getKeyValue<RadioSettingsView>(SettingKey.RADIO_SETTINGS);
-        const formatted = RadioSettingsView.of(<InternalRequest><unknown>{ body: radioSettings });
+        const radioSettings = await settingRepository.getKeyValue<RadioSettingsModel>(SettingKey.RADIO_SETTINGS);
 
         return RadioSettingsView.newBuilder()
-            .withHost(formatted.getHost())
-            .withPort(formatted.getPort())
-            .withIsAzuraCast(formatted.getIsAzuraCast())
-            .withMountPoint(formatted.getMountPoint())
-            .withServerType(formatted.getServerType())
+            .withHost(radioSettings.host)
+            .withPort(radioSettings.port)
+            .withIsAzuraCast(radioSettings.isAzuraCast)
+            .withMountPoint(radioSettings.mountPoint)
+            .withServerType(radioSettings.serverType)
             .build();
     }
 }

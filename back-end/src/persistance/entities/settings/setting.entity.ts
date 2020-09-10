@@ -3,7 +3,8 @@ import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
 export enum SettingKey {
     STAFF_LIST = 'staff-list',
-    RADIO_SETTINGS = 'radio-settings'
+    RADIO_SETTINGS = 'radio-settings',
+    RADIO_STATS = 'radio-stats'
 }
 
 interface ISettingEntity {

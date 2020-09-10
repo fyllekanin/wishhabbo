@@ -3,7 +3,7 @@ import { HabboRepository } from '../../persistance/repositories/habbo.repository
 import { HabboService } from '../../external/services/habbo.service';
 import { HabboBadgeEntity } from '../../persistance/entities/habbo/habbo-badge.entity';
 
-export class BadgeScannerTasks implements IBackgroundTask {
+export class BadgeScannerTask implements IBackgroundTask {
     private static readonly FIRST_PATTERN = /_badge_desc/;
     private static readonly SECOND_PATTERN = /badge_desc_/;
     private static readonly THIRD_PATTERN = /badge_name_/;
@@ -38,13 +38,13 @@ export class BadgeScannerTasks implements IBackgroundTask {
     }
 
     private getBadge (item: string): { badgeId: string, description: string } {
-        if (item.match(BadgeScannerTasks.FIRST_PATTERN)) {
+        if (item.match(BadgeScannerTask.FIRST_PATTERN)) {
             const parts = item.split('_badge_desc=');
             return { badgeId: parts[0].trim(), description: parts[1].trim() };
-        } else if (item.match(BadgeScannerTasks.SECOND_PATTERN)) {
+        } else if (item.match(BadgeScannerTask.SECOND_PATTERN)) {
             const parts = item.split('=');
             return { badgeId: parts[0].replace('badge_desc_', '').trim(), description: parts[1].trim() };
-        } else if (item.match(BadgeScannerTasks.THIRD_PATTERN)) {
+        } else if (item.match(BadgeScannerTask.THIRD_PATTERN)) {
             const parts = item.split('=');
             return { badgeId: parts[0].replace('badge_name_', '').trim(), description: parts[1].trim() };
         }
