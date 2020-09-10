@@ -16,6 +16,7 @@ import { UserController } from './rest-services/admin/users/user.controller';
 import compression from 'compression';
 import Database from './environments/database';
 import { StaffListController } from './rest-services/admin/website-settings/staff-list.controller';
+import { RadioSettingsController } from './rest-services/admin/website-settings/radio-settings.controller';
 
 process.env.NODE_ENV = 'production';
 
@@ -56,7 +57,8 @@ class MainServer extends Server {
                 new EventsController(),
                 new GroupController(),
                 new UserController(),
-                new StaffListController()
+                new StaffListController(),
+                new RadioSettingsController()
             ],
             null,
             INITIAL_MIDDLEWARE

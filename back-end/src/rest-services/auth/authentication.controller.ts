@@ -12,6 +12,9 @@ import { AuthUserView } from '../../rest-service-views/respond-views/user/auth-u
 import { InitialView } from '../../rest-service-views/respond-views/user/initial.view';
 import { InternalRequest } from '../../utilities/internal.request';
 import { PermissionHelper } from '../../helpers/permission.helper';
+import { SettingKey } from '../../persistance/entities/settings/setting.entity';
+import { RadioSettingsView } from '../../rest-service-views/two-way/admin/radio-settings.view';
+import { SettingRepository } from '../../persistance/repositories/setting.repository';
 
 @Controller('api/auth')
 export class AuthenticationController {
@@ -26,19 +29,22 @@ export class AuthenticationController {
             await req.serviceConfig.userRepository.getUserById(token.userId) : null;
 
         if (user) {
-            builder.withAuthUser(AuthUserView.newBuilder()
-                .withUserId(user.userId)
-                .withUsername(user.username)
-                .withHabbo(user.habbo)
-                .withAccessToken(token.access)
-                .withRefreshToken(token.refresh)
-                .withStaffPermissions(await PermissionHelper.getConvertedStaffPermissionsForUser(user, req.serviceConfig.groupRepository))
-                .withAdminPermissions(await PermissionHelper.getConvertedAdminPermissionsForUser(user, req.serviceConfig.groupRepository))
-                .build());
-            res.status(OK).json(builder.build());
-        } else {
-            res.status(OK).json();
+            builder
+                .withAuthUser(AuthUserView.newBuilder()
+                    .withUserId(user.userId)
+                    .withUsername(user.username)
+                    .withHabbo(user.habbo)
+                    .withAccessToken(token.access)
+                    .withRefreshToken(token.refresh)
+                    .withStaffPermissions(await PermissionHelper
+                        .getConvertedStaffPermissionsForUser(user, req.serviceConfig.groupRepository))
+                    .withAdminPermissions(await PermissionHelper
+                        .getConvertedAdminPermissionsForUser(user, req.serviceConfig.groupRepository))
+                    .build());
         }
+        builder.withRadioSettings(await this.getRadioSettings(req.serviceConfig.settingRepository));
+
+        res.status(OK).json(builder.build());
     }
 
     @Post('login')
@@ -141,5 +147,18 @@ export class AuthenticationController {
         });
 
         res.status(status).json(response);
+    }
+
+    private async getRadioSettings (settingRepository: SettingRepository): Promise<RadioSettingsView> {
+        const radioSettings = await settingRepository.getKeyValue<RadioSettingsView>(SettingKey.RADIO_SETTINGS);
+        const formatted = RadioSettingsView.of(<InternalRequest><unknown>{ body: radioSettings });
+
+        return RadioSettingsView.newBuilder()
+            .withHost(formatted.getHost())
+            .withPort(formatted.getPort())
+            .withIsAzuraCast(formatted.getIsAzuraCast())
+            .withMountPoint(formatted.getMountPoint())
+            .withServerType(formatted.getServerType())
+            .build();
     }
 }

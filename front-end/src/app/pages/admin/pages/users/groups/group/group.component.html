@@ -270,5 +270,20 @@
                 </label>
             </div>
         </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" [disabled]="!authUser.adminPermissions.CAN_MANAGE_RADIO_SETTINGS"
+                           [checked]="data.adminPermissions.CAN_MANAGE_RADIO_SETTINGS"
+                           (change)="data.adminPermissions.CAN_SEE_LOGS = !data.adminPermissions.CAN_MANAGE_RADIO_SETTINGS">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can manage radio settings
+                        <span tooltip="Can set the host, port, admin password etc"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
     </div>
 </app-content>

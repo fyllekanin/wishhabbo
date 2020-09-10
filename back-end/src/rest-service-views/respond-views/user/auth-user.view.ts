@@ -17,6 +17,7 @@ export interface AdminPermissions {
     CAN_MANAGE_USER_GROUPS: boolean;
     CAN_SEE_LOGS: boolean;
     CAN_MANAGE_STAFF_LIST: boolean;
+    CAN_MANAGE_RADIO_SETTINGS: boolean;
 }
 
 export class AuthUserView {

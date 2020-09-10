@@ -14,6 +14,12 @@ export class WebsiteSettingsListComponent {
             description: 'Add, remove or re-order groups on the staff list',
             permissions: [ 'CAN_MANAGE_STAFF_LIST' ],
             url: '/admin/website-settings/staff-list'
+        },
+        {
+            name: 'Radio settings',
+            description: 'Update the radio settings used for the radio',
+            permissions: [ 'CAN_MANAGE_RADIO_SETTINGS' ],
+            url: '/admin/website-settings/radio-settings'
         }
     ];
 

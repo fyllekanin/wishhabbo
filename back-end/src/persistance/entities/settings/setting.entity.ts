@@ -2,7 +2,8 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
 export enum SettingKey {
-    STAFF_LIST = 'staff-list'
+    STAFF_LIST = 'staff-list',
+    RADIO_SETTINGS = 'radio-settings'
 }
 
 interface ISettingEntity {

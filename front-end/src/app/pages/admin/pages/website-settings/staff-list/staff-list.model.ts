@@ -21,7 +21,7 @@ export class StaffListModel {
     @arrayOf(StaffListGroup)
     groups: Array<StaffListGroup> = [];
 
-    constructor (source: Partial<StaffListModel>) {
+    constructor (source?: Partial<StaffListModel>) {
         ClassHelper.assign(this, source);
     }
 }

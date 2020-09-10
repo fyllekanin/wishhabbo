@@ -191,4 +191,22 @@ export class ErrorCodes {
         name: 'Group does not exist',
         description: 'Given group does not exist'
     };
+
+    static readonly INVALID_RADIO_PORT: ErrorCode = {
+        code: 32,
+        name: 'Invalid radio port',
+        description: 'The radio port needs to be a number'
+    };
+
+    static readonly MISSING_RADIO_FIELDS: ErrorCode = {
+        code: 33,
+        name: 'Missing mandatory fields',
+        description: 'Radio settings need to have host, port, password, adminPassword and server type selected'
+    };
+
+    static readonly INVALID_SERVER_TYPE: ErrorCode = {
+        code: 34,
+        name: 'Invalid server type',
+        description: 'Given server type is not one of the supported server types'
+    };
 }

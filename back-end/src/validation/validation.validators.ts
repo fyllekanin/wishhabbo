@@ -14,6 +14,7 @@ import { GroupPayloadValidator } from './payloads/admin/group-payload.validator'
 import { UserDetailsPayloadValidator } from './payloads/admin/user-details-payload.validator';
 import { UserGroupsPayloadValidator } from './payloads/admin/user-groups-payload.validator';
 import { StaffListPayloadValidator } from './payloads/admin/staff-list-payload.validator';
+import { RadioSettingsPayloadValidator } from './payloads/admin/radio-settings-payload.validator';
 
 export class ValidationValidators {
     private static readonly ENTITY_VALIDATORS: Array<EntityValidator<IEntity>> = [
@@ -29,7 +30,8 @@ export class ValidationValidators {
         new GroupPayloadValidator(),
         new UserDetailsPayloadValidator(),
         new UserGroupsPayloadValidator(),
-        new StaffListPayloadValidator()
+        new StaffListPayloadValidator(),
+        new RadioSettingsPayloadValidator()
     ];
 
     static async validateEntity<T> (entity: T, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {

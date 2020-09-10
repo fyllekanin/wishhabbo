@@ -9,6 +9,8 @@ import { WebsiteSettingsListComponent } from './list/website-settings-list.compo
 import { websiteSettingsRoutes } from './website-settings.routes';
 import { StaffListService } from './staff-list/staff-list.service';
 import { StaffListComponent } from './staff-list/staff-list.component';
+import { RadioSettingsComponent } from './radio-settings/radio-settings.component';
+import { RadioSettingsService } from './radio-settings/radio-settings.service';
 
 @NgModule({
     imports: [
@@ -21,10 +23,12 @@ import { StaffListComponent } from './staff-list/staff-list.component';
     declarations: [
         WebsiteSettingsComponent,
         WebsiteSettingsListComponent,
-        StaffListComponent
+        StaffListComponent,
+        RadioSettingsComponent
     ],
     providers: [
-        StaffListService
+        StaffListService,
+        RadioSettingsService
     ],
     exports: [
         RouterModule

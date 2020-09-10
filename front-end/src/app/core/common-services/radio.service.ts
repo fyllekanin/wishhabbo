@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageKeys } from '../../shared/constants/local-storage.constants';
+import { RadioSettingsClass } from '../../shared/classes/radio-settings.class';
 
 @Injectable()
 export class RadioService {
-    private static readonly TEMP_RADIO_INFO = {
-        HOST: 'https://wishhabbo.co',
-        PORT: '8000',
-        isAzureCast: true
-    };
-
+    private radioSettings: RadioSettingsClass;
     private radioElement: HTMLAudioElement;
     private volume = 100;
 
@@ -19,6 +15,11 @@ export class RadioService {
         if (Number.isInteger(volume)) {
             this.volume = volume;
         }
+    }
+
+    setRadioSettings (radioSettings: RadioSettingsClass): void {
+        this.radioSettings = radioSettings;
+        this.updateRadio();
     }
 
     setRadioElement (radioElement: HTMLAudioElement): void {
@@ -33,7 +34,7 @@ export class RadioService {
     toggleRadio (): void {
         this.isPlaying = !this.isPlaying;
         if (this.isPlaying) {
-            this.setInformation();
+            this.updateRadio();
             this.radioElement.play();
         } else {
             this.radioElement.pause();
@@ -62,8 +63,19 @@ export class RadioService {
         this.radioElement.volume = this.volume / 100;
     }
 
-    private setInformation (): void {
+    private updateRadio (): void {
+        if (!this.radioSettings || !this.getRadioElement()) {
+            return;
+        }
+
         const radioElement = this.getRadioElement();
-        radioElement.src = `${RadioService.TEMP_RADIO_INFO.HOST}/radio/${RadioService.TEMP_RADIO_INFO.PORT}/radio.mp3`;
+        radioElement.src = this.getRadioUrl();
+    }
+
+    private getRadioUrl (): string {
+        if (this.radioSettings.isAzuraCast) {
+            return `${this.radioSettings.host}/radio/${this.radioSettings.port}/${this.radioSettings.mountPoint}`;
+        }
+        return null;
     }
 }

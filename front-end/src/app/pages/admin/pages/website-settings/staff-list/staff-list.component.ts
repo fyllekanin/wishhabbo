@@ -21,7 +21,7 @@ export class StaffListComponent implements OnDestroy {
         MOVE_DOWN: 'move_down',
         REMOVE: 'remove'
     };
-    data = new StaffListModel(null);
+    data = new StaffListModel();
 
     contentActions: Array<UserAction> = [
         { label: 'Save', value: this.ACTIONS.SAVE },
