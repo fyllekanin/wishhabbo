@@ -52,6 +52,12 @@ export class GroupRepository {
         });
     }
 
+    async getUserIdsWithGroup (groupId: number): Promise<Array<number>> {
+        return await this.getUserGroupRepository().find({
+            where: { groupId: groupId }
+        }).then(userGroups => userGroups.map(userGroup => userGroup.userId));
+    }
+
     async deleteGroup (group: GroupEntity): Promise<GroupEntity> {
         return await this.getGroupRepository().remove(group);
     }
@@ -63,13 +69,6 @@ export class GroupRepository {
             .build();
 
         await this.getUserGroupRepository().save(entity);
-    }
-
-    async deleteGroupFromUser (groupId: number, userId: number): Promise<DeleteResult> {
-        return await this.getUserGroupRepository().delete({
-            userId: userId,
-            groupId: groupId
-        });
     }
 
     async deleteGroupsFromUser (userId: number): Promise<void> {
