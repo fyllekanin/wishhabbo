@@ -11,7 +11,7 @@ describe('AppComponent', () => {
         radioService = <RadioService><unknown>{
             setRadioElement: () => null
         };
-        component = new AppComponent(radioService);
+        component = new AppComponent(radioService, null);
     });
 
     it('ngAfterContentInit should set the radio element', () => {

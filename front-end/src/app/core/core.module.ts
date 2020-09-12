@@ -6,6 +6,7 @@ import { HttpService } from './http/http.service';
 import { HttpRequestInterceptor } from './http/http.interceptor';
 import { AuthService } from './auth/auth.service';
 import { SiteNotificationService } from './common-services/site-notification.service';
+import { ContinuesInformationService } from './common-services/continues-information.service';
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ export class CoreModule {
                 AuthService,
                 RadioService,
                 DialogService,
-                SiteNotificationService
+                SiteNotificationService,
+                ContinuesInformationService
             ]
         };
     }

@@ -8,6 +8,8 @@ export class SlimUser {
     @primitiveOf(String)
     habbo: string;
     @primitiveOf(Number)
+    likes: number;
+    @primitiveOf(Number)
     updatedAt: number;
 
     constructor (source: Partial<SlimUser>) {

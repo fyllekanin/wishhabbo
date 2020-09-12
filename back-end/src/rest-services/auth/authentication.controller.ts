@@ -152,6 +152,9 @@ export class AuthenticationController {
 
     private async getRadioSettings (settingRepository: SettingRepository): Promise<RadioSettingsView> {
         const radioSettings = await settingRepository.getKeyValue<RadioSettingsModel>(SettingKey.RADIO_SETTINGS);
+        if (!radioSettings) {
+            return null;
+        }
 
         return RadioSettingsView.newBuilder()
             .withHost(radioSettings.host)

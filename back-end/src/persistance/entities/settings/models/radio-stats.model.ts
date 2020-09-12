@@ -1,9 +1,8 @@
-import { UserEntity } from '../../user/user.entity';
+import { SlimUserView } from '../../../../rest-service-views/two-way/slim-user.view';
 
 export interface RadioStatsModel {
     listeners: number;
-    likes: number;
     song: string;
-    currentDj: UserEntity;
-    nextDj: UserEntity;
+    currentDj: SlimUserView;
+    nextDj: SlimUserView;
 }

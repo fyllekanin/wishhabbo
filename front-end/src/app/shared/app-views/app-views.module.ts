@@ -6,11 +6,13 @@ import { HeaderRadioComponent } from './header/radio/header-radio.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { RouterModule } from '@angular/router';
 import { SiteNotificationComponent } from './site-notification/site-notification.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule
+        RouterModule,
+        FormsModule
     ],
     declarations: [
         HeaderComponent,

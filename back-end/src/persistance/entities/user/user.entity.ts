@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
 interface IUserEntity {
@@ -7,6 +7,7 @@ interface IUserEntity {
     password: string;
     displayGroupId: number;
     habbo: string;
+    likes: number;
 }
 
 @Entity('users')
@@ -21,6 +22,9 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
     displayGroupId: number;
     @Column({ unique: true })
     habbo: string;
+    @Column({ default: 0 })
+    @Index()
+    likes: number;
 
     constructor (builder: IUserEntity) {
         super();
@@ -33,6 +37,7 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
         this.password = builder.password;
         this.displayGroupId = builder.displayGroupId;
         this.habbo = builder.habbo;
+        this.likes = builder.likes;
     }
 
     newBuilderFromCurrent (): Builder {
@@ -50,7 +55,8 @@ class Builder {
         username: undefined,
         password: undefined,
         habbo: undefined,
-        displayGroupId: undefined
+        displayGroupId: undefined,
+        likes: undefined
     };
 
     constructor (entity?: UserEntity) {
@@ -79,6 +85,11 @@ class Builder {
 
     withDisplayGroupId (groupId: number): Builder {
         this.myData.displayGroupId = groupId;
+        return this;
+    }
+
+    withLikes (likes: number): Builder {
+        this.myData.likes = likes;
         return this;
     }
 

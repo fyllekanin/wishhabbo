@@ -21,6 +21,7 @@ export class TimetableComponent implements OnDestroy {
     subscriptions: Array<Unsubscribable> = [];
     title: string;
     data: ITimetable;
+    isRadio = false;
 
     actions: Array<UserAction> = [];
 
@@ -31,6 +32,7 @@ export class TimetableComponent implements OnDestroy {
         activatedRoute: ActivatedRoute
     ) {
         this.type = activatedRoute.snapshot.data.type;
+        this.isRadio = this.type === TimeTableTypes.RADIO;
         this.day = Number(activatedRoute.snapshot.params.day);
         this.subscriptions.push(activatedRoute.params.subscribe(async data => {
             this.day = Number(data.day);
@@ -48,11 +50,11 @@ export class TimetableComponent implements OnDestroy {
             return;
         }
 
-        if ((this.authService.getAuthUser().staffPermissions.CAN_UNBOOK_OTHERS_RADIO && this.isRadio()) ||
-            this.authService.getAuthUser().staffPermissions.CAN_UNBOOK_OTHERS_EVENTS && !this.isRadio()) {
+        if ((this.authService.getAuthUser().staffPermissions.CAN_UNBOOK_OTHERS_RADIO && this.isRadio) ||
+            this.authService.getAuthUser().staffPermissions.CAN_UNBOOK_OTHERS_EVENTS && !this.isRadio) {
             await this.doEdit(slot);
         } else {
-            await this.service.unbook(slot, this.isRadio());
+            await this.service.unbook(slot, this.isRadio);
         }
     }
 
@@ -61,7 +63,7 @@ export class TimetableComponent implements OnDestroy {
     }
 
     private async doEdit (slot: Slot): Promise<void> {
-        const result = await this.service.doOpenDetails(slot, true, this.isRadio());
+        const result = await this.service.doOpenDetails(slot, true, this.isRadio);
         if (!result.proceed) {
             return;
         }
@@ -70,25 +72,25 @@ export class TimetableComponent implements OnDestroy {
             slot.user.username = result.username ? result.username : slot.user.username;
         }
         if (result.isUnbooking) {
-            await this.service.unbook(slot, this.isRadio());
+            await this.service.unbook(slot, this.isRadio);
         } else {
-            await this.service.edit(slot, this.isRadio());
+            await this.service.edit(slot, this.isRadio);
         }
         await this.doSetup();
     }
 
     private async doBooking (slot: Slot): Promise<void> {
-        const result = await this.service.doOpenDetails(slot, false, this.isRadio());
+        const result = await this.service.doOpenDetails(slot, false, this.isRadio);
         if (!result.proceed) {
             return;
         }
         slot.event = result.event;
-        await this.service.book(slot, this.isRadio());
+        await this.service.book(slot, this.isRadio);
         await this.doSetup();
     }
 
     private async doSetup (): Promise<void> {
-        this.title = this.isRadio() ? 'Radio Timetable' : 'Events Timetable';
+        this.title = this.isRadio ? 'Radio Timetable' : 'Events Timetable';
 
         const slots = await this.service.fetchSlots(this.type);
         this.data = this.getDataWithCurrentSlots(slots);
@@ -120,9 +122,5 @@ export class TimetableComponent implements OnDestroy {
             return 0;
         });
         return data;
-    }
-
-    private isRadio (): boolean {
-        return this.type === TimeTableTypes.RADIO;
     }
 }

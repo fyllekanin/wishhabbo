@@ -6,10 +6,19 @@ export class TimetableRepository extends BaseRepository<TimetableEntity> {
     protected repository: Repository<TimetableEntity>;
 
     async getSlots (type: TimetableType): Promise<Array<TimetableEntity>> {
-        const query = this.getRepository().createQueryBuilder();
-        query.where('isArchived = :isArchived', { isArchived: 0 });
-        query.andWhere('type = :type', { type: type });
-        return await query.getMany();
+        return await this.getRepository().createQueryBuilder()
+            .where('isArchived = :isArchived', { isArchived: 0 })
+            .andWhere('type = :type', { type: type })
+            .getMany();
+    }
+
+    async getSlotForTime (day: number, hour: number, type: TimetableType): Promise<TimetableEntity> {
+        return await this.getRepository().createQueryBuilder()
+            .where('isArchived = :isArchived', { isArchived: 0 })
+            .andWhere('type = :type', { type: type })
+            .andWhere('hour = :hour', { hour: hour })
+            .andWhere('day = :day', { day: day })
+            .getOne();
     }
 
     async doArchiveWeekSlots (): Promise<void> {

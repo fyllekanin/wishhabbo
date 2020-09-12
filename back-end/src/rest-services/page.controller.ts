@@ -7,7 +7,6 @@ import { InternalRequest } from '../utilities/internal.request';
 export class PageController {
 
     @Get('test')
-    // @Middleware([ AUTHORIZATION_MIDDLEWARE ])
     private async getTest (req: InternalRequest, res: Response): Promise<void> {
         res.status(OK).json(req.serviceConfig.tokenRepository.getTokens());
     }

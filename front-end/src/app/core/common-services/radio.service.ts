@@ -6,8 +6,7 @@ import { RadioSettingsClass } from '../../shared/classes/radio-settings.class';
 export class RadioService {
     private radioSettings: RadioSettingsClass;
     private radioElement: HTMLAudioElement;
-    private volume = 100;
-
+    volume = 100;
     isPlaying = false;
 
     constructor () {
@@ -41,24 +40,8 @@ export class RadioService {
         }
     }
 
-    doUpVolume (): void {
-        if (this.volume >= 100) {
-            this.volume = 100;
-            return;
-        }
-
-        this.volume += 10;
-        localStorage.setItem(LocalStorageKeys.RADIO_VOLUME, this.volume.toString());
-        this.radioElement.volume = this.volume / 100;
-    }
-
-    doDownVolume (): void {
-        if (this.volume <= 0) {
-            this.volume = 0;
-            return;
-        }
-
-        this.volume -= 10;
+    setVolume (volume: number): void {
+        this.volume = volume;
         localStorage.setItem(LocalStorageKeys.RADIO_VOLUME, this.volume.toString());
         this.radioElement.volume = this.volume / 100;
     }

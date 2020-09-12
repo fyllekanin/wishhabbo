@@ -41,6 +41,11 @@ export class CreateUserTable1595879603141 implements MigrationInterface {
                     isUnique: true
                 },
                 {
+                    name: 'likes',
+                    type: 'int',
+                    default: 0
+                },
+                {
                     name: 'createdAt',
                     type: 'int',
                 },
