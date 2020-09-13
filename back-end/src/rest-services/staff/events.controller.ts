@@ -87,27 +87,18 @@ export class EventsController extends TimetableController {
             res.status(NOT_FOUND).json();
             return;
         }
-
-        const slot = TimetableSlot.of(req, false, entity.timetableId);
-        const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req.user);
-        if (errors.length > 0) {
-            res.status(BAD_REQUEST).json(errors);
+        const result = await this.doUpdateSlot(req, entity, false);
+        if (result.errors.length > 0) {
+            res.status(BAD_REQUEST).json(result.errors);
             return;
         }
-
-        const copy = { ...entity };
-        const user = slot.getUser() && slot.getUser().getUsername() ?
-            await req.serviceConfig.userRepository.getUserWithUsername(slot.getUser().getUsername()) : null;
-        entity.eventId = slot.getEvent().eventId;
-        entity.userId = user ? user.userId : entity.userId;
-        const updatedEntity = await req.serviceConfig.timetableRepository.save(entity);
 
         await Logger.createStaffLog(req, {
             id: LogTypes.UPDATED_TIMETABLE_SLOT,
             contentId: entity.timetableId,
             userId: req.user.userId,
-            beforeChange: JSON.stringify(copy),
-            afterChange: JSON.stringify(updatedEntity)
+            beforeChange: JSON.stringify(result.original),
+            afterChange: JSON.stringify(result.updated)
         });
         res.status(OK).json();
     }

@@ -1,7 +1,7 @@
 import { Column, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
-interface ILogEntityAbstract {
+export interface ILogEntityAbstract {
     logId: number;
     id: number;
     contentId: number;

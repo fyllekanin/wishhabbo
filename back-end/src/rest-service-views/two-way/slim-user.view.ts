@@ -4,6 +4,7 @@ export class SlimUserView {
     private readonly habbo: string;
     private readonly likes: number;
     private readonly updatedAt: number;
+    private readonly nameColors: Array<string>;
 
     constructor (builder: Builder) {
         if (!builder) {
@@ -14,6 +15,7 @@ export class SlimUserView {
         this.habbo = builder.habbo;
         this.likes = builder.likes;
         this.updatedAt = builder.updatedAt;
+        this.nameColors = builder.nameColors ? [ ...builder.nameColors ] : [];
     }
 
     getUserId (): number {
@@ -34,6 +36,10 @@ export class SlimUserView {
 
     getUpdatedAt (): number {
         return this.updatedAt;
+    }
+
+    getNameColors (): Array<string> {
+        return [ ...this.nameColors ];
     }
 
     static of (user: SlimUserView): SlimUserView {
@@ -57,6 +63,7 @@ class Builder {
     habbo: string;
     likes: number;
     updatedAt: number;
+    nameColors: Array<string>;
 
     withUserId (userId: number): Builder {
         this.userId = userId;
@@ -80,6 +87,11 @@ class Builder {
 
     withUpdatedAt (updatedAt: number): Builder {
         this.updatedAt = updatedAt;
+        return this;
+    }
+
+    withNameColors (nameColors: Array<string>): Builder {
+        this.nameColors = [ ...nameColors ];
         return this;
     }
 

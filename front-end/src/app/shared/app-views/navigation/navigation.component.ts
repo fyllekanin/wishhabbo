@@ -18,6 +18,10 @@ export class NavigationComponent {
             icon: 'fa-home'
         }),
         new NavigationItem({
+            title: 'Staff list',
+            path: '/default/staff-list'
+        }),
+        new NavigationItem({
             title: 'Radio',
             icon: 'fa-headphones'
         }),

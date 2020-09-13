@@ -41,7 +41,7 @@ export abstract class BaseRepository<T> {
 
         const items = await query.getMany();
         return PaginationView.newBuilder<T>()
-            .withTotal(PaginationHelper.getTotalAmountOfPages(options.take, await this.getBaseQuery(options).getCount()))
+            .withTotal(PaginationHelper.getTotalAmountOfPages(options.take, await query.getCount()))
             .withPage(options.page)
             .withItems(items)
             .build();

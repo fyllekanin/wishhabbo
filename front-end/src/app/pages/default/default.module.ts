@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { DefaultComponent } from './default.component';
 import { ContentModule } from '../../shared/components/content/content.module';
+import { StaffListComponent } from './staff-list/staff-list.component';
+import { StaffListResolver } from './staff-list/staff-list.resolver';
 
 @NgModule({
     imports: [
@@ -18,7 +20,11 @@ import { ContentModule } from '../../shared/components/content/content.module';
     declarations: [
         HomeComponent,
         NotFoundComponent,
-        DefaultComponent
+        DefaultComponent,
+        StaffListComponent
+    ],
+    providers: [
+        StaffListResolver
     ],
     exports: [
         RouterModule

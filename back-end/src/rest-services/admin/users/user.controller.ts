@@ -41,14 +41,13 @@ export class UserController {
                 order: 'ASC'
             }
         });
+        const users: Array<SlimUserView> = [];
+        for (const user of data.getItems()) {
+            users.push(await req.serviceConfig.userRepository.getSlimUserById(user.userId));
+        }
 
         res.status(OK).json(PaginationView.newBuilder()
-            .withItems(data.getItems().map(user => SlimUserView.newBuilder()
-                .withUserId(user.userId)
-                .withUsername(user.username)
-                .withHabbo(user.habbo)
-                .withUpdatedAt(user.updatedAt)
-                .build()))
+            .withItems(users)
             .withPage(data.getPage())
             .withTotal(data.getTotal())
             .build());
@@ -71,11 +70,7 @@ export class UserController {
             return;
         }
 
-        res.status(OK).json(SlimUserView.newBuilder()
-            .withUsername(user.username)
-            .withUserId(user.userId)
-            .withHabbo(user.habbo)
-            .build());
+        res.status(OK).json(await req.serviceConfig.userRepository.getSlimUserById(user.userId));
     }
 
     @Get(':userId/groups')

@@ -2,6 +2,7 @@ export interface ErrorCode {
     code: number;
     name: string;
     description: string;
+    parameters?: { [key: string]: string | number };
 }
 
 export class ErrorCodes {
@@ -208,5 +209,14 @@ export class ErrorCodes {
         code: 34,
         name: 'Invalid server type',
         description: 'Given server type is not one of the supported server types'
+    };
+
+    static readonly LIKING_RADIO_TO_FAST: ErrorCode = {
+        code: 35,
+        name: 'Liking the DJ to quick',
+        description: 'You have already liked the current current, you need to wait {min} minutes',
+        parameters: {
+            min: 'min'
+        }
     };
 }

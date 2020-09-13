@@ -61,13 +61,7 @@ export class RadioStatsTask implements IBackgroundTask {
             listeners: this.getListenerCount(xml.icestats.source[0].listener),
             song: xml.icestats.source[0].yp_currently_playing ?
                 xml.icestats.source[0].yp_currently_playing[0] : xml.icestats.source[0].artist[0],
-            currentDj: currentDj ? SlimUserView.newBuilder()
-                .withUserId(currentDj.userId)
-                .withUsername(currentDj.username)
-                .withLikes(currentDj.likes)
-                .withHabbo(currentDj.habbo)
-                .withUpdatedAt(currentDj.updatedAt)
-                .build() : null,
+            currentDj: currentDj ? await userRepository.getSlimUserById(currentDj.userId) : null,
             nextDj: await this.getNextDj(timetableRepository, userRepository)
         };
     }
