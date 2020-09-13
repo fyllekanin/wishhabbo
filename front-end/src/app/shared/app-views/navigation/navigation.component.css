@@ -27,7 +27,11 @@
 
 .main-navigation-item {
     display: inline-block;
-    margin: 0.75rem;
+    margin: 10px;
+}
+
+.main-navigation-item:nth-child(1) {
+    margin-left: 0;
 }
 
 .main-navigation-item a {
@@ -58,4 +62,8 @@
 
 .logged-out-avatar img {
     filter: brightness(0) drop-shadow(1px 1px 0 white) drop-shadow(-1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white);
+}
+
+.no-padding {
+    padding: 0;
 }

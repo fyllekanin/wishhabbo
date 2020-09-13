@@ -11,6 +11,7 @@ html, body {
     min-height: 101vh;
     overflow-x: hidden;
     color: #656565;
+    background-image: url('assets/images/background.png');
 }
 
 table, th {

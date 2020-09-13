@@ -1,37 +1,28 @@
 <div class="grid-x">
     <div class="cell medium-9">
-        <div class="grid-container">
+        <app-content header="Latest Habbo Guies">
             <div class="grid-x grid-margin-x">
-                <div class="cell small-12">
-                    <h5>Latest Habbo Guides</h5>
-                </div>
                 <div class="cell small-4" *ngFor="let article of articles">
                     <app-article [article]="article"></app-article>
                 </div>
             </div>
-        </div>
+        </app-content>
 
-        <div class="grid-container">
+        <app-content header="Latest Habbo New">
             <div class="grid-x grid-margin-x">
-                <div class="cell small-12">
-                    <h5>Latest Habbo News</h5>
-                </div>
                 <div class="cell small-4" *ngFor="let article of articles">
                     <app-article [article]="article"></app-article>
                 </div>
             </div>
-        </div>
+        </app-content>
 
-        <div class="grid-container">
+        <app-content header="Latest Site News">
             <div class="grid-x grid-margin-x">
-                <div class="cell small-12">
-                    <h5>Latest Site News</h5>
-                </div>
                 <div class="cell small-4" *ngFor="let article of articles">
                     <app-article [article]="article"></app-article>
                 </div>
             </div>
-        </div>
+        </app-content>
     </div>
     <div class="cell medium-3">
         <div class="grid-container">
