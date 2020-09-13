@@ -7,12 +7,6 @@ export class CreateLogUserTable1598094152114 implements MigrationInterface {
             name: 'log_user',
             indices: [
                 {
-                    columnNames: [ 'createdAt' ]
-                },
-                {
-                    columnNames: [ 'updatedAt' ]
-                },
-                {
                     columnNames: [ 'id' ]
                 },
                 {
@@ -28,6 +22,15 @@ export class CreateLogUserTable1598094152114 implements MigrationInterface {
                 {
                     columnNames: [ 'afterChange' ],
                     isFulltext: true
+                },
+                {
+                    columnNames: [ 'ip' ]
+                },
+                {
+                    columnNames: [ 'createdAt' ]
+                },
+                {
+                    columnNames: [ 'updatedAt' ]
                 }
             ],
             columns: [
@@ -61,6 +64,10 @@ export class CreateLogUserTable1598094152114 implements MigrationInterface {
                     type: 'longtext',
                     isNullable: true,
                     default: null
+                },
+                {
+                    name: 'ip',
+                    type: 'varchar'
                 },
                 {
                     name: 'createdAt',

@@ -9,6 +9,7 @@ export interface ILogEntityAbstract {
     userId: number;
     beforeChange: string;
     afterChange: string;
+    ip: string;
 }
 
 export abstract class LogEntityAbstract extends CreatedUpdatedAtEntity implements ILogEntityAbstract {
@@ -29,6 +30,9 @@ export abstract class LogEntityAbstract extends CreatedUpdatedAtEntity implement
     @Column({ nullable: true, type: 'longtext' })
     @Index({ fulltext: true })
     afterChange: string;
+    @Column()
+    @Index()
+    ip: string;
 
     constructor (builder: ILogEntityAbstract) {
         super();
@@ -42,6 +46,7 @@ export abstract class LogEntityAbstract extends CreatedUpdatedAtEntity implement
         this.userId = builder.userId;
         this.beforeChange = builder.beforeChange;
         this.afterChange = builder.afterChange;
+        this.ip = builder.ip;
     }
 }
 
@@ -52,7 +57,8 @@ export abstract class LogBuilder<T> {
         contentId: undefined,
         userId: undefined,
         beforeChange: undefined,
-        afterChange: undefined
+        afterChange: undefined,
+        ip: undefined
     };
 
     constructor (entity?: LogEntityAbstract) {
@@ -86,6 +92,11 @@ export abstract class LogBuilder<T> {
 
     withAfterChange (afterChange: string): LogBuilder<T> {
         this.myData.afterChange = afterChange;
+        return this;
+    }
+
+    withIp (ip: string): LogBuilder<T> {
+        this.myData.ip = ip;
         return this;
     }
 
