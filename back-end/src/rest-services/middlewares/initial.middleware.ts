@@ -6,7 +6,6 @@ import { ResourceRepository } from '../../persistance/repositories/resource.repo
 import { HabboRepository } from '../../persistance/repositories/habbo.repository';
 import { GroupRepository } from '../../persistance/repositories/group.repository';
 import { ArticleRepository } from '../../persistance/repositories/staff/media/article.repository';
-import { LogRepository } from '../../persistance/repositories/log.repository';
 import { TimetableRepository } from '../../persistance/repositories/staff/timetable.repository';
 import { EventsRepository } from '../../persistance/repositories/staff/events.repository';
 import { SettingRepository } from '../../persistance/repositories/setting.repository';
@@ -19,7 +18,6 @@ function getServiceConfig (): ServiceConfig {
         userRepository: new UserRepository(),
         tokenRepository: new TokenRepository(),
         articleRepository: new ArticleRepository(),
-        logRepository: new LogRepository(),
         timetableRepository: new TimetableRepository(),
         eventsRepository: new EventsRepository(),
         settingRepository: new SettingRepository()

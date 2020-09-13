@@ -1,10 +1,14 @@
-import { ErrorCode, ErrorCodes } from './error.codes';
+import { ErrorCodes } from './error.codes';
+import { ValidationError } from './validation.error';
 
 export class ErrorsCreator {
 
-    static createLikingRadioToFastError (min: string): ErrorCode {
-        const copy = { ...ErrorCodes.LIKING_RADIO_TO_FAST };
-        copy.description = copy.description.replace(`{${copy.parameters.min}}`, min);
-        return copy;
+    static createLikingRadioToFastValidationError (min: string): ValidationError {
+        return ValidationError.newBuilder()
+            .withCode(ErrorCodes.LIKING_RADIO_TO_FAST.code)
+            .withField('like')
+            .withMessage(ErrorCodes.LIKING_RADIO_TO_FAST.description
+                .replace(`{${ErrorCodes.LIKING_RADIO_TO_FAST.parameters.min}}`, min))
+            .build();
     }
 }

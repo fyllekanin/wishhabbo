@@ -25,7 +25,7 @@
                 <button class="green" (click)="radioService.toggleRadio()"><i
                     [ngClass]="radioService.isPlaying ? 'fas fa-pause' : 'fas fa-play'"></i>
                 </button>
-                <button class="red"><i class="fas fa-heart"></i></button>
+                <button class="red" (click)="radioService.doLikeDj()"><i class="fas fa-heart"></i></button>
                 <button class="blue" (click)="openRequest()"><i class="fa fa-comment"></i></button>
                 <div class="volume">
                     <input [(ngModel)]="radioService.volume"

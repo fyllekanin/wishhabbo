@@ -28,6 +28,7 @@ export class UserRepository extends BaseRepository<UserEntity> {
             .withUsername(user.username)
             .withUserId(user.userId)
             .withNameColors(displayGroup ? [ displayGroup.nameColor ] : [])
+            .withLikes(user.likes)
             .build();
     }
 

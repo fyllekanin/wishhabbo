@@ -214,7 +214,7 @@ export class ErrorCodes {
     static readonly LIKING_RADIO_TO_FAST: ErrorCode = {
         code: 35,
         name: 'Liking the DJ to quick',
-        description: 'You have already liked the current current, you need to wait {min} minutes',
+        description: 'You have already liked the current DJ, you need to wait {min} minutes',
         parameters: {
             min: 'min'
         }

@@ -11,6 +11,12 @@ import { TimetableSlot } from '../../rest-service-views/two-way/staff/timetable.
 import { ValidationValidators } from '../../validation/validation.validators';
 import { Logger } from '../../logging/log.logger';
 import { LogTypes } from '../../logging/log.types';
+import { LogRepository } from '../../persistance/repositories/log.repository';
+import { TimeUtility } from '../../utilities/time.utility';
+import { ErrorsCreator } from '../../validation/errors.creator';
+import { RadioStatsModel } from '../../persistance/entities/settings/models/radio-stats.model';
+import { SettingKey } from '../../persistance/entities/settings/setting.entity';
+import { SlimUserView } from '../../rest-service-views/two-way/slim-user.view';
 
 const middlewares = [
     AUTHORIZATION_MIDDLEWARE,
@@ -19,6 +25,55 @@ const middlewares = [
 
 @Controller('api/staff/radio')
 export class RadioController extends TimetableController {
+    private static readonly THIRTY_MINUTES = 1800;
+
+    @Post('like')
+    @Middleware([ AUTHORIZATION_MIDDLEWARE ])
+
+    private async createRadioLike (req: InternalRequest, res: Response): Promise<void> {
+        const radioStats = await req.serviceConfig.settingRepository.getKeyValue<RadioStatsModel>(SettingKey.RADIO_STATS);
+        if (!radioStats || !radioStats.currentDj) {
+            res.status(BAD_REQUEST).json([ {
+                name: 'Can\'t find the current DJ',
+                message: 'The current DJ was not possible to find'
+            } ]);
+            return;
+        }
+
+        const slimDj = SlimUserView.of(radioStats.currentDj);
+        const djEntity = await req.serviceConfig.userRepository.getUserById(slimDj.getUserId());
+        const items = await LogRepository.getRepositoryForUser().paginate({
+            page: 1,
+            take: 1,
+            where: [
+                { key: 'userId', operator: '=', value: req.user.userId },
+                { key: 'id', operator: '=', value: LogTypes.LIKED_RADIO },
+                { key: 'createdAt', operator: '>=', value: TimeUtility.getCurrent() - RadioController.THIRTY_MINUTES }
+            ]
+        });
+
+        if (items.getItems().length > 0) {
+            const secondsUntilCanLike = (items.getItems()[0].createdAt + RadioController.THIRTY_MINUTES)
+                - TimeUtility.getCurrent();
+            res.status(BAD_REQUEST).json([
+                ErrorsCreator.createLikingRadioToFastValidationError(`${Math.round(secondsUntilCanLike / 60)}`)
+            ]);
+            return;
+        }
+
+        const updated = djEntity.newBuilderFromCurrent()
+            .withLikes(djEntity.likes + 1)
+            .build();
+        await req.serviceConfig.userRepository.save(updated);
+        await Logger.createUserLog(req, {
+            id: LogTypes.LIKED_RADIO,
+            contentId: updated.userId,
+            userId: req.user.userId,
+            beforeChange: JSON.stringify(djEntity),
+            afterChange: JSON.stringify(updated)
+        });
+        res.status(OK).json();
+    }
 
     @Get('slots')
     @Middleware(middlewares)

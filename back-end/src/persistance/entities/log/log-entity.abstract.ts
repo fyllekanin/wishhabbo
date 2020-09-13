@@ -1,9 +1,10 @@
 import { Column, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
+import { LogTypes } from '../../../logging/log.types';
 
 export interface ILogEntityAbstract {
     logId: number;
-    id: number;
+    id: LogTypes;
     contentId: number;
     userId: number;
     beforeChange: string;

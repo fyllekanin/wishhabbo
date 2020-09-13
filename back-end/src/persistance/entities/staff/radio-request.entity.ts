@@ -29,7 +29,7 @@ export class RadioRequestEntity extends CreatedUpdatedAtEntity implements IRadio
         this.userId = builder.userId;
         this.request = builder.request;
     }
-    
+
     newBuilderFromCurrent (): Builder {
         return new Builder(this);
     }

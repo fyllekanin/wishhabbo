@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageKeys } from '../../shared/constants/local-storage.constants';
 import { RadioSettingsClass } from '../../shared/classes/radio-settings.class';
+import { HttpService } from '../http/http.service';
+import { SiteNotificationService } from './site-notification.service';
+import { SiteNotificationType } from '../../shared/app-views/site-notification/site-notification.interface';
 
 @Injectable()
 export class RadioService {
@@ -9,7 +12,10 @@ export class RadioService {
     volume = 100;
     isPlaying = false;
 
-    constructor () {
+    constructor (
+        private httpService: HttpService,
+        private siteNotificationService: SiteNotificationService
+    ) {
         const volume = Number(localStorage.getItem(LocalStorageKeys.RADIO_VOLUME));
         if (Number.isInteger(volume)) {
             this.volume = volume;
@@ -28,6 +34,17 @@ export class RadioService {
 
     getRadioElement (): HTMLAudioElement {
         return this.radioElement;
+    }
+
+    async doLikeDj (): Promise<void> {
+        this.httpService.post('/staff/radio/like', null).toPromise()
+            .then(() => {
+                this.siteNotificationService.create({
+                    title: 'Success',
+                    message: 'You liked the DJ!',
+                    type: SiteNotificationType.INFO
+                });
+            }).catch(error => this.siteNotificationService.onError(error.error));
     }
 
     toggleRadio (): void {

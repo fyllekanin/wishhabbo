@@ -3,15 +3,38 @@ import { LogEntityAbstract } from '../entities/log/log-entity.abstract';
 import { LogUserEntity } from '../entities/log/log-user.entity';
 import { LogStaffEntity } from '../entities/log/log-staff.entity';
 import { LogAdminEntity } from '../entities/log/log-admin.entity';
+import { BaseRepository } from './base.repository';
 
-export class LogRepository {
+export class LogRepository extends BaseRepository <LogEntityAbstract> {
+    private readonly entity: LogEntityAbstract;
     protected repository: Repository<LogEntityAbstract>;
 
-    async save (entity: LogEntityAbstract): Promise<LogEntityAbstract> {
-        return await this.getRepository(entity).save(entity);
+    constructor (entity: LogEntityAbstract) {
+        super();
+        this.entity = entity;
     }
 
-    protected getRepository (entity: LogEntityAbstract): Repository<LogEntityAbstract> {
+    static getRepositoryForUser (): LogRepository {
+        return new LogRepository(LogUserEntity.newBuilder().build());
+    }
+
+    static getRepositoryForAdmin (): LogRepository {
+        return new LogRepository(LogAdminEntity.newBuilder().build());
+    }
+
+    static getRepositoryForStaff (): LogRepository {
+        return new LogRepository(LogStaffEntity.newBuilder().build());
+    }
+
+    protected getRepository (): Repository<LogEntityAbstract> {
+        if (this.repository) {
+            return this.repository;
+        }
+        this.repository = this.getLogRepository(this.entity);
+        return this.repository;
+    }
+
+    protected getLogRepository (entity: LogEntityAbstract): Repository<LogEntityAbstract> {
         if (entity instanceof LogUserEntity) {
             return getConnection().getRepository(LogUserEntity);
         }

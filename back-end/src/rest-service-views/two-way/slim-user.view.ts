@@ -46,9 +46,13 @@ export class SlimUserView {
         if (!user) {
             return new SlimUserView(null);
         }
-        return new Builder().withUserId(user.userId)
+        return new Builder()
+            .withUserId(user.userId)
             .withUsername(user.username)
             .withHabbo(user.habbo)
+            .withLikes(user.likes)
+            .withUpdatedAt(user.updatedAt)
+            .withNameColors(user.nameColors)
             .build();
     }
 
