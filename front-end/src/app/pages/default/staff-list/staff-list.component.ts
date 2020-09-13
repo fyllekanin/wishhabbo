@@ -9,7 +9,7 @@ import { StaffListModel } from './staff-list.model';
 })
 export class StaffListComponent {
     data = new StaffListModel();
-    
+
     constructor (activatedRoute: ActivatedRoute) {
         this.data = activatedRoute.snapshot.data.data;
     }
