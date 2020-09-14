@@ -5,9 +5,23 @@ import { StaffListModel } from '../persistance/entities/settings/models/staff-li
 import { SettingKey } from '../persistance/entities/settings/setting.entity';
 import { StaffListPage, StaffListRow } from '../rest-service-views/respond-views/pages/staff-list.page';
 import { OK } from 'http-status-codes';
+import { HomePage } from '../rest-service-views/respond-views/pages/home.page';
 
 @Controller('api/page')
 export class PageController {
+
+    @Get('home')
+    private async getHomePage (req: InternalRequest, res: Response): Promise<void> {
+        const badges = await req.serviceConfig.habboRepository.paginate({
+            take: 12,
+            page: 1,
+            orderBy: { sort: 'createdAt', order: 'DESC' }
+        });
+        
+        res.status(OK).json(HomePage.newBuilder()
+            .withBadges(badges.getItems())
+            .build());
+    }
 
     @Get('staff-list')
     private async getStaffList (req: InternalRequest, res: Response): Promise<void> {

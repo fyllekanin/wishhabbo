@@ -1,7 +1,8 @@
 import { Equal, getConnection, Repository } from 'typeorm';
 import { HabboBadgeEntity } from '../entities/habbo/habbo-badge.entity';
+import { BaseRepository } from './base.repository';
 
-export class HabboRepository {
+export class HabboRepository extends BaseRepository<HabboBadgeEntity> {
     private habboBadgeRepository: Repository<HabboBadgeEntity>;
 
     async saveAll (entities: Array<HabboBadgeEntity>): Promise<Array<HabboBadgeEntity>> {
@@ -12,7 +13,7 @@ export class HabboRepository {
         return await this.getRepository().count({ badgeId: Equal(badgeId) }) > 0;
     }
 
-    private getRepository (): Repository<HabboBadgeEntity> {
+    protected getRepository (): Repository<HabboBadgeEntity> {
         if (this.habboBadgeRepository) {
             return this.habboBadgeRepository;
         }
