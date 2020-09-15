@@ -2,7 +2,7 @@
     <div class="cell medium-9">
         <app-content header="Latest Habbo Guides">
             <div class="grid-x grid-margin-x">
-                <div class="cell small-4" *ngFor="let article of articles">
+                <div class="cell small-3" *ngFor="let article of data.guides">
                     <app-article [article]="article"></app-article>
                 </div>
             </div>
@@ -10,7 +10,7 @@
 
         <app-content header="Latest Habbo News">
             <div class="grid-x grid-margin-x">
-                <div class="cell small-4" *ngFor="let article of articles">
+                <div class="cell small-3" *ngFor="let article of data.habboNews">
                     <app-article [article]="article"></app-article>
                 </div>
             </div>
@@ -18,7 +18,7 @@
 
         <app-content header="Latest Site News">
             <div class="grid-x grid-margin-x">
-                <div class="cell small-4" *ngFor="let article of articles">
+                <div class="cell small-3" *ngFor="let article of data.siteNews">
                     <app-article [article]="article"></app-article>
                 </div>
             </div>
@@ -36,52 +36,9 @@
                     <app-content header="Latest Badges">
                         <div class="grid-container">
                             <div class="grid-x text-align-center">
-                                <div class="cell small-6 medium-3 badge-style"
-                                     tooltip="Lost Tribe Competition and Event Winners &#013; AC8_HHUK">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/AC8_HHUK.png">
-                                </div>
-                                <div class="cell small-6 medium-3 badge-style"
-                                     tooltip="Rare Vintage Sofa &#013; HTW35">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/HTW35.png">
-                                </div>
-                                <div class="cell small-6 medium-3 badge-style"
-                                     tooltip="Black and White &#013; Z64_HHUK">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/Z64_HHUK.png">
-                                </div>
-                                <div class="cell small-6 medium-3 badge-style"
-                                     tooltip="Habboween 2015 &#013; APC04">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/APC04.png">
-                                </div>
-                                <div class="cell small-6 medium-3 badge-style"
-                                     tooltip="Your picnic set up deserved an OOH, LA LA! &#013; BR650">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/BR650.png">
-                                </div>
-                                <div class="cell small-6 medium-3 badge-style"
-                                     tooltip="Your team was selected to compete in Habbovision 2... &#013; COM24">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/COM24.png">
-                                </div>
-                                <div class="cell small-6 medium-3 badge-style"
-                                     tooltip="Pixelized ideal meal &#013; FI099">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/FI099.png">
-                                </div>
-                                <div class="cell small-6 medium-3 badge-style"
-                                     tooltip="Member of the Bronze team, Habbolympics 2010 &#013; HOP03_HHCA">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/HOP03_HHCA.png">
-                                </div>
-                                <div class="cell small-6 medium-3 badge-style" tooltip="Meet Dave Body &#013; MD2">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/MD2.png">
-                                </div>
-                                <div class="cell small-6 medium-3 badge-style"
-                                     tooltip="I won a round of 'The Memory Game' summer 2015 &#013; NO163">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/NO163.png">
-                                </div>
-                                <div class="cell small-6 medium-3 badge-style"
-                                     tooltip="You sail under your own flag! &#013; PRC02">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/PRC02.png">
-                                </div>
-                                <div class="cell small-6 medium-3 badge-style"
-                                     tooltip="Given to the Habbo in first place as Habbo of the ... &#013; SG3">
-                                    <img src="https://images.habbogroup.com/c_images/album1584/SG3.png">
+                                <div *ngFor="let badge of data.badges" class="cell small-6 medium-3 badge-style"
+                                     [attr.tooltip]="badge.description + '&#013;' + badge.badgeId">
+                                    <img appHabboBadge [code]="badge.badgeId"/>
                                 </div>
                             </div>
                         </div>

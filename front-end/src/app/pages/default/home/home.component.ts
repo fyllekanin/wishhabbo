@@ -1,5 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { Article } from '../../../shared/components/article/article.model';
+import { HomeModel } from './home.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-default-home',
@@ -7,26 +8,11 @@ import { Article } from '../../../shared/components/article/article.model';
     styleUrls: [ 'home.component.css' ]
 })
 export class HomeComponent implements AfterViewInit {
-    articles: Array<Article> = [
-        new Article({
-            articleId: 1,
-            title: 'Build-A-Wand',
-            author: 'erico',
-            badge: null
-        }),
-        new Article({
-            articleId: 2,
-            title: 'Build a taxy',
-            author: 'phil',
-            badge: null
-        }),
-        new Article({
-            articleId: 3,
-            title: 'Build a upside down house',
-            author: 'jenna',
-            badge: null
-        })
-    ];
+    data = new HomeModel();
+
+    constructor (activatedRoute: ActivatedRoute) {
+        this.data = activatedRoute.snapshot.data.data;
+    }
 
     ngAfterViewInit (): void {
         (<any>window).twttr.widgets.load();

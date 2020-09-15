@@ -4,6 +4,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { DefaultComponent } from './default.component';
 import { StaffListResolver } from './staff-list/staff-list.resolver';
 import { StaffListComponent } from './staff-list/staff-list.component';
+import { HomeResolver } from './home/home.resolver';
 
 export const defaultRoutes: Routes = [
     {
@@ -12,7 +13,10 @@ export const defaultRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: HomeComponent
+                component: HomeComponent,
+                resolve: {
+                    data: HomeResolver
+                }
             },
             {
                 path: 'not-found',
