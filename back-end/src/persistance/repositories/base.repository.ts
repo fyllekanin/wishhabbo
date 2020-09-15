@@ -9,7 +9,7 @@ interface PaginationOptions {
     where?: Array<{
         key: string,
         operator: string,
-        value: string | number | Array<string | number>,
+        value: string | number | boolean | Array<string | number | boolean>,
         isIn?: boolean,
         isNotIn?: boolean
     }>;

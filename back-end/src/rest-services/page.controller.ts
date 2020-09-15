@@ -6,6 +6,8 @@ import { SettingKey } from '../persistance/entities/settings/setting.entity';
 import { StaffListPage, StaffListRow } from '../rest-service-views/respond-views/pages/staff-list.page';
 import { OK } from 'http-status-codes';
 import { HomePage } from '../rest-service-views/respond-views/pages/home.page';
+import { ArticleConstants } from '../constants/article.constant';
+import { ArticleView } from '../rest-service-views/respond-views/staff/media/article.view';
 
 @Controller('api/page')
 export class PageController {
@@ -17,10 +19,42 @@ export class PageController {
             page: 1,
             orderBy: { sort: 'createdAt', order: 'DESC' }
         });
-        
+
         res.status(OK).json(HomePage.newBuilder()
             .withBadges(badges.getItems())
+            .withGuides(await this.getArticles(req, 4, ArticleConstants.TYPES.GUIDE.value))
+            .withHabboNews(await this.getArticles(req, 4, ArticleConstants.TYPES.NEWS.value))
+            .withSiteNews(await this.getArticles(req, 4, ArticleConstants.TYPES.SITE_NEWS.value))
             .build());
+    }
+
+    private async getArticles (req: InternalRequest, amount: number, type: number): Promise<Array<ArticleView>> {
+        const paginate = await req.serviceConfig.articleRepository.paginate({
+            take: amount,
+            page: 1,
+            orderBy: { sort: 'createdAt', order: 'DESC' },
+            where: [
+                { key: 'type', operator: '=', value: type },
+                { key: 'isApproved', operator: '=', value: true }
+            ]
+        });
+
+        const articles = [];
+        for (const article of paginate.getItems()) {
+            const user = await req.serviceConfig.userRepository.getSlimUserById(article.userId);
+            articles.push(ArticleView.newBuilder()
+                .withArticleId(article.articleId)
+                .withUser(user)
+                .withTitle(article.title)
+                .withContent(article.content)
+                .withBadges(JSON.parse(article.badges))
+                .withRoom(article.room)
+                .withRoomOwner(article.roomOwner)
+                .withDifficulty(article.difficulty)
+                .withType(type)
+                .build());
+        }
+        return articles;
     }
 
     @Get('staff-list')
