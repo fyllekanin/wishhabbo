@@ -44,6 +44,8 @@ export class ArticleClass {
     badges: Array<string> = [];
     @primitiveOf(String)
     room: string;
+    @primitiveOf(String)
+    roomOwner: string;
     @primitiveOf(Number)
     difficulty: number;
     @primitiveOf(Number)

@@ -7,6 +7,7 @@ import { ArticleConstants } from '../../../constants/article.constant';
 import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { ResourceRepository } from '../../../persistance/repositories/resource.repository';
 import { PayloadValidator } from '../payload-validator.interface';
+import { HabboService } from '../../../external/services/habbo.service';
 
 export class ArticlePayloadValidator implements PayloadValidator<ArticlePayload> {
 
@@ -20,6 +21,7 @@ export class ArticlePayloadValidator implements PayloadValidator<ArticlePayload>
         this.validateType(articlePayload, errors);
         this.validateMandatoryBadge(articlePayload, errors);
         this.validateContent(articlePayload, errors);
+        await this.validateRoomOwner(articlePayload, errors);
         await this.validateThumbnail(articlePayload, errors, serviceConfig.resourceRepository);
 
         return errors;
@@ -35,6 +37,21 @@ export class ArticlePayloadValidator implements PayloadValidator<ArticlePayload>
                 .withField('content')
                 .withMessage(ErrorCodes.MISSING_CONTENT.description)
                 .withCode(ErrorCodes.MISSING_CONTENT.code)
+                .build());
+        }
+    }
+
+    private async validateRoomOwner (payload: ArticlePayload, errors: Array<ValidationError>): Promise<void> {
+        if (!payload.getRoomOwner()) {
+            return;
+        }
+        const habboService = new HabboService();
+        const habbo = await habboService.getHabbo(payload.getRoomOwner());
+        if (!habbo) {
+            errors.push(ValidationError.newBuilder()
+                .withField('roomOwner')
+                .withMessage(ErrorCodes.NO_HABBO_WITH_NAME.description)
+                .withCode(ErrorCodes.NO_HABBO_WITH_NAME.code)
                 .build());
         }
     }

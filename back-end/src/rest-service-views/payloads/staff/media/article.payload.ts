@@ -7,6 +7,7 @@ export class ArticlePayload implements IPayload {
     private readonly content: string;
     private readonly badges: Array<string>;
     private readonly room: string;
+    private readonly roomOwner: string;
     private readonly difficulty: number;
     private readonly type: number;
     private readonly file: File;
@@ -17,6 +18,7 @@ export class ArticlePayload implements IPayload {
         content: string,
         badges: Array<string>,
         room: string,
+        roomOwner: string,
         difficulty: number,
         type: number,
         file: File
@@ -51,6 +53,10 @@ export class ArticlePayload implements IPayload {
         return this.room;
     }
 
+    getRoomOwner (): string {
+        return this.roomOwner;
+    }
+
     getDifficulty (): number {
         return this.difficulty;
     }
@@ -70,6 +76,7 @@ export class ArticlePayload implements IPayload {
             article.content,
             article.badges,
             article.room,
+            article.roomOwner,
             article.difficulty,
             article.type,
             file

@@ -7,6 +7,7 @@ export class ArticleView {
     content: string;
     badges: Array<string>;
     room: string;
+    roomOwner: string;
     difficulty: number;
     type: number;
     isApproved: boolean;
@@ -23,6 +24,7 @@ class ArticleViewBuilder {
     content: string;
     badges: Array<string>;
     room: string;
+    roomOwner: string;
     difficulty: number;
     type: number;
     isApproved: boolean;
@@ -57,6 +59,11 @@ class ArticleViewBuilder {
         return this;
     }
 
+    withRoomOwner (roomOwner: string): ArticleViewBuilder {
+        this.roomOwner = roomOwner;
+        return this;
+    }
+
     withDifficulty (difficulty: number): ArticleViewBuilder {
         this.difficulty = difficulty;
         return this;
@@ -80,6 +87,7 @@ class ArticleViewBuilder {
         entity.content = this.content;
         entity.badges = this.badges;
         entity.room = this.room;
+        entity.roomOwner = this.roomOwner;
         entity.difficulty = this.difficulty;
         entity.type = this.type;
         entity.isApproved = this.isApproved;

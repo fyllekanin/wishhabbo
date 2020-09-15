@@ -7,15 +7,19 @@
             <input id="title" type="text" [(ngModel)]="data.title"/>
         </div>
         <div class="cell small-6">
-            <label for="room" class="display-block">Room</label>
-            <input id="room" type="text" [(ngModel)]="data.room"/>
-        </div>
-        <div class="cell small-6">
             <label for="badges" class="display-block">Badges <em>(comma separated)</em></label>
             <input id="badges" type="text" [(ngModel)]="badges" (input)="onBadgesChange()"/>
             <div class="badges">
                 <img appHabboBadge *ngFor="let badge of data.badges" [code]="badge"/>
             </div>
+        </div>
+        <div class="cell small-6">
+            <label for="room" class="display-block">Room</label>
+            <input id="room" type="text" [(ngModel)]="data.room"/>
+        </div>
+        <div class="cell small-6">
+            <label for="roomOwner" class="display-block">Room owner</label>
+            <input id="roomOwner" type="text" [(ngModel)]="data.roomOwner"/>
         </div>
         <div class="cell small-6">
             <label for="type" class="display-block">Type</label>

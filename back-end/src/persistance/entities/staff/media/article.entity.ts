@@ -8,6 +8,7 @@ interface IArticleEntity {
     content: string;
     badges: string;
     room: string;
+    roomOwner: string;
     difficulty: number;
     type: number;
     isApproved: boolean;
@@ -30,6 +31,9 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
     @Column()
     room: string;
     @Column()
+    @Index()
+    roomOwner: string;
+    @Column()
     difficulty: number;
     @Column()
     @Index()
@@ -50,6 +54,7 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
         this.content = builder.content;
         this.badges = builder.badges;
         this.room = builder.room;
+        this.roomOwner = builder.roomOwner;
         this.difficulty = builder.difficulty;
         this.type = builder.type;
         this.isApproved = builder.isApproved;
@@ -72,6 +77,7 @@ class Builder {
         content: undefined,
         badges: undefined,
         room: undefined,
+        roomOwner: undefined,
         difficulty: undefined,
         type: undefined,
         isApproved: undefined
@@ -108,6 +114,11 @@ class Builder {
 
     withRoom (room: string): Builder {
         this.myData.room = room;
+        return this;
+    }
+
+    withRoomOwner (roomOwner: string): Builder {
+        this.myData.roomOwner = roomOwner;
         return this;
     }
 

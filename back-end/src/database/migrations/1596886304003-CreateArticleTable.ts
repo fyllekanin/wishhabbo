@@ -17,6 +17,9 @@ export class CreateArticleTable1596886304003 implements MigrationInterface {
                     isFulltext: true
                 },
                 {
+                    columnNames: [ 'roomOwner' ]
+                },
+                {
                     columnNames: [ 'badges' ]
                 },
                 {
@@ -53,6 +56,10 @@ export class CreateArticleTable1596886304003 implements MigrationInterface {
                 },
                 {
                     name: 'room',
+                    type: 'varchar'
+                },
+                {
+                    name: 'roomOwner',
                     type: 'varchar'
                 },
                 {
