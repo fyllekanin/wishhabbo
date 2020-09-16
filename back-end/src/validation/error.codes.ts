@@ -219,4 +219,10 @@ export class ErrorCodes {
             min: 'min'
         }
     };
+
+    static readonly INVALID_ROLE: ErrorCode = {
+        code: 36,
+        name: 'Invalid role',
+        description: 'A role can only contain a-z and spaces'
+    };
 }

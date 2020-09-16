@@ -70,7 +70,13 @@ export class UserController {
             return;
         }
 
-        res.status(OK).json(await req.serviceConfig.userRepository.getSlimUserById(user.userId));
+        const userdata = await req.serviceConfig.userRepository.getUserdataByUserId(user.userId);
+        res.status(OK).json({
+            userId: user.userId,
+            username: user.username,
+            habbo: user.habbo,
+            role: userdata.role
+        });
     }
 
     @Get(':userId/groups')
@@ -162,6 +168,7 @@ export class UserController {
     private async updateUserDetails (req: InternalRequest, res: Response): Promise<void> {
         const payload = UserDetailsPayload.of(req);
         const user = await req.serviceConfig.userRepository.getUserById(payload.getUserId());
+        const userdata = await req.serviceConfig.userRepository.getUserdataByUserId(user.userId);
         const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
         const userImmunity = user ? await req.serviceConfig.groupRepository.getUserIdImmunity(user.userId) : 0;
         if (!user || userImmunity >= immunity) {
@@ -178,8 +185,16 @@ export class UserController {
             .withUsername(payload.getUsername())
             .withHabbo(payload.getHabbo());
 
+        let userdataUpdated = null;
         if (await req.serviceConfig.groupRepository.haveAdminPermission(req.user.userId, Permissions.ADMIN.CAN_MANAGE_USER_ADVANCED)) {
             builder.withPassword(await HasherUtility.hash(payload.getPassword()));
+
+            if (payload.getRole()) {
+                userdataUpdated = userdata.newBuilderFromCurrent()
+                    .withRole(payload.getRole())
+                    .build();
+                await req.serviceConfig.userRepository.saveUserdata(userdataUpdated);
+            }
         }
         const updated = builder.build();
         const isPasswordUpdated = Boolean(payload.getPassword());
@@ -189,10 +204,16 @@ export class UserController {
             id: LogTypes.UPDATED_USER_DETAILS,
             contentId: updated.userId,
             userId: req.user.userId,
-            beforeChange: JSON.stringify(user.newBuilderFromCurrent()
-                .withPassword(isPasswordUpdated ? 'changed' : null).build()),
-            afterChange: JSON.stringify(updated.newBuilderFromCurrent()
-                .withPassword(isPasswordUpdated ? 'changed' : null).build())
+            beforeChange: JSON.stringify({
+                user: user.newBuilderFromCurrent()
+                    .withPassword(isPasswordUpdated ? 'changed' : null).build(),
+                userdata: userdata
+            }),
+            afterChange: JSON.stringify({
+                user: updated.newBuilderFromCurrent()
+                    .withPassword(isPasswordUpdated ? 'changed' : null).build(),
+                userdata: userdataUpdated
+            })
         });
         res.status(OK).json();
     }

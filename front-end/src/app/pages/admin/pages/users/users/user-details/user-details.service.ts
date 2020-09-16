@@ -21,7 +21,7 @@ export class UserDetailsService implements Resolve<SlimUser> {
             .pipe(map(item => new SlimUser(item)));
     }
 
-    save (data: { userId: number, username: string, habbo: string, password: string, repassword: string }): Promise<void> {
+    save (data: { userId: number, username: string, habbo: string, password: string, repassword: string, role: string }): Promise<void> {
         return this.httpService.put(`/admin/users/users/${data.userId}/details`, data).toPromise()
             .then(() => {
                 this.siteNotificationService.create({

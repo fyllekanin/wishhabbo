@@ -22,10 +22,11 @@ export class UserDetailsComponent implements OnDestroy {
         username: '',
         habbo: '',
         password: '',
-        repassword: ''
+        repassword: '',
+        role: ''
     };
     subscriptions: Array<Unsubscribable> = [];
-    canEditPassword = false;
+    canEditAdvanced = false;
     contentActions: Array<UserAction> = [
         { label: 'Save', value: this.ACTIONS.SAVE },
         { label: 'Go back', value: this.ACTIONS.GO_BACK }
@@ -41,8 +42,9 @@ export class UserDetailsComponent implements OnDestroy {
             this.data.userId = data.data.userId;
             this.data.username = data.data.username;
             this.data.habbo = data.data.habbo;
+            this.data.role = data.data.role;
         }));
-        this.canEditPassword = this.authService.getAuthUser().adminPermissions.CAN_MANAGE_USER_ADVANCED;
+        this.canEditAdvanced = this.authService.getAuthUser().adminPermissions.CAN_MANAGE_USER_ADVANCED;
     }
 
     async onAction (action: UserAction): Promise<void> {

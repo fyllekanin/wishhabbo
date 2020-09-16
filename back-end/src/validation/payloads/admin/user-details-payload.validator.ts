@@ -15,12 +15,27 @@ export class UserDetailsPayloadValidator implements PayloadValidator<UserDetails
         await this.validateValidUsername(userDetails, serviceConfig, errors);
         await this.validateValidPassword(userDetails, errors);
         await this.validateValidHabbo(userDetails, serviceConfig, errors);
+        await this.validateRole(userDetails, errors);
 
         return errors;
     }
 
     isValidEntity (payload: IPayload): boolean {
         return payload instanceof UserDetailsPayload;
+    }
+
+    private async validateRole (userDetails: UserDetailsPayload, errors: Array<ValidationError>): Promise<void> {
+        if (!userDetails.getRole()) {
+            return;
+        }
+
+        if (!userDetails.getRole().trim().match(/[a-zA-Z ]+/g)) {
+            errors.push(ValidationError.newBuilder()
+                .withCode(ErrorCodes.INVALID_ROLE.code)
+                .withField('role')
+                .withMessage(ErrorCodes.INVALID_ROLE.description)
+                .build());
+        }
     }
 
     private async validateValidUsername (userDetails: UserDetailsPayload, serviceConfig: ServiceConfig,

@@ -3,8 +3,10 @@ import { getConnection, Repository } from 'typeorm';
 import { BaseRepository } from '../base.repository';
 import { SlimUserView } from '../../../rest-service-views/two-way/slim-user.view';
 import { GroupRepository } from '../group.repository';
+import { UserdataEntity } from '../../entities/user/userdata.entity';
 
 export class UserRepository extends BaseRepository<UserEntity> {
+    private userdataRepository: Repository<UserdataEntity>;
     protected repository: Repository<UserEntity>;
 
     async removeDisplayGroupId (groupId: number): Promise<void> {
@@ -47,11 +49,36 @@ export class UserRepository extends BaseRepository<UserEntity> {
         });
     }
 
+    async getUserdataByUserId (userId: number): Promise<UserdataEntity> {
+        const userdata = await this.getUserdataRepository().findOne({
+            cache: true,
+            where: { userId: userId }
+        });
+        if (userdata) {
+            return userdata;
+        }
+        return UserdataEntity.newBuilder()
+            .withUserId(userId)
+            .build();
+    }
+
+    async saveUserdata (entity: UserdataEntity): Promise<void> {
+        await this.getUserdataRepository().save(entity);
+    }
+
     protected getRepository (): Repository<UserEntity> {
         if (this.repository) {
             return this.repository;
         }
         this.repository = getConnection().getRepository(UserEntity);
         return this.repository;
+    }
+
+    private getUserdataRepository (): Repository<UserdataEntity> {
+        if (this.userdataRepository) {
+            return this.userdataRepository;
+        }
+        this.userdataRepository = getConnection().getRepository(UserdataEntity);
+        return this.userdataRepository;
     }
 }
