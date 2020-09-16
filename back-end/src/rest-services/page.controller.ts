@@ -4,13 +4,33 @@ import { InternalRequest } from '../utilities/internal.request';
 import { StaffListModel } from '../persistance/entities/settings/models/staff-list.model';
 import { SettingKey } from '../persistance/entities/settings/setting.entity';
 import { StaffListPage, StaffListRow } from '../rest-service-views/respond-views/pages/staff-list.page';
-import { OK } from 'http-status-codes';
+import { NOT_FOUND, OK } from 'http-status-codes';
 import { HomePage } from '../rest-service-views/respond-views/pages/home.page';
 import { ArticleConstants } from '../constants/article.constant';
 import { ArticleView } from '../rest-service-views/respond-views/staff/media/article.view';
 
 @Controller('api/page')
 export class PageController {
+
+    @Get('article/:articleId')
+    private async getArticle (req: InternalRequest, res: Response): Promise<void> {
+        const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
+        if (!article) {
+            res.status(NOT_FOUND).json();
+            return;
+        }
+
+        res.status(OK).json(ArticleView.newBuilder()
+            .withArticleId(article.articleId)
+            .withTitle(article.title)
+            .withContent(article.content)
+            .withBadges(JSON.parse(article.badges))
+            .withRoom(article.room)
+            .withDifficulty(article.difficulty)
+            .withType(article.type)
+            .withIsApproved(article.isApproved)
+            .build());
+    }
 
     @Get('home')
     private async getHomePage (req: InternalRequest, res: Response): Promise<void> {
