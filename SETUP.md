@@ -4,7 +4,7 @@
 ##### NodeJS
 https://nodejs.org/en/
 
-Version 12 or higher
+Version 12 or higher.
 
 ##### MySQL
 Easiest solution for windows users: xampp
