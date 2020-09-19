@@ -12,20 +12,26 @@ export class WebsiteSettingsListComponent {
         {
             name: 'Staff list',
             description: 'Add, remove or re-order groups on the staff list',
-            permissions: [ 'CAN_MANAGE_STAFF_LIST' ],
+            permissions: ['CAN_MANAGE_STAFF_LIST'],
             url: '/admin/website-settings/staff-list'
         },
         {
             name: 'Radio settings',
             description: 'Update the radio settings used for the radio',
-            permissions: [ 'CAN_MANAGE_RADIO_SETTINGS' ],
+            permissions: ['CAN_MANAGE_RADIO_SETTINGS'],
             url: '/admin/website-settings/radio-settings'
+        },
+        {
+            name: 'Bbcodes',
+            description: 'Create, edit or delete bbcodes in the system',
+            permissions: ['CAN_MANAGE_BBCODES'],
+            url: '/admin/website-settings/bbcodes'
         }
     ];
 
     headers: Array<TableHeader> = [
-        { label: 'Name' },
-        { label: 'Description' }
+        {label: 'Name'},
+        {label: 'Description'}
     ];
     rows: Array<TableRow> = [];
 
@@ -39,8 +45,8 @@ export class WebsiteSettingsListComponent {
             .map(setting => ({
                 rowId: setting.name,
                 cells: [
-                    { label: setting.name },
-                    { label: setting.description }
+                    {label: setting.name},
+                    {label: setting.description}
                 ],
                 actions: [
                     {

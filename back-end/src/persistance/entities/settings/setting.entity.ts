@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
+import { IEntity } from '../entity.interface';
 
 export enum SettingKey {
     STAFF_LIST = 'staff-list',
@@ -7,7 +8,7 @@ export enum SettingKey {
     RADIO_STATS = 'radio-stats'
 }
 
-interface ISettingEntity {
+interface ISettingEntity extends IEntity {
     settingId: number;
     key: SettingKey;
     value: string;
@@ -18,9 +19,9 @@ export class SettingEntity<T> extends CreatedUpdatedAtEntity implements ISetting
     private parsedValue: T;
     @PrimaryGeneratedColumn()
     settingId: number;
-    @Column({ unique: true })
+    @Column({unique: true})
     key: SettingKey;
-    @Column({ type: 'longtext' })
+    @Column({type: 'longtext'})
     value: string;
 
     constructor (builder?: ISettingEntity) {

@@ -1,8 +1,9 @@
-import {Column, Entity, Index, PrimaryGeneratedColumn} from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
+import { InternalRequest } from '../../../utilities/internal.request';
+import { IEntity } from '../entity.interface';
 
-
-interface IBbcode {
+interface IBbcode extends IEntity {
     bbcodeId: number;
     name: string;
     example: string;
@@ -17,17 +18,17 @@ interface IBbcode {
 export class BbcodeEntity extends CreatedUpdatedAtEntity implements IBbcode {
     @PrimaryGeneratedColumn()
     bbcodeId: number;
-    @Column({ unique: true })
+    @Column({unique: true})
     name: string;
-    @Column({ unique: true })
+    @Column({unique: true})
     example: string;
-    @Column({ unique: true })
+    @Column({unique: true})
     pattern: string;
-    @Column({ unique: true })
+    @Column({unique: true})
     replacement: string;
-    @Column({ unique: true })
+    @Column({unique: true})
     editorPattern: string;
-    @Column({ unique: true })
+    @Column({unique: true})
     editorReplacement: string;
     @Column()
     @Index()
@@ -54,8 +55,20 @@ export class BbcodeEntity extends CreatedUpdatedAtEntity implements IBbcode {
         return new Builder(this);
     }
 
-    static newBuilder<T> (): Builder {
+    static newBuilder (): Builder {
         return new Builder();
+    }
+
+    static of (req: InternalRequest): BbcodeEntity {
+        return this.newBuilder()
+            .withBbcodeId(req.body.bbcodeId)
+            .withName(req.body.name)
+            .withExample(req.body.example)
+            .withPattern(req.body.pattern)
+            .withReplacement(req.body.replacement)
+            .withEditorPattern(req.body.editorPattern)
+            .withEditorReplacement(req.body.editorReplacement)
+            .build();
     }
 }
 
@@ -75,47 +88,47 @@ class Builder {
         Object.assign(this.myData, entity);
     }
 
-    withBbcodeId(bbcodeId: number): Builder {
+    withBbcodeId (bbcodeId: number): Builder {
         this.myData.bbcodeId = bbcodeId;
         return this;
     }
 
-    withName(name: string): Builder {
+    withName (name: string): Builder {
         this.myData.name = name;
         return this;
     }
 
-    withExample(example: string): Builder {
+    withExample (example: string): Builder {
         this.myData.example = example;
         return this;
     }
 
-    withPattern(pattern: string): Builder {
+    withPattern (pattern: string): Builder {
         this.myData.pattern = pattern;
         return this;
     }
 
-    withReplacement(replacement: string): Builder {
+    withReplacement (replacement: string): Builder {
         this.myData.replacement = replacement;
         return this;
     }
 
-    withEditorPattern(editorPattern: string): Builder {
+    withEditorPattern (editorPattern: string): Builder {
         this.myData.editorPattern = editorPattern;
         return this;
     }
 
-    withEditorReplacement(editorReplacement: string): Builder {
+    withEditorReplacement (editorReplacement: string): Builder {
         this.myData.editorReplacement = editorReplacement;
         return this;
     }
 
-    withIsSystem(isSystem: boolean): Builder {
+    withIsSystem (isSystem: boolean): Builder {
         this.myData.isSystem = isSystem;
         return this;
     }
 
-    build(): BbcodeEntity {
+    build (): BbcodeEntity {
         return new BbcodeEntity(this.myData);
     }
 }

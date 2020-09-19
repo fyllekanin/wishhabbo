@@ -7,6 +7,7 @@ import { HttpRequestInterceptor } from './http/http.interceptor';
 import { AuthService } from './auth/auth.service';
 import { SiteNotificationService } from './common-services/site-notification.service';
 import { ContinuesInformationService } from './common-services/continues-information.service';
+import { BbcodeService } from './common-services/bbcode.service';
 
 @NgModule({
     imports: [
@@ -23,12 +24,13 @@ export class CoreModule {
             ngModule: CoreModule,
             providers: [
                 HttpService,
-                { provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true },
+                {provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true},
                 AuthService,
                 RadioService,
                 DialogService,
                 SiteNotificationService,
-                ContinuesInformationService
+                ContinuesInformationService,
+                BbcodeService
             ]
         };
     }

@@ -9,6 +9,7 @@ import { TimetableRepository } from '../persistance/repositories/staff/timetable
 import { EventsRepository } from '../persistance/repositories/staff/events.repository';
 import { TokenEntity } from '../persistance/entities/user/token.entity';
 import { SettingRepository } from '../persistance/repositories/setting.repository';
+import { BbcodeRepository } from '../persistance/repositories/bbcode.repository';
 
 export interface ServiceConfig {
     resourceRepository: ResourceRepository;
@@ -20,6 +21,7 @@ export interface ServiceConfig {
     timetableRepository: TimetableRepository;
     eventsRepository: EventsRepository;
     settingRepository: SettingRepository;
+    bbcodeRepository: BbcodeRepository
 }
 
 export interface InternalUser {

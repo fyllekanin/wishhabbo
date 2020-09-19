@@ -16,8 +16,7 @@ interface PaginationOptions {
 }
 
 export abstract class BaseRepository<T> {
-    protected repository: Repository<T>;
-
+    
     async get (id: number): Promise<T> {
         return await this.getRepository().findOne(id);
     }
@@ -30,7 +29,7 @@ export abstract class BaseRepository<T> {
         return await this.getRepository().delete(entity);
     }
 
-    async getAll(): Promise<Array<T>> {
+    async getAll (): Promise<Array<T>> {
         return await this.getRepository().find();
     }
 

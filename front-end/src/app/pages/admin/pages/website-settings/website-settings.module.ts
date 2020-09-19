@@ -11,6 +11,7 @@ import { StaffListService } from './staff-list/staff-list.service';
 import { StaffListComponent } from './staff-list/staff-list.component';
 import { RadioSettingsComponent } from './radio-settings/radio-settings.component';
 import { RadioSettingsService } from './radio-settings/radio-settings.service';
+import { BbcodeListComponent } from './bbcodes/list/bbcode-list.component';
 
 @NgModule({
     imports: [
@@ -24,7 +25,8 @@ import { RadioSettingsService } from './radio-settings/radio-settings.service';
         WebsiteSettingsComponent,
         WebsiteSettingsListComponent,
         StaffListComponent,
-        RadioSettingsComponent
+        RadioSettingsComponent,
+        BbcodeListComponent
     ],
     providers: [
         StaffListService,

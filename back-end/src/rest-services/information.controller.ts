@@ -14,4 +14,9 @@ export class InformationController {
             .withRadioStats(await req.serviceConfig.settingRepository.getKeyValue(SettingKey.RADIO_STATS))
             .build());
     }
+
+    @Get('bbcodes')
+    private async getBbcodes (req: InternalRequest, res: Response): Promise<void> {
+        res.status(OK).json(await req.serviceConfig.bbcodeRepository.getAll());
+    }
 }

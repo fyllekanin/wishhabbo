@@ -9,6 +9,7 @@ import { ArticleRepository } from '../../persistance/repositories/staff/media/ar
 import { TimetableRepository } from '../../persistance/repositories/staff/timetable.repository';
 import { EventsRepository } from '../../persistance/repositories/staff/events.repository';
 import { SettingRepository } from '../../persistance/repositories/setting.repository';
+import { BbcodeRepository } from '../../persistance/repositories/bbcode.repository';
 
 function getServiceConfig (): ServiceConfig {
     return {
@@ -20,7 +21,8 @@ function getServiceConfig (): ServiceConfig {
         articleRepository: new ArticleRepository(),
         timetableRepository: new TimetableRepository(),
         eventsRepository: new EventsRepository(),
-        settingRepository: new SettingRepository()
+        settingRepository: new SettingRepository(),
+        bbcodeRepository: new BbcodeRepository()
     };
 }
 
