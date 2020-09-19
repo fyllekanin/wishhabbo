@@ -30,6 +30,10 @@ export abstract class BaseRepository<T> {
         return await this.getRepository().delete(entity);
     }
 
+    async getAll(): Promise<Array<T>> {
+        return await this.getRepository().find();
+    }
+
     async paginate (options: PaginationOptions): Promise<PaginationView<T>> {
         const query = this.getBaseQuery(options)
             .take(options.take)
