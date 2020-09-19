@@ -1,18 +1,28 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { IdHelper } from '../../../../../../back-end/src/helpers/id.helper';
+import { BbcodeClass } from '../../classes/bbcode.class';
+import { BbcodeService } from '../../../core/common-services/bbcode.service';
 
 declare var $: any;
 
 @Component({
     selector: 'app-editor',
     templateUrl: 'editor.component.html',
-    styleUrls: [ 'editor.component.css' ]
+    styleUrls: ['editor.component.css']
 })
 export class EditorComponent implements AfterViewInit {
     private id = IdHelper.newUuid();
     private content: string;
     private editor;
+    private bbcodes: Array<BbcodeClass> = null;
     @ViewChild('editor') myEditorWrapper: ElementRef<HTMLTemplateElement>;
+
+    constructor (bbcodeService: BbcodeService) {
+        bbcodeService.getBbcodes().then(bbcodes => {
+            this.bbcodes = bbcodes;
+            this.initEditor();
+        });
+    }
 
     getContent (): string {
         return this.editor ? this.editor.getBBCode() : '';
@@ -29,6 +39,14 @@ export class EditorComponent implements AfterViewInit {
     }
 
     ngAfterViewInit (): void {
+        this.initEditor();
+    }
+
+    private initEditor (): void {
+        if (!this.bbcodes || !this.myEditorWrapper) {
+            return;
+        }
+
         this.myEditorWrapper.nativeElement.className = this.id;
         // @ts-ignore
         $(document).ready(() => {
@@ -40,20 +58,17 @@ export class EditorComponent implements AfterViewInit {
     }
 
     private getSettings (id: string): any {
+        const systr = this.bbcodes.reduce((prev, curr) => {
+            prev[curr.editorReplacement] = curr.editorPattern;
+            return prev;
+        }, {});
         return {
             id: id,
             debug: false,
             minheight: 150,
             buttons: 'bold,italic,underline,strike|,img,video,link,|,bullist,numlist,|,fontcolor,fontsize' +
                 ',fontfamily,|,justifyleft,justifycenter,justifyright,|,atitle,,quote,code,table,removeFormat,test',
-            systr: {
-                '<ol>{DATA}</ol>': '[ol]{DATA}[/ol]',
-                '<li>{DATA}</li>': '[li]{DATA}[/li]',
-                '<ul>{DATA}</ul>': '[ul]{DATA}[/ul]',
-                '<img src="{URL}" align="right">': '[imgr]{URL}[/imgr]',
-                '<img src="{URL}" align="left">': '[imgl]{URL}[/imgl]',
-                '<div class="atitle">{SELTEXT}</div>': '[atitle]{SELTEXT}[/atitle]'
-            },
+            systr: systr,
             allButtons: {
                 quote: {
                     title: 'Spoiler',

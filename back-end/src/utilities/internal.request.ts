@@ -21,7 +21,7 @@ export interface ServiceConfig {
     timetableRepository: TimetableRepository;
     eventsRepository: EventsRepository;
     settingRepository: SettingRepository;
-    bbcodeRepository: BbcodeRepository
+    bbcodeRepository: BbcodeRepository;
 }
 
 export interface InternalUser {
