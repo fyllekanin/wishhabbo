@@ -285,5 +285,20 @@
                 </label>
             </div>
         </div>
+        <div class="cell small-6">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" [disabled]="!authUser.adminPermissions.CAN_MANAGE_BBCODES"
+                           [checked]="data.adminPermissions.CAN_MANAGE_BBCODES"
+                           (change)="data.adminPermissions.CAN_SEE_LOGS = !data.adminPermissions.CAN_MANAGE_BBCODES">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Can manage bbcodes
+                        <span tooltip="Can create, edit and delete bbcodes in the system"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
     </div>
 </app-content>

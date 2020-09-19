@@ -18,6 +18,7 @@ export interface AdminPermissions {
     CAN_SEE_LOGS: boolean;
     CAN_MANAGE_STAFF_LIST: boolean;
     CAN_MANAGE_RADIO_SETTINGS: boolean;
+    CAN_MANAGE_BBCODES: boolean;
 }
 
 export class AuthUserView {
@@ -60,11 +61,11 @@ export class AuthUserView {
     }
 
     getStaffPermissions (): StaffPermissions {
-        return { ...this.staffPermissions };
+        return {...this.staffPermissions};
     }
 
     getAdminPermissions (): AdminPermissions {
-        return { ...this.adminPermissions };
+        return {...this.adminPermissions};
     }
 
     static newBuilder (): AuthUserViewBuilder {

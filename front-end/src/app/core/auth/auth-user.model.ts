@@ -44,6 +44,8 @@ export class AdminPermissions {
     CAN_MANAGE_STAFF_LIST: boolean;
     @primitiveOf(Boolean)
     CAN_MANAGE_RADIO_SETTINGS: boolean;
+    @primitiveOf(Boolean)
+    CAN_MANAGE_BBCODES: boolean;
 
     constructor (source: Partial<AdminPermissions>) {
         ClassHelper.assign(this, source);
