@@ -230,9 +230,6 @@ export class SeedBbcodesTable1600506005547 implements MigrationInterface {
                 .withEditorReplacement('<hr />')
                 .withIsSystem(true)
                 .build(),
-            /**
-             * <iframe src="https://www.youtube.com/embed/f7bxL0FvBw8" width="640" height="480" frameborder="0"></iframe>
-             */
             BbcodeEntity.newBuilder()
                 .withName('video')
                 .withExample('[video]youtube ID[/video]')
