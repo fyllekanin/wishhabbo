@@ -24,8 +24,8 @@ export class LoginPayloadValidator implements PayloadValidator<LoginPayload> {
     private validateEmptyUsername (loginPayload: LoginPayload, errors: Array<ValidationError>): void {
         if (!loginPayload.getUsername()) {
             errors.push(ValidationError.newBuilder()
-                .withCode(ErrorCodes.EMPTY_USERNAME.code)
-                .withMessage(ErrorCodes.EMPTY_USERNAME.description)
+                .withCode(ErrorCodes.EMPTY_FIELD.code)
+                .withMessage(ErrorCodes.EMPTY_FIELD.description)
                 .withField('username')
                 .build());
         }
@@ -34,8 +34,8 @@ export class LoginPayloadValidator implements PayloadValidator<LoginPayload> {
     private validateEmptyPassword (loginPayload: LoginPayload, errors: Array<ValidationError>): void {
         if (!loginPayload.getPassword()) {
             errors.push(ValidationError.newBuilder()
-                .withCode(ErrorCodes.EMPTY_PASSWORD.code)
-                .withMessage(ErrorCodes.EMPTY_PASSWORD.description)
+                .withCode(ErrorCodes.EMPTY_FIELD.code)
+                .withMessage(ErrorCodes.EMPTY_FIELD.description)
                 .withField('password')
                 .build());
         }

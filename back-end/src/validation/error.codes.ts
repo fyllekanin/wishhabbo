@@ -43,16 +43,14 @@ export class ErrorCodes {
         description: 'The current motto on the given habbo user is incorrect'
     };
 
-    static readonly EMPTY_USERNAME: ErrorCode = {
-        code: 7,
-        name: 'Username empty',
-        description: 'The username can not be empty while logging in'
-    };
+    /**
+     * 7 free to use
+     */
 
-    static readonly EMPTY_PASSWORD: ErrorCode = {
+    static readonly UNIQUE_BBCODE_EXAMPLE: ErrorCode = {
         code: 8,
-        name: 'Password empty',
-        description: 'The password can not be empty while logging in'
+        name: 'Bbcode example uniqueness',
+        description: 'A bbcodes example need to be unique'
     };
 
     static readonly FAILED_LOGIN: ErrorCode = {
@@ -103,10 +101,10 @@ export class ErrorCodes {
         description: 'Given file is either not the correct format or is corrupt'
     };
 
-    static readonly MISSING_CONTENT: ErrorCode = {
+    static readonly UNIQUE_BBCODE_NAME: ErrorCode = {
         code: 17,
-        name: 'Content is empty',
-        description: 'The content is not valid as it\'s empty'
+        name: 'Bbcode name uniqueness',
+        description: 'A bbcodes name need to be unique'
     };
 
     static readonly ALREADY_TAKEN_SLOT: ErrorCode = {
@@ -224,5 +222,17 @@ export class ErrorCodes {
         code: 36,
         name: 'Invalid role',
         description: 'A role can only contain a-z and spaces'
+    };
+
+    static readonly SYSTEM_BBCODE: ErrorCode = {
+        code: 37,
+        name: 'System bbcode can not be edited',
+        description: 'A system bbcode can not be changed or deleted'
+    };
+
+    static readonly EMPTY_FIELD: ErrorCode = {
+        code: 38,
+        name: 'Field can not be empty',
+        description: 'The given field can not be empty'
     };
 }

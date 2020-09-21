@@ -15,11 +15,13 @@ import { UserDetailsPayloadValidator } from './payloads/admin/user-details-paylo
 import { UserGroupsPayloadValidator } from './payloads/admin/user-groups-payload.validator';
 import { StaffListPayloadValidator } from './payloads/admin/staff-list-payload.validator';
 import { RadioSettingsPayloadValidator } from './payloads/admin/radio-settings-payload.validator';
+import { BbcodeValidator } from './entities/settings/bbcode.validator';
 
 export class ValidationValidators {
     private static readonly ENTITY_VALIDATORS: Array<EntityValidator<IEntity>> = [
         new UserValidation(),
-        new EventValidator()
+        new EventValidator(),
+        new BbcodeValidator()
     ];
 
     private static readonly PAYLOAD_VALIDATORS: Array<PayloadValidator<IPayload>> = [

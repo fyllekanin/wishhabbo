@@ -35,8 +35,8 @@ export class ArticlePayloadValidator implements PayloadValidator<ArticlePayload>
         if (!payload.getContent() || payload.getContent().length === 0) {
             errors.push(ValidationError.newBuilder()
                 .withField('content')
-                .withMessage(ErrorCodes.MISSING_CONTENT.description)
-                .withCode(ErrorCodes.MISSING_CONTENT.code)
+                .withMessage(ErrorCodes.EMPTY_FIELD.description)
+                .withCode(ErrorCodes.EMPTY_FIELD.code)
                 .build());
         }
     }
@@ -128,7 +128,7 @@ export class ArticlePayloadValidator implements PayloadValidator<ArticlePayload>
             take: 1,
             page: 1,
             where: [
-                { key: 'title', operator: '=', value: payload.getTitle() }
+                {key: 'title', operator: '=', value: payload.getTitle()}
             ]
         });
 
