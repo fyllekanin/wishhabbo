@@ -18,6 +18,7 @@ import Database from './environments/database';
 import { StaffListController } from './rest-services/admin/website-settings/staff-list.controller';
 import { RadioSettingsController } from './rest-services/admin/website-settings/radio-settings.controller';
 import { InformationController } from './rest-services/information.controller';
+import { BbcodeController } from './rest-services/admin/website-settings/bbcode.controller';
 
 process.env.NODE_ENV = 'production';
 
@@ -27,7 +28,7 @@ class MainServer extends Server {
     constructor () {
         super();
         this.backgroundTaskHandler = new BackgroundTaskHandler();
-        this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(bodyParser.urlencoded({extended: true}));
         this.app.use(bodyParser.json());
         this.app.use(compression());
         this.app.use(express.static(__dirname + '/public'));
@@ -60,7 +61,8 @@ class MainServer extends Server {
                 new UserController(),
                 new StaffListController(),
                 new RadioSettingsController(),
-                new InformationController()
+                new InformationController(),
+                new BbcodeController()
             ],
             null,
             INITIAL_MIDDLEWARE

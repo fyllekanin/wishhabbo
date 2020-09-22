@@ -22,5 +22,9 @@ export enum LogTypes {
     UPDATED_STAFF_LIST = 16,
     UPDATED_RADIO_SETTINGS = 17,
 
-    LIKED_RADIO = 18
+    LIKED_RADIO = 18,
+
+    CREATED_BBCODE = 19,
+    UPDATED_BBCODE = 20,
+    DELETED_BBCODE = 21
 }
