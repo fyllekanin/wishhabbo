@@ -12,7 +12,7 @@ export class BbcodeController {
 
     @Get(':bbcodeId')
     private async getBbcode (req: InternalRequest, res: Response): Promise<void> {
-        const bbcode = req.serviceConfig.bbcodeRepository.get(Number(req.params.bbcodeId));
+        const bbcode = await req.serviceConfig.bbcodeRepository.get(Number(req.params.bbcodeId));
         if (!bbcode) {
             res.status(NOT_FOUND).json();
             return;
@@ -39,6 +39,7 @@ export class BbcodeController {
             beforeChange: null,
             afterChange: JSON.stringify(created)
         });
+        res.status(OK).json(created.bbcodeId);
     }
 
     @Put(':bbcodeId')
@@ -74,6 +75,7 @@ export class BbcodeController {
             beforeChange: JSON.stringify(existing),
             afterChange: JSON.stringify(updated)
         });
+        res.status(OK).json();
     }
 
     @Delete(':bbcodeId')
@@ -93,5 +95,6 @@ export class BbcodeController {
             beforeChange: JSON.stringify(existing),
             afterChange: null
         });
+        res.status(OK).json();
     }
 }

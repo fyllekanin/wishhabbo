@@ -1,3 +1,5 @@
+import { BbcodeComponent } from './bbcodes/bbcode/bbcode.component';
+import { BbcodeService } from './bbcodes/bbcode/bbcode.service';
 import { NgModule } from '@angular/core';
 import { TableModule } from '../../../../shared/components/table/table.module';
 import { FormsModule } from '@angular/forms';
@@ -26,11 +28,13 @@ import { BbcodeListComponent } from './bbcodes/list/bbcode-list.component';
         WebsiteSettingsListComponent,
         StaffListComponent,
         RadioSettingsComponent,
-        BbcodeListComponent
+        BbcodeListComponent,
+        BbcodeComponent
     ],
     providers: [
         StaffListService,
-        RadioSettingsService
+        RadioSettingsService,
+        BbcodeService
     ],
     exports: [
         RouterModule

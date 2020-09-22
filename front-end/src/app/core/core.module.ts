@@ -7,7 +7,7 @@ import { HttpRequestInterceptor } from './http/http.interceptor';
 import { AuthService } from './auth/auth.service';
 import { SiteNotificationService } from './common-services/site-notification.service';
 import { ContinuesInformationService } from './common-services/continues-information.service';
-import { BbcodeService } from './common-services/bbcode.service';
+import { GlobalBbcodeService } from './common-services/global-bbcode.service';
 
 @NgModule({
     imports: [
@@ -30,7 +30,7 @@ export class CoreModule {
                 DialogService,
                 SiteNotificationService,
                 ContinuesInformationService,
-                BbcodeService
+                GlobalBbcodeService
             ]
         };
     }

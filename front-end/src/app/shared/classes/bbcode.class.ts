@@ -22,7 +22,7 @@ export class BbcodeClass {
     @primitiveOf(Number)
     updatedAt: number;
 
-    constructor (source: Partial<BbcodeClass>) {
+    constructor (source?: Partial<BbcodeClass>) {
         ClassHelper.assign(this, source);
     }
 }

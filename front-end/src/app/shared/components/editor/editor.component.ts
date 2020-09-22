@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { IdHelper } from '../../../../../../back-end/src/helpers/id.helper';
 import { BbcodeClass } from '../../classes/bbcode.class';
-import { BbcodeService } from '../../../core/common-services/bbcode.service';
+import { GlobalBbcodeService } from '../../../core/common-services/global-bbcode.service';
 
 declare var $: any;
 
@@ -17,8 +17,8 @@ export class EditorComponent implements AfterViewInit {
     private bbcodes: Array<BbcodeClass> = null;
     @ViewChild('editor') myEditorWrapper: ElementRef<HTMLTemplateElement>;
 
-    constructor (bbcodeService: BbcodeService) {
-        bbcodeService.getBbcodes().then(bbcodes => {
+    constructor (globalBbcodeService: GlobalBbcodeService) {
+        globalBbcodeService.getBbcodes().then(bbcodes => {
             this.bbcodes = bbcodes;
             this.initEditor();
         });

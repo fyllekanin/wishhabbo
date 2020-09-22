@@ -1,3 +1,4 @@
+import { DialogService } from './../../../../../../core/common-services/dialog.service';
 import { Component, OnDestroy } from '@angular/core';
 import { TableActionResponse, TableHeader, TableRow } from '../../../../../../shared/components/table/table.model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,6 +7,7 @@ import { Unsubscribable } from 'rxjs';
 import { BbcodeClass } from '../../../../../../shared/classes/bbcode.class';
 import { TimeHelper } from '../../../../../../shared/helpers/time.helper';
 import { UserAction } from '../../../../../../shared/constants/common.interfaces';
+import { BbcodeService } from '../bbcode/bbcode.service';
 
 @Component({
     selector: 'app-admin-website-settings-bbcode-list',
@@ -28,6 +30,8 @@ export class BbcodeListComponent implements OnDestroy {
     systemTableRows: Array<TableRow> = [];
 
     constructor (
+        private dialogService: DialogService,
+        private bbcodeService: BbcodeService,
         private router: Router,
         activatedRoute: ActivatedRoute
     ) {
@@ -43,7 +47,18 @@ export class BbcodeListComponent implements OnDestroy {
     }
 
     async onAction (action: TableActionResponse): Promise<void> {
-        // Empty
+        switch (action.action.value) {
+            case this.ACTIONS.EDIT:
+                await this.router.navigateByUrl(`/admin/website-settings/bbcodes/${action.row.rowId}`);
+                break;
+            case this.ACTIONS.DELETE:
+                const answer = await this.dialogService.confirm('Do you really wanna delete this bbcode?');
+                if (answer) {
+                    await this.bbcodeService.delete(action.row.rowId as number);
+                    this.editableTableRows = this.editableTableRows.filter(row => row.rowId === action.row.rowId);
+                }
+                break;
+        }
     }
 
     private onData ({data}: { data: Array<BbcodeClass> }): void {

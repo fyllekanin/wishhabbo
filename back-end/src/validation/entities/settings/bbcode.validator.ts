@@ -24,7 +24,8 @@ export class BbcodeValidator implements EntityValidator<BbcodeEntity> {
         return entity instanceof BbcodeEntity;
     }
 
-    private async validateIfSystemBbcode (entity: BbcodeEntity, serviceConfig: ServiceConfig, errors: Array<ValidationError>): Promise<void> {
+    private async validateIfSystemBbcode (entity: BbcodeEntity, serviceConfig: ServiceConfig,
+        errors: Array<ValidationError>): Promise<void> {
         if (!entity.bbcodeId) {
             return;
         }

@@ -24,7 +24,7 @@ export class GroupService implements Resolve<GroupClass> {
             .pipe(map((data: GroupClass) => new GroupClass(data)));
     }
 
-    delete (groupId: number): Promise<void> {
+    async delete (groupId: number): Promise<void> {
         return this.httpService.delete(`/admin/users/groups/${groupId}`).toPromise()
             .then(() => {
                 this.siteNotificationService.create({
@@ -43,7 +43,7 @@ export class GroupService implements Resolve<GroupClass> {
             });
     }
 
-    save (group: GroupClass): Promise<number | unknown> {
+    async save (group: GroupClass): Promise<number | unknown> {
         if (group.groupId) {
             return this.httpService.put(`/admin/users/groups/${group.groupId}`, group).toPromise()
                 .then(() => {

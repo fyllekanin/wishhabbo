@@ -4,7 +4,9 @@ import { HttpService } from '../http/http.service';
 import { Resolve } from '@angular/router';
 
 @Injectable()
-export class BbcodeService implements Resolve<Array<BbcodeClass>> {
+export class GlobalBbcodeService implements Resolve<Array<BbcodeClass>> {
+    private static readonly CACHE_LIFETIME = 600;
+    private cacheTime: number;
     private bbcodes: Array<BbcodeClass> = null;
 
     constructor (private httpService: HttpService) {
@@ -15,12 +17,17 @@ export class BbcodeService implements Resolve<Array<BbcodeClass>> {
     }
 
     async getBbcodes (): Promise<Array<BbcodeClass>> {
-        if (this.bbcodes) {
+        if (this.bbcodes && this.cacheTime > (new Date().getTime() / 1000)) {
             return [...this.bbcodes];
         }
         this.bbcodes = await this.httpService.get('/information/bbcodes')
             .toPromise()
             .then((bbcodes: Array<BbcodeClass>) => bbcodes.map(bbcode => new BbcodeClass(bbcode)));
+        this.cacheTime = (new Date().getTime() / 1000) + GlobalBbcodeService.CACHE_LIFETIME;
         return [...this.bbcodes];
+    }
+
+    clearCache(): void {
+        this.bbcodes = null;
     }
 }
