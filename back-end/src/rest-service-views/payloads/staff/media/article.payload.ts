@@ -10,6 +10,7 @@ export class ArticlePayload implements IPayload {
     private readonly roomOwner: string;
     private readonly difficulty: number;
     private readonly type: number;
+    private readonly isAvailable: boolean;
     private readonly file: File;
 
     constructor (
@@ -21,6 +22,7 @@ export class ArticlePayload implements IPayload {
         roomOwner: string,
         difficulty: number,
         type: number,
+        isAvailable: boolean,
         file: File
     ) {
         this.articleId = articleId;
@@ -28,9 +30,11 @@ export class ArticlePayload implements IPayload {
         this.content = content;
         this.badges = badges;
         this.room = room;
+        this.roomOwner = roomOwner;
         this.difficulty = difficulty;
         this.type = type;
         this.file = file;
+        this.isAvailable = isAvailable;
     }
 
     getArticleId (): number {
@@ -65,6 +69,10 @@ export class ArticlePayload implements IPayload {
         return this.type;
     }
 
+    getIsAvailable(): boolean {
+        return this.isAvailable;
+    }
+
     getFile (): File {
         return this.file;
     }
@@ -79,6 +87,7 @@ export class ArticlePayload implements IPayload {
             article.roomOwner,
             article.difficulty,
             article.type,
+            article.isAvailable,
             file
         );
     }

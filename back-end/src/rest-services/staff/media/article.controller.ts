@@ -77,6 +77,7 @@ export class ArticleController {
             .withDifficulty(article.difficulty)
             .withType(article.type)
             .withIsApproved(article.isApproved)
+            .withIsAvailable(article.isAvailable)
             .build());
     }
 
@@ -105,7 +106,9 @@ export class ArticleController {
             .withContent(payload.getContent())
             .withBadges(payload.getBadges())
             .withRoom(payload.getRoom())
+            .withRoomOwner(payload.getRoomOwner())
             .withDifficulty(payload.getDifficulty())
+            .withIsAvailable(payload.getIsAvailable())
             .build();
         const entityErrors = await ValidationValidators.validateEntity(article, req.serviceConfig, req.user);
         if (entityErrors.length > 0) {
@@ -163,7 +166,9 @@ export class ArticleController {
             .withContent(payload.getContent())
             .withBadges(payload.getBadges())
             .withRoom(payload.getRoom())
+            .withRoomOwner(payload.getRoomOwner())
             .withDifficulty(payload.getDifficulty())
+            .withIsAvailable(payload.getIsAvailable())
             .build();
 
         const entityErrors = await ValidationValidators.validateEntity(updatedArticle, req.serviceConfig, req.user);
@@ -234,7 +239,7 @@ export class ArticleController {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         const canManageArticle = await this.canRequesterManageArticles(req);
 
-        if (!article || (article.userId !== req.user.userId && !canManageArticle)) {
+        if (!article || !canManageArticle) {
             res.status(NOT_FOUND).json();
             return;
         }
@@ -262,7 +267,7 @@ export class ArticleController {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         const canManageArticle = await this.canRequesterManageArticles(req);
 
-        if (!article || (article.userId !== req.user.userId && !canManageArticle)) {
+        if (!article || !canManageArticle) {
             res.status(NOT_FOUND).json();
             return;
         }

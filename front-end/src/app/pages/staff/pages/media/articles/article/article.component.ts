@@ -28,8 +28,9 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
     data = new ArticleClass(null);
     subscriptions: Array<Unsubscribable> = [];
 
-    types: Array<{ label: string, value: number, isBadgeMandatory: boolean }> = [];
+    types: Array<{ label: string, value: number, isBadgeIncluded: boolean }> = [];
     difficulties: Array<{ label: string, value: number }> = [];
+    showBadges = false;
     badges = '';
     @ViewChild(EditorComponent, { static: true }) editorComponent: EditorComponent;
     @ViewChild('fileElement', { static: true }) fileElementRef: ElementRef<HTMLInputElement>;
@@ -43,7 +44,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
         this.types = Object.keys(ARTICLE_TYPES).map(key => {
             const type = ARTICLE_TYPES[key];
-            return { label: type.name, value: Number(key), isBadgeMandatory: type.isBadgeMandatory };
+            return { label: type.name, value: Number(key), isBadgeIncluded: type.isBadgeIncluded };
         });
         this.difficulties = Object.keys(ARTICLE_DIFFICULTIES).map(key => {
             const difficulty = ARTICLE_DIFFICULTIES[key];
@@ -59,6 +60,10 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
 
     ngOnDestroy (): void {
         // Empty
+    }
+
+    onTypeChange(): void {
+        this.showBadges = this.data.getType().isBadgeIncluded;
     }
 
     async onAction (action: UserAction): Promise<void> {
@@ -98,6 +103,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         this.data = data;
         this.badges = this.data.badges.join(',');
         this.actions = this.getActions();
+        this.showBadges = this.data.getType().isBadgeIncluded;
     }
 
     private getActions (): Array<UserAction> {

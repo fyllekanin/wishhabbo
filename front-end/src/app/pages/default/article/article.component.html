@@ -1,0 +1,24 @@
+<div class="grid-x grid-margin-x">
+    <div class="cell medium-9">
+        <app-content [header]="'Article: ' + data.title">
+            I assume we should have title + author here?
+        </app-content>
+
+        <app-content header="Content">
+            <div [innerHTML]="data.parsedContent"></div>
+        </app-content>
+    </div>
+    <div class="cell medium-3">
+        <app-content header="Badges">
+            The badges we can get here
+        </app-content>
+
+        <app-content header="Mark complete here when it actually works">
+            Big sexy button here with a dancing habbo? o.o
+        </app-content>
+
+        <app-content header="Other badges">
+            Meh?
+        </app-content>
+    </div>
+</div>

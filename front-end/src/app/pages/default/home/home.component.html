@@ -3,7 +3,7 @@
         <app-content header="Latest Habbo Guides">
             <div class="grid-x grid-margin-x">
                 <div class="cell small-3" *ngFor="let article of data.guides">
-                    <app-article [article]="article"></app-article>
+                    <app-slim-article [article]="article"></app-slim-article>
                 </div>
             </div>
         </app-content>
@@ -11,7 +11,7 @@
         <app-content header="Latest Habbo News">
             <div class="grid-x grid-margin-x">
                 <div class="cell small-3" *ngFor="let article of data.habboNews">
-                    <app-article [article]="article"></app-article>
+                    <app-slim-article [article]="article"></app-slim-article>
                 </div>
             </div>
         </app-content>
@@ -19,7 +19,7 @@
         <app-content header="Latest Site News">
             <div class="grid-x grid-margin-x">
                 <div class="cell small-3" *ngFor="let article of data.siteNews">
-                    <app-article [article]="article"></app-article>
+                    <app-slim-article [article]="article"></app-slim-article>
                 </div>
             </div>
         </app-content>

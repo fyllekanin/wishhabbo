@@ -12,6 +12,7 @@ interface IArticleEntity {
     difficulty: number;
     type: number;
     isApproved: boolean;
+    isAvailable: boolean;
 }
 
 @Entity('articles')
@@ -41,6 +42,9 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
     @Column()
     @Index()
     isApproved: boolean;
+    @Column()
+    @Index()
+    isAvailable: boolean;
 
     constructor (builder: IArticleEntity) {
         super();
@@ -58,6 +62,7 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
         this.difficulty = builder.difficulty;
         this.type = builder.type;
         this.isApproved = builder.isApproved;
+        this.isAvailable = builder.isAvailable;
     }
 
     newBuilderFromCurrent (): Builder {
@@ -80,11 +85,12 @@ class Builder {
         roomOwner: undefined,
         difficulty: undefined,
         type: undefined,
-        isApproved: undefined
+        isApproved: undefined,
+        isAvailable: undefined
     };
 
     constructor (entity?: ArticleEntity) {
-        Object.assign(this, entity);
+        Object.assign(this.myData, entity);
     }
 
     withArticleId (articleId: number): Builder {
@@ -134,6 +140,11 @@ class Builder {
 
     withIsApproved (isApproved: boolean): Builder {
         this.myData.isApproved = isApproved;
+        return this;
+    }
+
+    withIsAvailable (isAvailable: boolean): Builder {
+        this.myData.isAvailable = isAvailable;
         return this;
     }
 

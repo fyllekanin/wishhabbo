@@ -1,18 +1,19 @@
+import { BOOL_TYPE } from '@angular/compiler/src/output/output_ast';
 import { arrayOf, ClassHelper, objectOf, primitiveOf } from '../../helpers/class.helper';
 import { SlimUser } from '../slim-user.class';
 
 export const ARTICLE_TYPES = {
     0: {
         name: 'Guide',
-        isBadgeMandatory: true
+        isBadgeIncluded: true
     },
     1: {
         name: 'News',
-        isBadgeMandatory: false
+        isBadgeIncluded: false
     },
     2: {
         name: 'Site News',
-        isBadgeMandatory: false
+        isBadgeIncluded: false
     }
 };
 
@@ -39,6 +40,8 @@ export class ArticleClass {
     @primitiveOf(String)
     title: string;
     @primitiveOf(String)
+    parsedContent: string;
+    @primitiveOf(String)
     content: string;
     @arrayOf(String)
     badges: Array<string> = [];
@@ -52,16 +55,22 @@ export class ArticleClass {
     type: number;
     @primitiveOf(Boolean)
     isApproved: boolean;
+    @primitiveOf(Boolean)
+    isAvailable: boolean;
 
     constructor (source: Partial<ArticleClass>) {
         ClassHelper.assign(this, source);
     }
 
-    getType (): { name: string, isBadgeMandatory: boolean } {
+    getType (): { name: string, isBadgeIncluded: boolean } {
         const type = ARTICLE_TYPES[this.type];
         return type ? type : {
             name: 'Unknown',
-            isBadgeMandatory: false
+            isBadgeIncluded: false
         };
+    }
+
+    get thumbnail (): string {
+        return `/resources/article-thumbnails/${this.articleId}.png`;
     }
 }

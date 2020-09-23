@@ -4,6 +4,7 @@ export class ArticleView {
     articleId: number;
     user: SlimUserView;
     title: string;
+    parsedContent: string;
     content: string;
     badges: Array<string>;
     room: string;
@@ -11,6 +12,7 @@ export class ArticleView {
     difficulty: number;
     type: number;
     isApproved: boolean;
+    isAvailable: boolean;
 
     static newBuilder (): ArticleViewBuilder {
         return new ArticleViewBuilder();
@@ -21,6 +23,7 @@ class ArticleViewBuilder {
     articleId: number;
     user: SlimUserView;
     title: string;
+    parsedContent: string;
     content: string;
     badges: Array<string>;
     room: string;
@@ -28,6 +31,7 @@ class ArticleViewBuilder {
     difficulty: number;
     type: number;
     isApproved: boolean;
+    isAvailable: boolean;
 
     withArticleId (articleId: number): ArticleViewBuilder {
         this.articleId = articleId;
@@ -46,6 +50,11 @@ class ArticleViewBuilder {
 
     withContent (content: string): ArticleViewBuilder {
         this.content = content;
+        return this;
+    }
+
+    withParsedContent(parsedContent: string): ArticleViewBuilder {
+        this.parsedContent = parsedContent;
         return this;
     }
 
@@ -79,11 +88,17 @@ class ArticleViewBuilder {
         return this;
     }
 
+    withIsAvailable(isAvailable: boolean): ArticleViewBuilder {
+        this.isAvailable = isAvailable;
+        return this;
+    }
+
     build (): ArticleView {
         const entity = new ArticleView();
         entity.articleId = this.articleId;
         entity.user = this.user;
         entity.title = this.title;
+        entity.parsedContent = this.parsedContent;
         entity.content = this.content;
         entity.badges = this.badges;
         entity.room = this.room;
@@ -91,6 +106,7 @@ class ArticleViewBuilder {
         entity.difficulty = this.difficulty;
         entity.type = this.type;
         entity.isApproved = this.isApproved;
+        entity.isAvailable = this.isAvailable;
         return entity;
     }
 }

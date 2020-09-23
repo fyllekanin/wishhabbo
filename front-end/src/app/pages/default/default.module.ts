@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { HomeComponent } from './home/home.component';
 import { RouterModule } from '@angular/router';
 import { defaultRoutes } from './default.routes';
-import { ArticleModule } from '../../shared/components/article/article.module';
+import { SlimArticleModule } from '../../shared/components/slim-article/slim-article.module';
 import { CommonModule } from '@angular/common';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { DefaultComponent } from './default.component';
@@ -11,11 +11,13 @@ import { StaffListComponent } from './staff-list/staff-list.component';
 import { StaffListResolver } from './staff-list/staff-list.resolver';
 import { HomeResolver } from './home/home.resolver';
 import { HabboBadgeModule } from '../../shared/components/habbo-badge/habbo-badge.module';
+import { ArticleService } from './article/article.service';
+import { ArticleComponent } from './article/article.component';
 
 @NgModule({
     imports: [
         RouterModule.forChild(defaultRoutes),
-        ArticleModule,
+        SlimArticleModule,
         CommonModule,
         ContentModule,
         HabboBadgeModule
@@ -24,11 +26,13 @@ import { HabboBadgeModule } from '../../shared/components/habbo-badge/habbo-badg
         HomeComponent,
         NotFoundComponent,
         DefaultComponent,
-        StaffListComponent
+        StaffListComponent,
+        ArticleComponent
     ],
     providers: [
         StaffListResolver,
-        HomeResolver
+        HomeResolver,
+        ArticleService
     ],
     exports: [
         RouterModule

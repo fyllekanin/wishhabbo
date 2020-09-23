@@ -27,6 +27,9 @@ export class CreateArticleTable1596886304003 implements MigrationInterface {
                 },
                 {
                     columnNames: [ 'isApproved' ]
+                },
+                {
+                    columnNames: ['isAvailable']
                 }
             ],
             columns: [
@@ -72,6 +75,10 @@ export class CreateArticleTable1596886304003 implements MigrationInterface {
                 },
                 {
                     name: 'isApproved',
+                    type: 'int'
+                },
+                {
+                    name: 'isAvailable',
                     type: 'int'
                 },
                 {

@@ -3,6 +3,8 @@
     display: block;
     background-color: #ffffff;
     padding: 5px;
+
+    cursor: pointer;
 }
 
 .image {

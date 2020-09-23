@@ -1,3 +1,4 @@
+import { ArticleService } from './article/article.service';
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -5,6 +6,7 @@ import { DefaultComponent } from './default.component';
 import { StaffListResolver } from './staff-list/staff-list.resolver';
 import { StaffListComponent } from './staff-list/staff-list.component';
 import { HomeResolver } from './home/home.resolver';
+import { ArticleComponent } from './article/article.component';
 
 export const defaultRoutes: Routes = [
     {
@@ -27,6 +29,13 @@ export const defaultRoutes: Routes = [
                 component: StaffListComponent,
                 resolve: {
                     data: StaffListResolver
+                }
+            },
+            {
+                path: 'article/:articleId',
+                component: ArticleComponent,
+                resolve: {
+                    data: ArticleService
                 }
             }
         ]

@@ -23,12 +23,14 @@ export class PageController {
         res.status(OK).json(ArticleView.newBuilder()
             .withArticleId(article.articleId)
             .withTitle(article.title)
+            .withParsedContent(await req.serviceConfig.bbcodeRepository.parseContent(article.content))
             .withContent(article.content)
             .withBadges(JSON.parse(article.badges))
             .withRoom(article.room)
             .withDifficulty(article.difficulty)
             .withType(article.type)
             .withIsApproved(article.isApproved)
+            .withIsAvailable(article.isAvailable)
             .build());
     }
 

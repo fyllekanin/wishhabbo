@@ -31,16 +31,13 @@ class MainServer extends Server {
         this.app.use(bodyParser.urlencoded({extended: true}));
         this.app.use(bodyParser.json());
         this.app.use(compression());
-        this.app.use(express.static(__dirname + '/public'));
-        this.app.use(express.static(__dirname + '/resources'));
+        this.app.use('/', express.static(__dirname + '/public'));
+        this.app.use('/resources', express.static(__dirname + '/resources'));
     }
 
     start (port: number): void {
         createConnection(Database as ConnectionOptions).then(() => {
             this.setupControllers();
-            this.app.use('*', (req, res) => {
-                res.sendFile(__dirname + '/public/index.html');
-            });
             this.backgroundTaskHandler.activate();
             this.app.listen(port, () => {
                 console.log(`Server started on port ${port}`);
