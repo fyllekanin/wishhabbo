@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input, HostListener } from '@angular/core';
 
 @Directive({
     selector: '[appHabboBadge]'
@@ -6,6 +6,7 @@ import { Directive, ElementRef, Input } from '@angular/core';
 export class HabboBadgeDirective {
     private static readonly DEFAULT = '/assets/images/badge_error.gif';
     private static readonly URL = 'https://images.habbogroup.com/c_images/album1584/{code}.{extension}';
+    private static readonly BOX_SHADOW = '0 2px 2px 0 rgba(177, 177, 177, 0.35)';
     private static readonly EXTENSIONS = [
         'png',
         'gif',
@@ -13,6 +14,18 @@ export class HabboBadgeDirective {
     ];
     private _code: string;
     private _timeout: number;
+
+    @HostBinding('style.width') myWidth = '50px';
+    @HostBinding('style.height') myHeight = '50px';
+    @HostBinding('style.background-color') myBackgroundColor = '#eaeae6';
+    @HostBinding('style.border-radius') myBorderRadius = '5px';
+    @HostBinding('style.transition') myTransition = '0.6s';
+    @HostBinding('style.border') myBorder = '1px solid #d2d2cf';
+    @HostBinding('style.padding') myPadding = '4px';
+    @HostBinding('style.margin') myMargin = '5px 0';
+    @HostBinding('style.-webkit-box-shadow') myWebkitBoxShadow = HabboBadgeDirective.BOX_SHADOW;
+    @HostBinding('style.-moz-box-shadow') myMozBoxShadow = HabboBadgeDirective.BOX_SHADOW;
+    @HostBinding('style.box-shadow') myBoxShadow = HabboBadgeDirective.BOX_SHADOW;
 
     constructor (private _elementRef: ElementRef) {
     }
@@ -25,6 +38,16 @@ export class HabboBadgeDirective {
             this._code = code;
             this.setImage(0);
         }, 200);
+    }
+
+    @HostListener('mouseover')
+    onMouseOver(): void {
+        this.myBackgroundColor = '#9a7993';
+    }
+
+    @HostListener('mouseleave')
+    onMouseLeave(): void {
+        this.myBackgroundColor = '#eaeae6';
     }
 
     private setImage (index: number): void {

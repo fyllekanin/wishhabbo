@@ -10,7 +10,9 @@
     </div>
     <div class="cell medium-3">
         <app-content header="Badges">
-            The badges we can get here
+            <div class="text-align-center">
+                <img *ngFor="let badgeId of data.badges" appHabboBadge [code]="badgeId" />
+            </div>
         </app-content>
 
         <app-content header="Mark complete here when it actually works">
