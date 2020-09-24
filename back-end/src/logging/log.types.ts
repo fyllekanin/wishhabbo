@@ -26,5 +26,7 @@ export enum LogTypes {
 
     CREATED_BBCODE = 19,
     UPDATED_BBCODE = 20,
-    DELETED_BBCODE = 21
+    DELETED_BBCODE = 21,
+
+    RADIO_REQUEST = 22
 }

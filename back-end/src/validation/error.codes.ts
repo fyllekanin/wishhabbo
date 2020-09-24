@@ -43,9 +43,11 @@ export class ErrorCodes {
         description: 'The current motto on the given habbo user is incorrect'
     };
 
-    /**
-     * 7 free to use
-     */
+    static readonly SPAM_ERROR: ErrorCode = {
+        code: 7,
+        name: 'Doing things to quick',
+        description: 'You are currently doing things to quick'
+    };
 
     static readonly UNIQUE_BBCODE_EXAMPLE: ErrorCode = {
         code: 8,

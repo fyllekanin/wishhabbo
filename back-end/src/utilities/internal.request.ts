@@ -10,6 +10,7 @@ import { EventsRepository } from '../persistance/repositories/staff/events.repos
 import { TokenEntity } from '../persistance/entities/user/token.entity';
 import { SettingRepository } from '../persistance/repositories/setting.repository';
 import { BbcodeRepository } from '../persistance/repositories/bbcode.repository';
+import { RadioRequestRepository } from '../persistance/repositories/radio-request.repository';
 
 export interface ServiceConfig {
     resourceRepository: ResourceRepository;
@@ -22,6 +23,7 @@ export interface ServiceConfig {
     eventsRepository: EventsRepository;
     settingRepository: SettingRepository;
     bbcodeRepository: BbcodeRepository;
+    radioRequestRepository: RadioRequestRepository;
 }
 
 export interface InternalUser {

@@ -1,3 +1,4 @@
+import { RadioRequestRepository } from './../../persistance/repositories/radio-request.repository';
 import { NextFunction, Response } from 'express';
 import { TokenRepository } from '../../persistance/repositories/user/token.repository';
 import { InternalRequest, ServiceConfig } from '../../utilities/internal.request';
@@ -22,7 +23,8 @@ function getServiceConfig (): ServiceConfig {
         timetableRepository: new TimetableRepository(),
         eventsRepository: new EventsRepository(),
         settingRepository: new SettingRepository(),
-        bbcodeRepository: new BbcodeRepository()
+        bbcodeRepository: new BbcodeRepository(),
+        radioRequestRepository: new RadioRequestRepository()
     };
 }
 

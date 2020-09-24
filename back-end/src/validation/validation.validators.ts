@@ -16,12 +16,14 @@ import { UserGroupsPayloadValidator } from './payloads/admin/user-groups-payload
 import { StaffListPayloadValidator } from './payloads/admin/staff-list-payload.validator';
 import { RadioSettingsPayloadValidator } from './payloads/admin/radio-settings-payload.validator';
 import { BbcodeValidator } from './entities/settings/bbcode.validator';
+import { RadioRequestValidator } from './entities/radio-request.validator';
 
 export class ValidationValidators {
     private static readonly ENTITY_VALIDATORS: Array<EntityValidator<IEntity>> = [
         new UserValidation(),
         new EventValidator(),
-        new BbcodeValidator()
+        new BbcodeValidator(),
+        new RadioRequestValidator()
     ];
 
     private static readonly PAYLOAD_VALIDATORS: Array<PayloadValidator<IPayload>> = [
