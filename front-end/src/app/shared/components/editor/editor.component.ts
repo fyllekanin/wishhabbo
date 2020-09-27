@@ -58,7 +58,11 @@ export class EditorComponent implements AfterViewInit {
     }
 
     private getSettings (id: string): any {
+        let atitleTransform = {};
         const systr = this.bbcodes.reduce((prev, curr) => {
+            if (curr.editorPattern === '[atitle]{DATA}[/atitle]') {
+                atitleTransform[curr.editorReplacement] = curr.editorPattern;
+            }
             prev[curr.editorReplacement] = curr.editorPattern;
             return prev;
         }, {});
@@ -75,6 +79,12 @@ export class EditorComponent implements AfterViewInit {
                     transform: {
                         '<details><summary>Spoiler</summary>{SELTEXT}</details>': '[spoiler]{SELTEXT}[/spoiler]'
                     }
+                },
+                atitle: {
+                    title: 'Title',
+                    buttonHTML: '<span class="fonticon ve-tlb-bold1 btn-inner">Title</span>',
+                    hotkey: 'ctrl+t',
+                    transform: atitleTransform
                 }
             }
         };

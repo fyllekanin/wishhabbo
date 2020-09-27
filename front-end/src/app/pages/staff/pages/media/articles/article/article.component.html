@@ -44,7 +44,7 @@
             <input id="thumbnail" type="file" accept="image/*" #fileElement/>
         </div>
 
-        <div class="cell small-6" *ngIf="showBadges">
+        <div class="cell small-3" *ngIf="showBadges">
             <div class="checkbox-container">
                 <label class="checkbox-label">
                     <input type="checkbox"
@@ -54,6 +54,22 @@
                     <span class="label">
                         Is available
                         <span tooltip="Is the badge still available to get?"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <div class="cell small-3" *ngIf="showBadges">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox"
+                           [checked]="data.isPaid"
+                           (change)="data.isPaid = !data.isPaid">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Is paid
+                        <span tooltip="Do you have to pay for the badge?"><i
                             class="fas fa-info-circle"></i></span>
                     </span>
                 </label>

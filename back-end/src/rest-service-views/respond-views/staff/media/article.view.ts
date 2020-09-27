@@ -13,6 +13,7 @@ export class ArticleView {
     type: number;
     isApproved: boolean;
     isAvailable: boolean;
+    isPaid: boolean;
 
     static newBuilder (): ArticleViewBuilder {
         return new ArticleViewBuilder();
@@ -32,6 +33,7 @@ class ArticleViewBuilder {
     type: number;
     isApproved: boolean;
     isAvailable: boolean;
+    isPaid: boolean;
 
     withArticleId (articleId: number): ArticleViewBuilder {
         this.articleId = articleId;
@@ -93,6 +95,11 @@ class ArticleViewBuilder {
         return this;
     }
 
+    withIsPaid(isPaid: boolean): ArticleViewBuilder {
+        this.isPaid = isPaid;
+        return this;
+    }
+
     build (): ArticleView {
         const entity = new ArticleView();
         entity.articleId = this.articleId;
@@ -107,6 +114,7 @@ class ArticleViewBuilder {
         entity.type = this.type;
         entity.isApproved = this.isApproved;
         entity.isAvailable = this.isAvailable;
+        entity.isPaid = this.isPaid;
         return entity;
     }
 }

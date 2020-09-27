@@ -19,16 +19,20 @@ export const ARTICLE_TYPES = {
 
 export const ARTICLE_DIFFICULTIES = {
     0: {
-        name: 'None'
+        name: 'None',
+        color: null
     },
     1: {
-        name: 'Easy'
+        name: 'Easy',
+        color: 'green'
     },
     2: {
-        name: 'Medium'
+        name: 'Medium',
+        color: 'blue'
     },
     3: {
-        name: 'Hard'
+        name: 'Hard',
+        color: 'red'
     }
 };
 
@@ -57,6 +61,8 @@ export class ArticleClass {
     isApproved: boolean;
     @primitiveOf(Boolean)
     isAvailable: boolean;
+    @primitiveOf(Boolean)
+    isPaid: boolean;
 
     constructor (source: Partial<ArticleClass>) {
         ClassHelper.assign(this, source);
@@ -71,6 +77,6 @@ export class ArticleClass {
     }
 
     get thumbnail (): string {
-        return `/resources/article-thumbnails/${this.articleId}.png`;
+        return `/resources/article-thumbnails/${this.articleId}.gif`;
     }
 }

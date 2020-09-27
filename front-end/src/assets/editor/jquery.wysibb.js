@@ -574,7 +574,6 @@ var wbbdebug = false;
             }
 
             $.log(this);
-
         },
         initTransforms: function () {
             $.log("Create rules for transform HTML=>BB");
@@ -615,16 +614,6 @@ var wbbdebug = false;
                 }
                 if (ob.transform && ob.skipRules !== true) {
                     var obtr = $.extend({}, ob.transform);
-
-                    /* if (ob.addWrap) {
-						//addWrap
-						$.log("needWrap");
-						for (var bhtml in obtr) {
-							var bbcode = ob.transform[bhtml];
-							var newhtml = '<span wbb="'+btnlist[bidx]+'">'+bhtml+'</span>';
-							obtr[newhtml] = bbcode;
-						}
-					} */
 
                     for (var bhtml in obtr) {
                         var orightml = bhtml;
@@ -3193,7 +3182,6 @@ var wbbdebug = false;
                         }, this)
                     });
                 }, this);
-
             }
         },
         error: function (msg) {

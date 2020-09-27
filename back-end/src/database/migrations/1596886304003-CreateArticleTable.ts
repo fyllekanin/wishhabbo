@@ -30,6 +30,9 @@ export class CreateArticleTable1596886304003 implements MigrationInterface {
                 },
                 {
                     columnNames: ['isAvailable']
+                },
+                {
+                    columnNames: ['isPaid']
                 }
             ],
             columns: [
@@ -79,6 +82,10 @@ export class CreateArticleTable1596886304003 implements MigrationInterface {
                 },
                 {
                     name: 'isAvailable',
+                    type: 'int'
+                },
+                {
+                    name: 'isPaid',
                     type: 'int'
                 },
                 {

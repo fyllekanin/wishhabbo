@@ -6,3 +6,9 @@
 h5 {
     color: #bdbdbd;
 }
+
+.twitter-wrapper {
+    max-height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}

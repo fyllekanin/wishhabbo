@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { HomeModel } from './home.model';
 import { ActivatedRoute } from '@angular/router';
 
@@ -7,14 +7,10 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: 'home.component.html',
     styleUrls: [ 'home.component.css' ]
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent {
     data = new HomeModel();
 
     constructor (activatedRoute: ActivatedRoute) {
         this.data = activatedRoute.snapshot.data.data;
-    }
-
-    ngAfterViewInit (): void {
-        (<any>window).twttr.widgets.load();
     }
 }

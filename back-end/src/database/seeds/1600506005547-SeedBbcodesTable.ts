@@ -207,9 +207,9 @@ export class SeedBbcodesTable1600506005547 implements MigrationInterface {
                 .withName('A title')
                 .withExample('[atitle]title[/atitle]')
                 .withPattern('\\[atitle\\](.+?)\\[\\/atitle\\]')
-                .withReplacement('<div class="atitle">$1</div>')
+                .withReplacement('<div style="background-color: #f3f3f3; box-shadow: inset 0 1px 2px rgba(0,0,0,.1); font-size: 11px; font-weight: 700; margin-bottom: 5px; padding: 11px;">$1</div>')
                 .withEditorPattern('[atitle]{DATA}[/atitle]')
-                .withEditorReplacement('<div class="atitle">{DATA}</div>')
+                .withEditorReplacement('<div style="background-color: #f3f3f3; box-shadow: inset 0 1px 2px rgba(0,0,0,.1); font-size: 11px; font-weight: 700; margin-bottom: 5px; padding: 11px;">{DATA}</div>')
                 .withIsSystem(true)
                 .build(),
             BbcodeEntity.newBuilder()

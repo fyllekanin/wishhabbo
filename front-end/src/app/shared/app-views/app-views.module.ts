@@ -1,3 +1,4 @@
+import { RadioContentComponent } from './header/radio/radio-content/radio-content.component';
 import { NgModule } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { NavigationComponent } from './navigation/navigation.component';
@@ -19,7 +20,8 @@ import { FormsModule } from '@angular/forms';
         HeaderRadioComponent,
         NavigationComponent,
         DialogComponent,
-        SiteNotificationComponent
+        SiteNotificationComponent,
+        RadioContentComponent
     ],
     exports: [
         HeaderComponent,

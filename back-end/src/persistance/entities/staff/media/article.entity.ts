@@ -13,6 +13,7 @@ interface IArticleEntity {
     type: number;
     isApproved: boolean;
     isAvailable: boolean;
+    isPaid: boolean;
 }
 
 @Entity('articles')
@@ -45,6 +46,9 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
     @Column()
     @Index()
     isAvailable: boolean;
+    @Column()
+    @Index()
+    isPaid: boolean;
 
     constructor (builder: IArticleEntity) {
         super();
@@ -63,6 +67,7 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
         this.type = builder.type;
         this.isApproved = builder.isApproved;
         this.isAvailable = builder.isAvailable;
+        this.isPaid = builder.isPaid;
     }
 
     newBuilderFromCurrent (): Builder {
@@ -86,7 +91,8 @@ class Builder {
         difficulty: undefined,
         type: undefined,
         isApproved: undefined,
-        isAvailable: undefined
+        isAvailable: undefined,
+        isPaid: undefined
     };
 
     constructor (entity?: ArticleEntity) {
@@ -145,6 +151,11 @@ class Builder {
 
     withIsAvailable (isAvailable: boolean): Builder {
         this.myData.isAvailable = isAvailable;
+        return this;
+    }
+
+    withIsPaid(isPaid: boolean): Builder {
+        this.myData.isPaid = isPaid;
         return this;
     }
 

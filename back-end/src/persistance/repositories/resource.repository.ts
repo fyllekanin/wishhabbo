@@ -14,7 +14,7 @@ export class ResourceRepository {
 
     async removeArticleThumbnail (articleId: number): Promise<void> {
         return new Promise(res => {
-            const path = `${ResourceConstants.ARTICLE_THUMBNAILS}/${articleId}.png`;
+            const path = `${ResourceConstants.ARTICLE_THUMBNAILS}/${articleId}.gif`;
             try {
                 fileSystem.unlinkSync(path);
             } catch (e) {
@@ -28,7 +28,7 @@ export class ResourceRepository {
         return new Promise(res => {
 
             const oldPath = req.files.thumbnail.path;
-            const newPath = `${ResourceConstants.ARTICLE_THUMBNAILS}/${name}.png`;
+            const newPath = `${ResourceConstants.ARTICLE_THUMBNAILS}/${name}.gif`;
             const rawData = fileSystem.readFileSync(oldPath);
 
             fileSystem.writeFile(newPath, rawData, err => {

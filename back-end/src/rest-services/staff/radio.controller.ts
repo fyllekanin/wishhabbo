@@ -1,3 +1,5 @@
+import { Logger } from './../../logging/log.logger';
+import { RadioRequestView } from './../../rest-service-views/respond-views/staff/media/radio-request.view';
 import { Controller, Delete, Get, Middleware, Post, Put } from '@overnightjs/core';
 import { Response } from 'express';
 import { BAD_REQUEST, NOT_FOUND, OK } from 'http-status-codes';
@@ -9,7 +11,6 @@ import { TimetableController } from './timetable.controller';
 import { TimetableEntity, TimetableType } from '../../persistance/entities/staff/timetable.entity';
 import { TimetableSlot } from '../../rest-service-views/two-way/staff/timetable.slot';
 import { ValidationValidators } from '../../validation/validation.validators';
-import { Logger } from '../../logging/log.logger';
 import { LogTypes } from '../../logging/log.types';
 import { LogRepository } from '../../persistance/repositories/log.repository';
 import { TimeUtility } from '../../utilities/time.utility';
@@ -27,9 +28,46 @@ const middlewares = [
 export class RadioController extends TimetableController {
     private static readonly THIRTY_MINUTES = 1800;
 
+    @Get('requests')
+    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_BOOK_RADIO ]) ])
+    private async getRadioRequests(req: InternalRequest, res: Response): Promise<void> {
+        const requests = await req.serviceConfig.radioRequestRepository.getRequestsWithinTwoHours();
+        const items = [];
+
+        for (const request of requests) {
+            items.push(RadioRequestView.newBuilder()
+                .withRadioRequestId(request.radioRequestId)
+                .withUser(await req.serviceConfig.userRepository.getSlimUserById(request.userId))
+                .withRequest(request.request)
+                .withCreatedAt(request.createdAt)
+                .build());
+        }
+
+        res.status(OK).json(items);
+    }
+
+    @Delete('requests/:radioRequestId')
+    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO ]) ])
+    private async deleteRadioRequests(req: InternalRequest, res: Response): Promise<void> {
+        const request = await req.serviceConfig.radioRequestRepository.get(Number(req.params.radioRequestId));
+        if (!request) {
+            res.status(NOT_FOUND).json();
+            return;
+        }
+
+        await req.serviceConfig.radioRequestRepository.delete(request);
+        await Logger.createStaffLog(req, {
+            id: LogTypes.DELETE_RADIO_REQUEST,
+            contentId: request.radioRequestId,
+            userId: req.user.userId,
+            beforeChange: JSON.stringify(request),
+            afterChange: null
+        });
+        res.status(OK).json();
+    }
+
     @Post('like')
     @Middleware([ AUTHORIZATION_MIDDLEWARE ])
-
     private async createRadioLike (req: InternalRequest, res: Response): Promise<void> {
         const radioStats = await req.serviceConfig.settingRepository.getKeyValue<RadioStatsModel>(SettingKey.RADIO_STATS);
         if (!radioStats || !radioStats.currentDj) {

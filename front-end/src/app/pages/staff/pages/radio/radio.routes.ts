@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { RadioComponent } from './radio.component';
 import { TimetableComponent } from '../../../../shared/components/timetable/timetable.component';
 import { TimeTableTypes } from '../../../../shared/components/timetable/timetable.interface';
+import { RequestsComponent } from './requests/requests.component';
+import { RequestsService } from './requests/requests.service';
 
 export const radioRoutes: Routes = [
     {
@@ -13,6 +15,13 @@ export const radioRoutes: Routes = [
                 component: TimetableComponent,
                 data: {
                     type: TimeTableTypes.RADIO
+                }
+            },
+            {
+                path: 'requests',
+                component: RequestsComponent,
+                resolve: {
+                    data: RequestsService
                 }
             }
         ]

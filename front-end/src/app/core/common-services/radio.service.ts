@@ -47,6 +47,17 @@ export class RadioService {
             }).catch(error => this.siteNotificationService.onError(error.error));
     }
 
+    async doRequest(content: string ): Promise<void> {
+        this.httpService.post('/information/radio-request', { request: content }).toPromise()
+            .then(() => {
+                this.siteNotificationService.create({
+                    title: 'Success',
+                    message: 'You sent a request to the DJ!',
+                    type: SiteNotificationType.INFO
+                });
+            }).catch(error => this.siteNotificationService.onError(error.error));
+    }
+
     toggleRadio (): void {
         this.isPlaying = !this.isPlaying;
         if (this.isPlaying) {

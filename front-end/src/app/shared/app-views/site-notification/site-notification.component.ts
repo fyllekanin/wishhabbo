@@ -46,7 +46,7 @@ export class SiteNotificationComponent {
 
         const message = document.createElement('span');
         message.className = 'message';
-        message.textContent = notification.message;
+        message.innerHTML = notification.message;
 
         const dismiss = document.createElement('i');
         dismiss.className = 'dismiss fa fa-times-circle';

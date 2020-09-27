@@ -1,17 +1,29 @@
 import { Router } from '@angular/router';
-import { Component, HostBinding, HostListener, Input } from '@angular/core';
-import { ArticleClass } from '../../classes/media/article.class';
+import { Component, HostBinding, HostListener, Input, OnInit } from '@angular/core';
+import { ArticleClass, ARTICLE_DIFFICULTIES } from '../../classes/media/article.class';
 
 @Component({
     selector: 'app-slim-article',
     templateUrl: 'slim-article.component.html',
     styleUrls: [ 'slim-article.component.css' ]
 })
-export class SlimArticleComponent {
+export class SlimArticleComponent implements OnInit {
     @HostBinding('class.gray-bottom-shadow') lightDarkBottomShadow = true;
     @Input() article: ArticleClass;
 
+    badgeCount = 0;
+    firstBadge: string = null;
+    difficulty: { name: string, color: string } = null;
+
     constructor(private router: Router) {}
+
+    ngOnInit(): void {
+        this.difficulty = ARTICLE_DIFFICULTIES[this.article.difficulty];
+        this.badgeCount = this.article.badges.length;
+
+        const randomNumber = Math.floor((Math.random() * this.badgeCount));
+        this.firstBadge = this.badgeCount > 0 ? this.article.badges[randomNumber] : null;
+    }
 
     @HostListener('click', ['$event.target'])
     onClick(): void {

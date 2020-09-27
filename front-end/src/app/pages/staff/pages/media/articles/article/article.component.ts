@@ -85,6 +85,15 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
     }
 
     private async onSave (): Promise<void> {
+        if (!this.showBadges) {
+            this.data.badges = [];
+            this.data.room = null;
+            this.data.roomOwner = null;
+            this.data.difficulty = null;
+            this.data.isAvailable = false;
+            this.data.isPaid = false;
+        }
+
         this.data.content = this.editorComponent.getContent();
         const articleId = await this.service.save(this.data, this.fileElementRef.nativeElement);
         this.data.articleId = articleId as number;

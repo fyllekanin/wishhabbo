@@ -13,6 +13,7 @@ import { HomeResolver } from './home/home.resolver';
 import { HabboBadgeModule } from '../../shared/components/habbo-badge/habbo-badge.module';
 import { ArticleService } from './article/article.service';
 import { ArticleComponent } from './article/article.component';
+import { NgxTwitterTimelineModule } from 'ngx-twitter-timeline';
 
 @NgModule({
     imports: [
@@ -20,7 +21,8 @@ import { ArticleComponent } from './article/article.component';
         SlimArticleModule,
         CommonModule,
         ContentModule,
-        HabboBadgeModule
+        HabboBadgeModule,
+        NgxTwitterTimelineModule
     ],
     declarations: [
         HomeComponent,

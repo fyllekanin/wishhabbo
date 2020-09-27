@@ -74,10 +74,12 @@ export class ArticleController {
             .withContent(article.content)
             .withBadges(JSON.parse(article.badges))
             .withRoom(article.room)
+            .withRoomOwner(article.roomOwner)
             .withDifficulty(article.difficulty)
             .withType(article.type)
             .withIsApproved(article.isApproved)
             .withIsAvailable(article.isAvailable)
+            .withIsPaid(article.isPaid)
             .build());
     }
 
@@ -109,6 +111,7 @@ export class ArticleController {
             .withRoomOwner(payload.getRoomOwner())
             .withDifficulty(payload.getDifficulty())
             .withIsAvailable(payload.getIsAvailable())
+            .withIsPaid(payload.getIsPaid())
             .build();
         const entityErrors = await ValidationValidators.validateEntity(article, req.serviceConfig, req.user);
         if (entityErrors.length > 0) {
@@ -169,6 +172,7 @@ export class ArticleController {
             .withRoomOwner(payload.getRoomOwner())
             .withDifficulty(payload.getDifficulty())
             .withIsAvailable(payload.getIsAvailable())
+            .withIsPaid(payload.getIsPaid())
             .build();
 
         const entityErrors = await ValidationValidators.validateEntity(updatedArticle, req.serviceConfig, req.user);

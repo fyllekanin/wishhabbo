@@ -26,7 +26,7 @@ export class RadioRequestValidator implements EntityValidator<RadioRequestEntity
     }
 
     private async validateRequestMessage (entity: RadioRequestEntity, errors: Array<ValidationError>): Promise<void> {
-        if (!entity.request || entity.request.length < 5) {
+        if (!entity.request) {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.EMPTY_FIELD.code)
                 .withField('request')
@@ -42,7 +42,7 @@ export class RadioRequestValidator implements EntityValidator<RadioRequestEntity
             where: [
                 { key: 'id', operator: '=', value: LogTypes.RADIO_REQUEST },
                 { key: 'userId', operator: '=', value: user.userId },
-                { key: 'createdAt', operator: '>', value: TimeUtility.getCurrent() + RadioRequestValidator.TWO_MINUTES}
+                { key: 'createdAt', operator: '>', value: TimeUtility.getCurrent() - RadioRequestValidator.TWO_MINUTES}
             ]
         });
 

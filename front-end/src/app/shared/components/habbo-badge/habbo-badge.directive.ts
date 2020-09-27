@@ -20,8 +20,7 @@ export class HabboBadgeDirective {
     @HostBinding('style.background-color') myBackgroundColor = '#eaeae6';
     @HostBinding('style.border-radius') myBorderRadius = '5px';
     @HostBinding('style.transition') myTransition = '0.6s';
-    @HostBinding('style.border') myBorder = '1px solid #d2d2cf';
-    @HostBinding('style.padding') myPadding = '4px';
+    @HostBinding('style.padding') myPadding = '7px';
     @HostBinding('style.margin') myMargin = '5px 0';
     @HostBinding('style.-webkit-box-shadow') myWebkitBoxShadow = HabboBadgeDirective.BOX_SHADOW;
     @HostBinding('style.-moz-box-shadow') myMozBoxShadow = HabboBadgeDirective.BOX_SHADOW;

@@ -33,6 +33,12 @@ export class StaffComponent {
                         url: `/staff/radio/timetable/${day}`,
                         icon: 'fas fa-table',
                         isApplicable: user.staffPermissions.CAN_BOOK_RADIO
+                    },
+                    {
+                        label: 'Requests',
+                        url: `/staff/radio/requests`,
+                        icon: 'fas fa-table',
+                        isApplicable: user.staffPermissions.CAN_BOOK_RADIO
                     }
                 ]
             },

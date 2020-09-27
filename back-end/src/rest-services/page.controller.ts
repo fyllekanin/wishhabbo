@@ -31,6 +31,7 @@ export class PageController {
             .withType(article.type)
             .withIsApproved(article.isApproved)
             .withIsAvailable(article.isAvailable)
+            .withIsPaid(article.isPaid)
             .build());
     }
 
@@ -73,6 +74,8 @@ export class PageController {
                 .withRoom(article.room)
                 .withRoomOwner(article.roomOwner)
                 .withDifficulty(article.difficulty)
+                .withIsAvailable(article.isAvailable)
+                .withIsPaid(article.isPaid)
                 .withType(type)
                 .build());
         }
