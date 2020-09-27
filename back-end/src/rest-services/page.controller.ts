@@ -77,6 +77,7 @@ export class PageController {
                 .withIsAvailable(article.isAvailable)
                 .withIsPaid(article.isPaid)
                 .withType(type)
+                .withUpdatedAt(article.updatedAt)
                 .build());
         }
         return articles;

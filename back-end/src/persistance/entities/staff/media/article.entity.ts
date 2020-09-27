@@ -14,6 +14,7 @@ interface IArticleEntity {
     isApproved: boolean;
     isAvailable: boolean;
     isPaid: boolean;
+    updatedAt: number;
 }
 
 @Entity('articles')
@@ -92,7 +93,8 @@ class Builder {
         type: undefined,
         isApproved: undefined,
         isAvailable: undefined,
-        isPaid: undefined
+        isPaid: undefined,
+        updatedAt: undefined
     };
 
     constructor (entity?: ArticleEntity) {
@@ -156,6 +158,11 @@ class Builder {
 
     withIsPaid(isPaid: boolean): Builder {
         this.myData.isPaid = isPaid;
+        return this;
+    }
+
+    withUpdatedAt(updatedAt: number): Builder {
+        this.myData.updatedAt = updatedAt;
         return this;
     }
 

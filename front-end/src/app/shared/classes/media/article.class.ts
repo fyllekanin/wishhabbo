@@ -63,6 +63,8 @@ export class ArticleClass {
     isAvailable: boolean;
     @primitiveOf(Boolean)
     isPaid: boolean;
+    @primitiveOf(Number)
+    updatedAt: number;
 
     constructor (source: Partial<ArticleClass>) {
         ClassHelper.assign(this, source);
@@ -77,6 +79,6 @@ export class ArticleClass {
     }
 
     get thumbnail (): string {
-        return `/resources/article-thumbnails/${this.articleId}.gif`;
+        return `/resources/article-thumbnails/${this.articleId}.gif?updatedAt=${this.updatedAt}`;
     }
 }

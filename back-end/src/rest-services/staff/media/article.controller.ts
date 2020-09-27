@@ -119,7 +119,7 @@ export class ArticleController {
             return;
         }
 
-        const updatedEntity = await req.serviceConfig.articleRepository.save(article).catch(reason => {
+        const updatedEntity = await req.serviceConfig.articleRepository.create(article).catch(reason => {
             throw reason;
         });
         const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${updatedEntity.articleId}`);
@@ -181,14 +181,13 @@ export class ArticleController {
             return;
         }
 
-        const updatedEntity = await req.serviceConfig.articleRepository.save(updatedArticle);
-        if (!updatedEntity) {
+        await req.serviceConfig.articleRepository.update(updatedArticle).catch(err => {
             res.status(BAD_REQUEST).json();
-            return;
-        }
+            throw err;
+        });
 
         if (payload.getFile()) {
-            const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${updatedEntity.articleId}`);
+            const result = await req.serviceConfig.resourceRepository.uploadArticleThumbnail(req, `${updatedArticle.articleId}`);
             if (!result) {
                 res.status(BAD_REQUEST).json();
                 return;
@@ -197,7 +196,7 @@ export class ArticleController {
 
         await Logger.createStaffLog(req, {
             id: LogTypes.UPDATED_ARTICLE,
-            contentId: updatedEntity.articleId,
+            contentId: updatedArticle.articleId,
             userId: req.user.userId,
             beforeChange: JSON.stringify(article),
             afterChange: JSON.stringify(updatedArticle)

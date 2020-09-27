@@ -14,6 +14,7 @@ export class ArticleView {
     isApproved: boolean;
     isAvailable: boolean;
     isPaid: boolean;
+    updatedAt: number;
 
     static newBuilder (): ArticleViewBuilder {
         return new ArticleViewBuilder();
@@ -34,6 +35,7 @@ class ArticleViewBuilder {
     isApproved: boolean;
     isAvailable: boolean;
     isPaid: boolean;
+    updatedAt: number;
 
     withArticleId (articleId: number): ArticleViewBuilder {
         this.articleId = articleId;
@@ -100,6 +102,11 @@ class ArticleViewBuilder {
         return this;
     }
 
+    withUpdatedAt(updatedAt: number): ArticleViewBuilder {
+        this.updatedAt = updatedAt;
+        return this;
+    }
+
     build (): ArticleView {
         const entity = new ArticleView();
         entity.articleId = this.articleId;
@@ -115,6 +122,7 @@ class ArticleViewBuilder {
         entity.isApproved = this.isApproved;
         entity.isAvailable = this.isAvailable;
         entity.isPaid = this.isPaid;
+        entity.updatedAt = this.updatedAt;
         return entity;
     }
 }
