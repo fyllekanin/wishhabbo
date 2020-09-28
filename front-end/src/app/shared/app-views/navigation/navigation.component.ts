@@ -6,7 +6,7 @@ import { AuthUser } from '../../../core/auth/auth-user.model';
 @Component({
     selector: 'app-navigation',
     templateUrl: './navigation.component.html',
-    styleUrls: [ './navigation.component.css' ]
+    styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent {
     user: AuthUser;
@@ -23,11 +23,13 @@ export class NavigationComponent {
         }),
         new NavigationItem({
             title: 'Radio',
-            icon: 'fa-headphones'
+            icon: 'fa-headphones',
+            path: `/default/timetable/0/${new Date().getDay() === 0 ? 7 : new Date().getDay()}`
         }),
         new NavigationItem({
             title: 'Events',
-            icon: 'fa-gamepad'
+            icon: 'fa-gamepad',
+            path: `/default/timetable/1/${new Date().getDay() === 0 ? 7 : new Date().getDay()}`
         })
     ];
 

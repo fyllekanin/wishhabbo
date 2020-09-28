@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ITimetable, Slot, TimeTableTypes } from './timetable.interface';
+import { Slot, Timetable, TimeTableTypes } from './timetable.interface';
 import { UnSub } from '../../decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
 import { TimetableService } from './timetable.service';
@@ -11,16 +11,17 @@ import { AuthService } from '../../../core/auth/auth.service';
 @Component({
     selector: 'app-timetable',
     templateUrl: 'timetable.component.html',
-    styleUrls: [ 'timetable.component.css' ]
+    styleUrls: ['timetable.component.css']
 })
 @UnSub()
 export class TimetableComponent implements OnDestroy {
     private readonly type: string;
     private day: number;
 
+    readonly isPublic: boolean;
     subscriptions: Array<Unsubscribable> = [];
     title: string;
-    data: ITimetable;
+    data: Timetable;
     isRadio = false;
 
     actions: Array<UserAction> = [];
@@ -32,6 +33,7 @@ export class TimetableComponent implements OnDestroy {
         activatedRoute: ActivatedRoute
     ) {
         this.type = activatedRoute.snapshot.data.type;
+        this.isPublic = activatedRoute.snapshot.data.isPublic;
         this.isRadio = this.type === TimeTableTypes.RADIO;
         this.day = Number(activatedRoute.snapshot.params.day);
         this.subscriptions.push(activatedRoute.params.subscribe(async data => {
@@ -45,6 +47,10 @@ export class TimetableComponent implements OnDestroy {
     }
 
     async clickHour (slot: Slot): Promise<void> {
+        if (this.isPublic) {
+            return;
+        }
+
         if (!slot.isBooked) {
             await this.doBooking(slot);
             return;
@@ -95,23 +101,23 @@ export class TimetableComponent implements OnDestroy {
         const slots = await this.service.fetchSlots(this.type);
         this.data = this.getDataWithCurrentSlots(slots);
         this.actions = [
-            { label: 'Mon', value: 1, isActive: this.day === 1 },
-            { label: 'Tue', value: 2, isActive: this.day === 2 },
-            { label: 'Wed', value: 3, isActive: this.day === 3 },
-            { label: 'Thu', value: 4, isActive: this.day === 4 },
-            { label: 'Fri', value: 5, isActive: this.day === 5 },
-            { label: 'Sat', value: 6, isActive: this.day === 6 },
-            { label: 'Sun', value: 7, isActive: this.day === 7 }
+            {label: 'Mon', value: 1, isActive: this.day === 1},
+            {label: 'Tue', value: 2, isActive: this.day === 2},
+            {label: 'Wed', value: 3, isActive: this.day === 3},
+            {label: 'Thu', value: 4, isActive: this.day === 4},
+            {label: 'Fri', value: 5, isActive: this.day === 5},
+            {label: 'Sat', value: 6, isActive: this.day === 6},
+            {label: 'Sun', value: 7, isActive: this.day === 7}
         ];
     }
 
-    private getDataWithCurrentSlots (data: ITimetable): ITimetable {
+    private getDataWithCurrentSlots (data: Timetable): Timetable {
         const offset = TimeHelper.getTimeOffsetInHours();
         data.current = data.all.map(item => {
-            const copy = { ...item };
+            const copy = {...item};
             copy.hour = TimeHelper.getConvertedHour(item.hour + offset);
             copy.day = TimeHelper.getConvertedDay(item.hour + offset, item.day);
-            copy.event = copy.event ? copy.event : { eventId: 0, name: 'Unknown', createdAt: 0, updatedAt: 0 };
+            copy.event = copy.event ? copy.event : {eventId: 0, name: 'Unknown', createdAt: 0, updatedAt: 0};
             return copy;
         }).filter(item => item.day === this.day).sort((a, b) => {
             if (a.hour > b.hour) {

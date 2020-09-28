@@ -23,7 +23,7 @@ export class BbcodeComponent implements OnDestroy {
     data = new BbcodeClass();
     subscriptions: Array<Unsubscribable> = [];
 
-    constructor(
+    constructor (
         private globalBbcodeService: GlobalBbcodeService,
         private bbcodeService: BbcodeService,
         private router: Router,
@@ -33,11 +33,11 @@ export class BbcodeComponent implements OnDestroy {
         this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy (): void {
         // Empty
     }
 
-    async onAction(action: UserAction): Promise<void> {
+    async onAction (action: UserAction): Promise<void> {
         switch (action.value) {
             case this.ACTIONS.SAVE:
                 this.data.bbcodeId = await this.bbcodeService.create(this.data) as number;
@@ -48,7 +48,7 @@ export class BbcodeComponent implements OnDestroy {
                 const answer = await this.dialogService.confirm('Do you really wanna delete this bbcode?');
                 if (answer) {
                     await this.bbcodeService.delete(this.data.bbcodeId);
-                await this.router.navigateByUrl('/admin/website-settings/bbcodes');
+                    await this.router.navigateByUrl('/admin/website-settings/bbcodes');
                 }
                 break;
             case this.ACTIONS.BACK:
@@ -57,16 +57,16 @@ export class BbcodeComponent implements OnDestroy {
         }
     }
 
-    private onData({ data }: { data: BbcodeClass }): void {
+    private onData ({data}: { data: BbcodeClass }): void {
         this.data = data;
         this.contentActions = this.getActions();
     }
 
-    private getActions(): Array<UserAction> {
+    private getActions (): Array<UserAction> {
         return [
-            { label: 'Save',  value: this.ACTIONS.SAVE, isHidden: false },
-            { label: 'Delete', value: this.ACTIONS.DELETE, isHidden: !this.data.bbcodeId },
-            { label: 'Go back', value: this.ACTIONS.BACK, isHidden: false }
+            {label: 'Save', value: this.ACTIONS.SAVE, isHidden: false},
+            {label: 'Delete', value: this.ACTIONS.DELETE, isHidden: !this.data.bbcodeId},
+            {label: 'Go back', value: this.ACTIONS.BACK, isHidden: false}
         ];
     }
 }

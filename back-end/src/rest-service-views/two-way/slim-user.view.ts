@@ -15,7 +15,7 @@ export class SlimUserView {
         this.habbo = builder.habbo;
         this.likes = builder.likes;
         this.updatedAt = builder.updatedAt;
-        this.nameColors = builder.nameColors ? [ ...builder.nameColors ] : [];
+        this.nameColors = Array.isArray(builder.nameColors) ? [...builder.nameColors] : [];
     }
 
     getUserId (): number {
@@ -39,7 +39,7 @@ export class SlimUserView {
     }
 
     getNameColors (): Array<string> {
-        return [ ...this.nameColors ];
+        return [...this.nameColors];
     }
 
     static of (user: SlimUserView): SlimUserView {
@@ -95,7 +95,7 @@ class Builder {
     }
 
     withNameColors (nameColors: Array<string>): Builder {
-        this.nameColors = [ ...nameColors ];
+        this.nameColors = Array.isArray(nameColors) ? [...nameColors] : [];
         return this;
     }
 

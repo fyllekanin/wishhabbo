@@ -87,7 +87,7 @@ export class ArticleService implements Resolve<ArticleClass> {
         data.append('thumbnail', fileElement.files[0]);
         if (article.articleId) {
             return this.httpService.post(`/staff/articles/${article.articleId}`, data).toPromise()
-                .then(articleId => {
+                .then(() => {
                     this.siteNotificationService.create({
                         title: 'Updated',
                         message: 'Article updated',
@@ -97,6 +97,7 @@ export class ArticleService implements Resolve<ArticleClass> {
                 })
                 .catch(error => {
                     this.siteNotificationService.onError(error.error);
+                    return article.articleId;
                 });
         } else {
             return this.httpService.post('/staff/articles', data).toPromise()

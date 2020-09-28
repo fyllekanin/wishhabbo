@@ -40,9 +40,13 @@ export class RadioRequestValidator implements EntityValidator<RadioRequestEntity
             take: 1,
             page: 1,
             where: [
-                { key: 'id', operator: '=', value: LogTypes.RADIO_REQUEST },
-                { key: 'userId', operator: '=', value: user.userId },
-                { key: 'createdAt', operator: '>', value: TimeUtility.getCurrent() - RadioRequestValidator.TWO_MINUTES}
+                {key: 'id', operator: '=', value: LogTypes.RADIO_REQUEST},
+                {key: 'userId', operator: '=', value: user.userId},
+                {
+                    key: 'createdAt',
+                    operator: '>',
+                    value: TimeUtility.getCurrentTime() - RadioRequestValidator.TWO_MINUTES
+                }
             ]
         });
 

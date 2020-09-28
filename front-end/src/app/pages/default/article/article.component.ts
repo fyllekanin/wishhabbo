@@ -17,18 +17,18 @@ export class ArticleComponent implements OnDestroy {
     subscriptions: Array<Unsubscribable> = [];
     sanitizedContent: SafeHtml;
 
-    constructor(
+    constructor (
         private sanitizer: DomSanitizer,
         activatedRoute: ActivatedRoute
     ) {
         this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy (): void {
         // Empty
     }
 
-    private onData({ data }: { data: ArticleClass }): void {
+    private onData ({data}: { data: ArticleClass }): void {
         this.data = data;
         this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(this.data.parsedContent);
     }

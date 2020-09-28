@@ -15,7 +15,7 @@ import { DialogService } from '../../../../../../core/common-services/dialog.ser
 @Component({
     selector: 'app-staff-articles-article',
     templateUrl: 'article.component.html',
-    styleUrls: [ 'article.component.css' ]
+    styleUrls: ['article.component.css']
 })
 @UnSub()
 export class ArticleComponent implements AfterViewInit, OnDestroy {
@@ -32,8 +32,8 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
     difficulties: Array<{ label: string, value: number }> = [];
     showBadges = false;
     badges = '';
-    @ViewChild(EditorComponent, { static: true }) editorComponent: EditorComponent;
-    @ViewChild('fileElement', { static: true }) fileElementRef: ElementRef<HTMLInputElement>;
+    @ViewChild(EditorComponent, {static: true}) editorComponent: EditorComponent;
+    @ViewChild('fileElement', {static: true}) fileElementRef: ElementRef<HTMLInputElement>;
 
     constructor (
         private service: ArticleService,
@@ -44,11 +44,11 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
         this.types = Object.keys(ARTICLE_TYPES).map(key => {
             const type = ARTICLE_TYPES[key];
-            return { label: type.name, value: Number(key), isBadgeIncluded: type.isBadgeIncluded };
+            return {label: type.name, value: Number(key), isBadgeIncluded: type.isBadgeIncluded};
         });
         this.difficulties = Object.keys(ARTICLE_DIFFICULTIES).map(key => {
             const difficulty = ARTICLE_DIFFICULTIES[key];
-            return { label: difficulty.name, value: Number(key) };
+            return {label: difficulty.name, value: Number(key)};
         });
     }
 
@@ -62,7 +62,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         // Empty
     }
 
-    onTypeChange(): void {
+    onTypeChange (): void {
         this.showBadges = this.data.getType().isBadgeIncluded;
     }
 
@@ -89,7 +89,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
             this.data.badges = [];
             this.data.room = null;
             this.data.roomOwner = null;
-            this.data.difficulty = null;
+            this.data.difficulty = 0;
             this.data.isAvailable = false;
             this.data.isPaid = false;
         }
@@ -108,7 +108,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    private onData ({ data }: { data: ArticleClass }): void {
+    private onData ({data}: { data: ArticleClass }): void {
         this.data = data;
         this.badges = this.data.badges.join(',');
         this.actions = this.getActions();
@@ -117,9 +117,9 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
 
     private getActions (): Array<UserAction> {
         return [
-            { label: 'Save', value: this.ACTIONS.SAVE, isAvailable: true },
-            { label: 'Delete', value: this.ACTIONS.DELETE, isAvailable: Boolean(this.data.articleId) },
-            { label: 'Go back', value: this.ACTIONS.BACK, isAvailable: true }
+            {label: 'Save', value: this.ACTIONS.SAVE, isAvailable: true},
+            {label: 'Delete', value: this.ACTIONS.DELETE, isAvailable: Boolean(this.data.articleId)},
+            {label: 'Go back', value: this.ACTIONS.BACK, isAvailable: true}
         ].filter(action => action.isAvailable).map(action => {
             delete action.isAvailable;
             return action;

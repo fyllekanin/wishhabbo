@@ -8,9 +8,10 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ArticleService implements Resolve<ArticleClass> {
 
-    constructor(private httpService: HttpService) {}
+    constructor (private httpService: HttpService) {
+    }
 
-    resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<ArticleClass> {
+    resolve (activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<ArticleClass> {
         return this.httpService.get(`/page/article/${activatedRouteSnapshot.params.articleId}`)
             .pipe(map(data => new ArticleClass(data)));
     }

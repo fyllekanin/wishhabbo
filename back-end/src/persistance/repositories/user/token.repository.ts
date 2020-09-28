@@ -16,7 +16,7 @@ export class TokenRepository {
     }
 
     async delete (entity: TokenEntity): Promise<DeleteResult> {
-        return await this.getRepository().delete({ tokenId: entity.tokenId });
+        return await this.getRepository().delete({tokenId: entity.tokenId});
     }
 
     async getTokenFromRequest (req: InternalRequest): Promise<TokenEntity> {
@@ -49,11 +49,11 @@ export class TokenRepository {
     }
 
     isAccessTokenAlive (entity: TokenEntity): boolean {
-        return Boolean(entity && (entity.updatedAt + TokenRepository.ACCESS_TOKEN_LIFE_TIME) > TimeUtility.getCurrent());
+        return Boolean(entity && (entity.updatedAt + TokenRepository.ACCESS_TOKEN_LIFE_TIME) > TimeUtility.getCurrentTime());
     }
 
     isRefreshTokenAlive (entity: TokenEntity): boolean {
-        return Boolean(entity && (entity.updatedAt + TokenRepository.REFRESH_TOKEN_LIFE_TIME) > TimeUtility.getCurrent());
+        return Boolean(entity && (entity.updatedAt + TokenRepository.REFRESH_TOKEN_LIFE_TIME) > TimeUtility.getCurrentTime());
     }
 
     async getTokens (): Promise<Array<TokenEntity>> {
@@ -62,7 +62,7 @@ export class TokenRepository {
 
     async deleteExpiredTokens (): Promise<DeleteResult> {
         return await this.getRepository()
-            .delete({ updatedAt: LessThan(TimeUtility.getCurrent() - TokenRepository.REFRESH_TOKEN_LIFE_TIME) });
+            .delete({updatedAt: LessThan(TimeUtility.getCurrentTime() - TokenRepository.REFRESH_TOKEN_LIFE_TIME)});
     }
 
     async getToken (user: UserEntity): Promise<TokenEntity> {
@@ -78,13 +78,13 @@ export class TokenRepository {
 
     private async getAvailableAccessToken (): Promise<string> {
         const newToken = IdHelper.newUuid();
-        const isAvailable = await this.getRepository().count({ access: newToken }) === 0;
+        const isAvailable = await this.getRepository().count({access: newToken}) === 0;
         return isAvailable ? newToken : await this.getAvailableAccessToken();
     }
 
     private async getAvailableRefreshToken (): Promise<string> {
         const newToken = IdHelper.newUuid();
-        const isAvailable = await this.getRepository().count({ refresh: newToken }) === 0;
+        const isAvailable = await this.getRepository().count({refresh: newToken}) === 0;
         return isAvailable ? newToken : await this.getAvailableRefreshToken();
     }
 

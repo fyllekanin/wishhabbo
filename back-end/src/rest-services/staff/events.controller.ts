@@ -12,6 +12,7 @@ import { ValidationValidators } from '../../validation/validation.validators';
 import { Logger } from '../../logging/log.logger';
 import { LogTypes } from '../../logging/log.types';
 import { EventEntity } from '../../persistance/entities/staff/event.entity';
+import { TimetableUtility } from '../../utilities/timetable.utility';
 
 const middlewares = [
     AUTHORIZATION_MIDDLEWARE,
@@ -29,7 +30,7 @@ export class EventsController extends TimetableController {
     @Get('slots')
     private async getSlots (req: InternalRequest, res: Response): Promise<void> {
         const slots = await req.serviceConfig.timetableRepository.getSlots(TimetableType.EVENTS);
-        res.status(OK).json(await this.getConvertedSlots(req, slots));
+        res.status(OK).json(await TimetableUtility.getConvertedSlots(req, slots));
     }
 
     @Post('event')

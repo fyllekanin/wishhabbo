@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BookingResult, ITimetable, Slot, TimetableEvent, TimeTableTypes } from './timetable.interface';
+import { BookingResult, Slot, Timetable, TimetableEvent, TimeTableTypes } from './timetable.interface';
 import { HttpService } from '../../../core/http/http.service';
 import { SiteNotificationService } from '../../../core/common-services/site-notification.service';
 import { DialogService } from '../../../core/common-services/dialog.service';
@@ -11,15 +11,14 @@ import { SiteNotificationType } from '../../app-views/site-notification/site-not
 
 @Injectable()
 export class TimetableService {
-    private events: Array<TimetableEvent> = [];
     private bookingActions: Array<DialogButton> = [
-        new DialogButton({ label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true }),
-        new DialogButton({ label: 'Book', action: 'book', type: ButtonTypes.GREEN })
+        new DialogButton({label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true}),
+        new DialogButton({label: 'Book', action: 'book', type: ButtonTypes.GREEN})
     ];
     private editingActions: Array<DialogButton> = [
-        new DialogButton({ label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true }),
-        new DialogButton({ label: 'Unbook', action: 'unbook', type: ButtonTypes.BLUE }),
-        new DialogButton({ label: 'Save', action: 'book', type: ButtonTypes.GREEN })
+        new DialogButton({label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true}),
+        new DialogButton({label: 'Unbook', action: 'unbook', type: ButtonTypes.BLUE}),
+        new DialogButton({label: 'Save', action: 'book', type: ButtonTypes.GREEN})
     ];
 
     constructor (
@@ -67,7 +66,7 @@ export class TimetableService {
     }
 
     async book (slot: Slot, isRadio: boolean): Promise<unknown> {
-        const copy = { ...slot };
+        const copy = {...slot};
         const offsetInHours = copy.hour + TimeHelper.getHourOffsetRounded();
         const convertedHour = TimeHelper.getConvertedHour(offsetInHours);
         const convertedDay = TimeHelper.getConvertedDay(offsetInHours, slot.day);
@@ -105,9 +104,9 @@ export class TimetableService {
         });
     }
 
-    fetchSlots (type: string): Promise<ITimetable> {
+    fetchSlots (type: string): Promise<Timetable> {
         return this.httpService.get(`/staff/${type === TimeTableTypes.RADIO ? 'radio' : 'events'}/slots`).toPromise()
-            .then((slots: Array<Slot>) => ({
+            .then((slots: Array<Slot>) => new Timetable({
                 all: slots,
                 current: [],
                 type: type

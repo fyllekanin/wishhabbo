@@ -5,14 +5,14 @@ import { AuthService } from '../../core/auth/auth.service';
 @Component({
     selector: 'app-staff',
     templateUrl: 'staff.component.html',
-    styleUrls: [ 'staff.component.css' ]
+    styleUrls: ['staff.component.css']
 })
 export class StaffComponent {
     menus: Array<ISideMenu> = [];
 
     constructor (authService: AuthService) {
         const user = authService.getAuthUser();
-        const day = new Date().getDay() + 1;
+        const day = new Date().getDay() === 0 ? 7 : new Date().getDay();
         this.menus = [
             {
                 title: 'General',

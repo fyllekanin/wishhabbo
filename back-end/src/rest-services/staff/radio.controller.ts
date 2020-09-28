@@ -1,3 +1,4 @@
+import { TimetableUtility } from './../../utilities/timetable.utility';
 import { Logger } from './../../logging/log.logger';
 import { RadioRequestView } from './../../rest-service-views/respond-views/staff/media/radio-request.view';
 import { Controller, Delete, Get, Middleware, Post, Put } from '@overnightjs/core';
@@ -21,7 +22,7 @@ import { SlimUserView } from '../../rest-service-views/two-way/slim-user.view';
 
 const middlewares = [
     AUTHORIZATION_MIDDLEWARE,
-    GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_BOOK_RADIO ])
+    GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_BOOK_RADIO])
 ];
 
 @Controller('api/staff/radio')
@@ -29,8 +30,8 @@ export class RadioController extends TimetableController {
     private static readonly THIRTY_MINUTES = 1800;
 
     @Get('requests')
-    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_BOOK_RADIO ]) ])
-    private async getRadioRequests(req: InternalRequest, res: Response): Promise<void> {
+    @Middleware([AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_BOOK_RADIO])])
+    private async getRadioRequests (req: InternalRequest, res: Response): Promise<void> {
         const requests = await req.serviceConfig.radioRequestRepository.getRequestsWithinTwoHours();
         const items = [];
 
@@ -47,8 +48,8 @@ export class RadioController extends TimetableController {
     }
 
     @Delete('requests/:radioRequestId')
-    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO ]) ])
-    private async deleteRadioRequests(req: InternalRequest, res: Response): Promise<void> {
+    @Middleware([AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO])])
+    private async deleteRadioRequests (req: InternalRequest, res: Response): Promise<void> {
         const request = await req.serviceConfig.radioRequestRepository.get(Number(req.params.radioRequestId));
         if (!request) {
             res.status(NOT_FOUND).json();
@@ -67,14 +68,14 @@ export class RadioController extends TimetableController {
     }
 
     @Post('like')
-    @Middleware([ AUTHORIZATION_MIDDLEWARE ])
+    @Middleware([AUTHORIZATION_MIDDLEWARE])
     private async createRadioLike (req: InternalRequest, res: Response): Promise<void> {
         const radioStats = await req.serviceConfig.settingRepository.getKeyValue<RadioStatsModel>(SettingKey.RADIO_STATS);
         if (!radioStats || !radioStats.currentDj) {
-            res.status(BAD_REQUEST).json([ {
+            res.status(BAD_REQUEST).json([{
                 name: 'Can\'t find the current DJ',
                 message: 'The current DJ was not possible to find'
-            } ]);
+            }]);
             return;
         }
 
@@ -84,15 +85,15 @@ export class RadioController extends TimetableController {
             page: 1,
             take: 1,
             where: [
-                { key: 'userId', operator: '=', value: req.user.userId },
-                { key: 'id', operator: '=', value: LogTypes.LIKED_RADIO },
-                { key: 'createdAt', operator: '>=', value: TimeUtility.getCurrent() - RadioController.THIRTY_MINUTES }
+                {key: 'userId', operator: '=', value: req.user.userId},
+                {key: 'id', operator: '=', value: LogTypes.LIKED_RADIO},
+                {key: 'createdAt', operator: '>=', value: TimeUtility.getCurrentTime() - RadioController.THIRTY_MINUTES}
             ]
         });
 
         if (items.getItems().length > 0) {
             const secondsUntilCanLike = (items.getItems()[0].createdAt + RadioController.THIRTY_MINUTES)
-                - TimeUtility.getCurrent();
+                - TimeUtility.getCurrentTime();
             res.status(BAD_REQUEST).json([
                 ErrorsCreator.createLikingRadioToFastValidationError(`${Math.round(secondsUntilCanLike / 60)}`)
             ]);
@@ -117,7 +118,7 @@ export class RadioController extends TimetableController {
     @Middleware(middlewares)
     private async getSlots (req: InternalRequest, res: Response): Promise<void> {
         const slots = await req.serviceConfig.timetableRepository.getSlots(TimetableType.RADIO);
-        res.status(OK).json(await this.getConvertedSlots(req, slots));
+        res.status(OK).json(await TimetableUtility.getConvertedSlots(req, slots));
     }
 
     @Put(':timetableId')

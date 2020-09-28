@@ -1,33 +1,40 @@
 import { HabboBadgeEntity } from '../../../persistance/entities/habbo/habbo-badge.entity';
 import { ArticleView } from '../staff/media/article.view';
+import { TimetableSlot } from '../../two-way/staff/timetable.slot';
 
 export class HomePage {
     private readonly badges: Array<HabboBadgeEntity>;
     private readonly guides: Array<ArticleView>;
     private readonly habboNews: Array<ArticleView>;
     private readonly siteNews: Array<ArticleView>;
+    private readonly todayEvents: Array<TimetableSlot>;
 
     constructor (builder: Builder) {
-        this.badges = [ ...builder.badges ];
-        this.guides = [ ...builder.guides ];
-        this.habboNews = [ ...builder.habboNews ];
-        this.siteNews = [ ...builder.siteNews ];
+        this.badges = [...builder.badges];
+        this.guides = [...builder.guides];
+        this.habboNews = [...builder.habboNews];
+        this.siteNews = [...builder.siteNews];
+        this.todayEvents = [...builder.todayEvents];
     }
 
     getBadges (): Array<HabboBadgeEntity> {
-        return [ ...this.badges ];
+        return [...this.badges];
     }
 
     getGuides (): Array<ArticleView> {
-        return [ ...this.guides ];
+        return [...this.guides];
     }
 
     getHabboNews (): Array<ArticleView> {
-        return [ ...this.habboNews ];
+        return [...this.habboNews];
     }
 
     getSiteNews (): Array<ArticleView> {
-        return [ ...this.siteNews ];
+        return [...this.siteNews];
+    }
+
+    getTodayEvents (): Array<TimetableSlot> {
+        return [...this.todayEvents];
     }
 
     static newBuilder (): Builder {
@@ -40,24 +47,30 @@ class Builder {
     guides: Array<ArticleView>;
     habboNews: Array<ArticleView>;
     siteNews: Array<ArticleView>;
+    todayEvents: Array<TimetableSlot>;
 
     withBadges (badges: Array<HabboBadgeEntity>): Builder {
-        this.badges = [ ...badges ];
+        this.badges = [...badges];
         return this;
     }
 
     withGuides (guides: Array<ArticleView>): Builder {
-        this.guides = [ ...guides ];
+        this.guides = [...guides];
         return this;
     }
 
     withHabboNews (habboNews: Array<ArticleView>): Builder {
-        this.habboNews = [ ...habboNews ];
+        this.habboNews = [...habboNews];
         return this;
     }
 
     withSiteNews (siteNews: Array<ArticleView>): Builder {
-        this.siteNews = [ ...siteNews ];
+        this.siteNews = [...siteNews];
+        return this;
+    }
+
+    withTodaysEvents (slots: Array<TimetableSlot>): Builder {
+        this.todayEvents = [...slots];
         return this;
     }
 

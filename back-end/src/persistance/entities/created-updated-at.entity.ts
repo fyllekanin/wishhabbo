@@ -13,13 +13,13 @@ export class CreatedUpdatedAtEntity implements IEntity {
 
     @BeforeInsert()
     async beforeInsert (): Promise<void> {
-        const time = TimeUtility.getCurrent();
+        const time = TimeUtility.getCurrentTime();
         this.createdAt = time;
         this.updatedAt = time;
     }
 
     @BeforeUpdate()
     async beforeUpdate (): Promise<void> {
-        this.updatedAt = TimeUtility.getCurrent();
+        this.updatedAt = TimeUtility.getCurrentTime();
     }
 }

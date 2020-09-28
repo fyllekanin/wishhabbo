@@ -29,7 +29,8 @@
                             <a routerLink="/admin" *ngIf="user.doHaveAdminPermissions">AdminCP</a>
                             <a routerLink="/staff" *ngIf="user.doHaveStaffPermissions">StaffCP</a>
                             <span
-                                class="dropdown-meny-divider" *ngIf="user.doHaveStaffPermissions || user.doHaveAdminPermissions"></span>
+                                class="dropdown-meny-divider"
+                                *ngIf="user.doHaveStaffPermissions || user.doHaveAdminPermissions"></span>
 
                             <a (click)="onLogout()">Logout</a>
                         </div>

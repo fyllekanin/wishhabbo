@@ -58,7 +58,7 @@ export class EditorComponent implements AfterViewInit {
     }
 
     private getSettings (id: string): any {
-        let atitleTransform = {};
+        const atitleTransform = {};
         const systr = this.bbcodes.reduce((prev, curr) => {
             if (curr.editorPattern === '[atitle]{DATA}[/atitle]') {
                 atitleTransform[curr.editorReplacement] = curr.editorPattern;

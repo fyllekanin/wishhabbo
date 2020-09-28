@@ -8,6 +8,10 @@ import { NOT_FOUND, OK } from 'http-status-codes';
 import { HomePage } from '../rest-service-views/respond-views/pages/home.page';
 import { ArticleConstants } from '../constants/article.constant';
 import { ArticleView } from '../rest-service-views/respond-views/staff/media/article.view';
+import { TimetableSlot } from '../rest-service-views/two-way/staff/timetable.slot';
+import { TimetableType } from '../persistance/entities/staff/timetable.entity';
+import { TimeUtility } from '../utilities/time.utility';
+import { TimetableUtility } from '../utilities/timetable.utility';
 
 @Controller('api/page')
 export class PageController {
@@ -40,7 +44,7 @@ export class PageController {
         const badges = await req.serviceConfig.habboRepository.paginate({
             take: 12,
             page: 1,
-            orderBy: { sort: 'createdAt', order: 'DESC' }
+            orderBy: {sort: 'createdAt', order: 'DESC'}
         });
 
         res.status(OK).json(HomePage.newBuilder()
@@ -48,17 +52,45 @@ export class PageController {
             .withGuides(await this.getArticles(req, 4, ArticleConstants.TYPES.GUIDE.value))
             .withHabboNews(await this.getArticles(req, 4, ArticleConstants.TYPES.NEWS.value))
             .withSiteNews(await this.getArticles(req, 4, ArticleConstants.TYPES.SITE_NEWS.value))
+            .withTodaysEvents(await this.getTodayEvents(req))
             .build());
+    }
+
+    private async getTodayEvents (req: InternalRequest): Promise<Array<TimetableSlot>> {
+        const items = await req.serviceConfig.timetableRepository.getSlots(TimetableType.EVENTS);
+        const convertedSlots = await TimetableUtility.getConvertedSlots(req, items);
+        let day = TimeUtility.getCurrentDay();
+        let hour = TimeUtility.getCurrentHour();
+
+
+        const slots: Array<TimetableSlot> = [];
+        for (const item of convertedSlots) {
+            if (item.getDay() === day && item.getHour() === hour) {
+                slots.push(item);
+
+                hour++;
+                if (hour >= 24) {
+                    day = (day + 1) >= 8 ? 1 : day + 1;
+                    hour = 0;
+                }
+            }
+
+            if (slots.length === 4) {
+                break;
+            }
+        }
+
+        return slots;
     }
 
     private async getArticles (req: InternalRequest, amount: number, type: number): Promise<Array<ArticleView>> {
         const paginate = await req.serviceConfig.articleRepository.paginate({
             take: amount,
             page: 1,
-            orderBy: { sort: 'createdAt', order: 'DESC' },
+            orderBy: {sort: 'createdAt', order: 'DESC'},
             where: [
-                { key: 'type', operator: '=', value: type },
-                { key: 'isApproved', operator: '=', value: true }
+                {key: 'type', operator: '=', value: String(type)},
+                {key: 'isApproved', operator: '=', value: true}
             ]
         });
 

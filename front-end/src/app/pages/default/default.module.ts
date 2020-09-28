@@ -14,6 +14,7 @@ import { HabboBadgeModule } from '../../shared/components/habbo-badge/habbo-badg
 import { ArticleService } from './article/article.service';
 import { ArticleComponent } from './article/article.component';
 import { NgxTwitterTimelineModule } from 'ngx-twitter-timeline';
+import { TimetableModule } from '../../shared/components/timetable/timetable.module';
 
 @NgModule({
     imports: [
@@ -22,7 +23,8 @@ import { NgxTwitterTimelineModule } from 'ngx-twitter-timeline';
         CommonModule,
         ContentModule,
         HabboBadgeModule,
-        NgxTwitterTimelineModule
+        NgxTwitterTimelineModule,
+        TimetableModule
     ],
     declarations: [
         HomeComponent,

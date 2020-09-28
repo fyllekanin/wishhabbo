@@ -7,6 +7,8 @@ import { StaffListResolver } from './staff-list/staff-list.resolver';
 import { StaffListComponent } from './staff-list/staff-list.component';
 import { HomeResolver } from './home/home.resolver';
 import { ArticleComponent } from './article/article.component';
+import { TimeTableTypes } from '../../shared/components/timetable/timetable.interface';
+import { TimetableComponent } from '../../shared/components/timetable/timetable.component';
 
 export const defaultRoutes: Routes = [
     {
@@ -36,6 +38,22 @@ export const defaultRoutes: Routes = [
                 component: ArticleComponent,
                 resolve: {
                     data: ArticleService
+                }
+            },
+            {
+                path: 'timetable/0/:day',
+                component: TimetableComponent,
+                data: {
+                    type: TimeTableTypes.RADIO,
+                    isPublic: true
+                }
+            },
+            {
+                path: 'timetable/1/:day',
+                component: TimetableComponent,
+                data: {
+                    type: TimeTableTypes.EVENTS,
+                    isPublic: true
                 }
             }
         ]

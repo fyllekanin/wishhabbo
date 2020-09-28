@@ -20,10 +20,10 @@ import ExpressFormidable from 'express-formidable';
 export class ArticleController {
 
     @Get('page/:page')
-    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([
+    @Middleware([AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([
         Permissions.STAFF.CAN_WRITE_ARTICLES,
         Permissions.STAFF.CAN_MANAGE_ARTICLES
-    ]) ])
+    ])])
     private async getArticles (req: InternalRequest, res: Response): Promise<void> {
         const data = await req.serviceConfig.articleRepository.paginate({
             take: PaginationHelper.TWENTY_ITEMS,
@@ -57,10 +57,10 @@ export class ArticleController {
     }
 
     @Get(':articleId')
-    @Middleware([ AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([
+    @Middleware([AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([
         Permissions.STAFF.CAN_WRITE_ARTICLES,
         Permissions.STAFF.CAN_MANAGE_ARTICLES
-    ]) ])
+    ])])
     private async getArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         if (!article) {
@@ -143,7 +143,7 @@ export class ArticleController {
     @Post(':articleId')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ]),
+        GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES]),
         ExpressFormidable({
             multiples: true
         })
@@ -169,6 +169,7 @@ export class ArticleController {
             .withContent(payload.getContent())
             .withBadges(payload.getBadges())
             .withRoom(payload.getRoom())
+            .withType(payload.getType())
             .withRoomOwner(payload.getRoomOwner())
             .withDifficulty(payload.getDifficulty())
             .withIsAvailable(payload.getIsAvailable())
@@ -208,7 +209,7 @@ export class ArticleController {
     @Delete(':articleId')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
+        GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES])
     ])
     private async deleteArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
@@ -236,7 +237,7 @@ export class ArticleController {
     @Put(':articleId/approve')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
+        GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES])
     ])
     private async approveArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
@@ -264,7 +265,7 @@ export class ArticleController {
     @Put(':articleId/unapprove')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES ])
+        GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES])
     ])
     private async unapproveArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
@@ -289,7 +290,7 @@ export class ArticleController {
         res.status(OK).json();
     }
 
-    private async canRequesterManageArticles ({ user }: InternalRequest): Promise<boolean> {
+    private async canRequesterManageArticles ({user}: InternalRequest): Promise<boolean> {
         const groupRepository = new GroupRepository();
         return await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_MANAGE_ARTICLES);
     }

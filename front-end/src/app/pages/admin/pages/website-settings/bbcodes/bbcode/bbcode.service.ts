@@ -10,12 +10,13 @@ import { SiteNotificationType } from 'src/app/shared/app-views/site-notification
 @Injectable()
 export class BbcodeService implements Resolve<BbcodeClass> {
 
-    constructor(
+    constructor (
         private httpService: HttpService,
         private siteNotificationService: SiteNotificationService
-        ) {}
+    ) {
+    }
 
-    resolve(route: ActivatedRouteSnapshot): Observable<BbcodeClass> {
+    resolve (route: ActivatedRouteSnapshot): Observable<BbcodeClass> {
         const bbcodeId = route.params.bbcodeId;
         if (bbcodeId === 'new') {
             return of(new BbcodeClass());
@@ -24,7 +25,7 @@ export class BbcodeService implements Resolve<BbcodeClass> {
             .pipe(map(data => new BbcodeClass(data)));
     }
 
-    async create(bbcode: BbcodeClass): Promise<number | unknown> {
+    async create (bbcode: BbcodeClass): Promise<number | unknown> {
         return this.httpService.post(`/admin/website-settings/bbcodes`, bbcode).toPromise()
             .then(bbcodeId => {
                 this.siteNotificationService.create({
@@ -47,7 +48,7 @@ export class BbcodeService implements Resolve<BbcodeClass> {
             }).catch(error => this.siteNotificationService.onError(error.error));
     }
 
-    async delete(bbcodeId: number): Promise<void> {
+    async delete (bbcodeId: number): Promise<void> {
         return this.httpService.delete(`/admin/website-settings/bbcodes/${bbcodeId}`).toPromise()
             .then(() => {
                 this.siteNotificationService.create({

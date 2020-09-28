@@ -6,6 +6,10 @@
     cursor: pointer;
 }
 
+.isPublic {
+    cursor: auto;
+}
+
 .hour:hover {
     background-color: #f1f1f1;
 }

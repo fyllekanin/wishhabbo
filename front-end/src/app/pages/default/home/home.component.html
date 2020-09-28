@@ -29,6 +29,13 @@
             <div class="grid-x grid-margin-x">
                 <div class="cell small-12">
                     <app-content header="Todays Events">
+                        <div *ngIf="data.todayEvents.length === 0">
+                            No events upcoming
+                        </div>
+
+                        <div *ngFor="let event of data.todayEvents">
+                            {{ 'something' }}
+                        </div>
 
                     </app-content>
                 </div>
@@ -51,17 +58,12 @@
                 </div>
                 <div class="cell small-12">
                     <app-content header="Twitter Feed">
-                           <div class="twitter-wrapper">
-                                <ngx-twitter-timeline
-                                    [data]="{ sourceType: 'url', url: 'https://twitter.com/WishHabboCOM?ref_src=twsrc%5Etfw' }"
-                                    [opts]="{ tweetLimit: 5 }"
-                                ></ngx-twitter-timeline>
-                           </div>
-                    </app-content>
-                </div>
-                <div class="cell small-12">
-                    <app-content header="Activity Feed">
-
+                        <div class="twitter-wrapper">
+                            <ngx-twitter-timeline
+                                [data]="{ sourceType: 'url', url: 'https://twitter.com/WishHabboCOM?ref_src=twsrc%5Etfw' }"
+                                [opts]="{ tweetLimit: 5 }"
+                            ></ngx-twitter-timeline>
+                        </div>
                     </app-content>
                 </div>
             </div>
