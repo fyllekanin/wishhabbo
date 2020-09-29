@@ -1,4 +1,4 @@
-import { arrayOf, ClassHelper, date, dateAndTime, objectOf, primitiveOf } from "./class.helper";
+import { arrayOf, ClassHelper, date, dateAndTime, objectOf, primitiveOf } from './class.helper';
 
 class ExampleObject {}
 
