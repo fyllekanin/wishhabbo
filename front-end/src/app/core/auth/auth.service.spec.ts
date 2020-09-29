@@ -55,7 +55,7 @@ describe('AuthService', () => {
             // Given
             spyOn(service, 'getRefreshToken').and.returnValue('refresh');
             spyOn(httpService, 'post')
-                .and.callFake((_url: string, _body: object, options?: { headers: { [key: string]: string } }) => {
+                .and.callFake((_url: string, _body: any, options?: { headers: { [key: string]: string } }) => {
                     // Then
                     expect(options.headers['RefreshAuthorization']).toEqual('refresh');
                     done();
