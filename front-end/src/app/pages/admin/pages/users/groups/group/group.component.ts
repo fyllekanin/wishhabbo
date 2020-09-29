@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UnSub } from '../../../../../../shared/decorators/unsub.decorator';
+import { CombineSubscriptions, UnSub } from '../../../../../../shared/decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
 import { UserAction } from '../../../../../../shared/constants/common.interfaces';
 import { DialogService } from '../../../../../../core/common-services/dialog.service';
@@ -23,7 +23,9 @@ export class GroupComponent implements OnDestroy {
     };
     actions: Array<UserAction> = [];
     data = new GroupClass(null);
-    subscriptions: Array<Unsubscribable> = [];
+
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
 
     constructor (
         private service: GroupService,
@@ -32,7 +34,7 @@ export class GroupComponent implements OnDestroy {
         private authService: AuthService,
         activatedRoute: ActivatedRoute
     ) {
-        this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
+        this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
     ngOnDestroy (): void {

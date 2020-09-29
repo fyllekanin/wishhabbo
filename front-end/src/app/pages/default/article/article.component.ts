@@ -1,4 +1,4 @@
-import { UnSub } from '../../../shared/decorators/unsub.decorator';
+import { CombineSubscriptions, UnSub } from '../../../shared/decorators/unsub.decorator';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnDestroy } from '@angular/core';
 import { ArticleClass } from '../../../shared/classes/media/article.class';
@@ -14,14 +14,15 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class ArticleComponent implements OnDestroy {
     data = new ArticleClass(null);
 
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
     sanitizedContent: SafeHtml;
 
     constructor (
         private sanitizer: DomSanitizer,
         activatedRoute: ActivatedRoute
     ) {
-        this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
+        this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
     ngOnDestroy (): void {

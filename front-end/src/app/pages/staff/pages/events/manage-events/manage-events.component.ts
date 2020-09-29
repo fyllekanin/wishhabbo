@@ -6,6 +6,7 @@ import { TimetableEvent } from '../../../../../shared/components/timetable/timet
 import { TimeHelper } from '../../../../../shared/helpers/time.helper';
 import { ManageEventsService } from './manage-events.service';
 import { DialogService } from '../../../../../core/common-services/dialog.service';
+import { CombineSubscriptions } from 'src/app/shared/decorators/unsub.decorator';
 
 @Component({
     selector: 'app-staff-events-manage',
@@ -15,7 +16,8 @@ export class ManageEventsComponent {
 
     data: Array<TimetableEvent> = [];
     contentActions = [ { label: 'Create new', value: 'createNew' } ];
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
     rows: Array<TableRow> = [];
     headers: Array<TableHeader> = [
         { label: 'Event' },
@@ -27,7 +29,7 @@ export class ManageEventsComponent {
         private dialogService: DialogService,
         activatedRoute: ActivatedRoute
     ) {
-        this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
+        this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
     async onCreateNew (): Promise<void> {

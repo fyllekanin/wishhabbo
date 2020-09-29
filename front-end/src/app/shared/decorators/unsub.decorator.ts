@@ -33,6 +33,7 @@ export function UnSub () {
         function unsubscribe () {
             do {
                 const sub: Unsubscribable = unsubscribableLike.subscriptions.shift();
+                console.log(sub);
                 if (sub && typeof sub.unsubscribe === 'function') {
                     sub.unsubscribe();
                 }
@@ -42,4 +43,10 @@ export function UnSub () {
         return target;
     };
 
+}
+
+export function CombineSubscriptions(params?) {
+    return function (target, propertyKey: string | symbol) {
+        Reflect.defineMetadata('subscription:name', propertyKey, target, 'subscriber');
+};
 }

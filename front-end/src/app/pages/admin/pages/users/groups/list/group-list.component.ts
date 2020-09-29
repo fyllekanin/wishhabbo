@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { TableActionResponse, TableHeader, TableRow } from '../../../../../../shared/components/table/table.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UnSub } from '../../../../../../shared/decorators/unsub.decorator';
+import { CombineSubscriptions, UnSub } from '../../../../../../shared/decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
 import { IPagination, IPaginationResolver } from '../../../../../../shared/components/pagination/pagination.model';
 import { DialogService } from '../../../../../../core/common-services/dialog.service';
@@ -22,7 +22,8 @@ export class GroupListComponent implements OnDestroy {
 
     contentActions = [ { label: 'Create new', value: 'createNew' } ];
     data: IPagination<GroupClass>;
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
 
     rows: Array<TableRow> = [];
     headers: Array<TableHeader> = [
@@ -37,7 +38,7 @@ export class GroupListComponent implements OnDestroy {
         private dialogService: DialogService,
         activatedRoute: ActivatedRoute
     ) {
-        this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
+        this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
     onAction (response: TableActionResponse): void {

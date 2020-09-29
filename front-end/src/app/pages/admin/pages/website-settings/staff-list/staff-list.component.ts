@@ -7,6 +7,7 @@ import { TableActionResponse, TableHeader, TableRow } from '../../../../../share
 import { UserAction } from '../../../../../shared/constants/common.interfaces';
 import { SiteNotificationService } from '../../../../../core/common-services/site-notification.service';
 import { SiteNotificationType } from '../../../../../shared/app-views/site-notification/site-notification.interface';
+import { CombineSubscriptions } from 'src/app/shared/decorators/unsub.decorator';
 
 @Component({
     selector: 'app-admin-website-settings-staff-list',
@@ -30,7 +31,8 @@ export class StaffListComponent implements OnDestroy {
     selectedGroup: StaffListGroup = null;
     selectableGroups: Array<StaffListGroup> = [];
     selectedGroups: Array<StaffListGroup> = [];
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
     rows: Array<TableRow> = [];
     headers: Array<TableHeader> = [
         { label: 'Name' },
@@ -43,7 +45,7 @@ export class StaffListComponent implements OnDestroy {
         private siteNotificationService: SiteNotificationService,
         activatedRoute: ActivatedRoute
     ) {
-        this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
+        this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
     ngOnDestroy (): void {

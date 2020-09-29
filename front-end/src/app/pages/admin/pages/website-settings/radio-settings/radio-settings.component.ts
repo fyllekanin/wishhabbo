@@ -4,6 +4,7 @@ import { Unsubscribable } from 'rxjs';
 import { RadioSettingsService } from './radio-settings.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserAction } from '../../../../../shared/constants/common.interfaces';
+import { CombineSubscriptions } from 'src/app/shared/decorators/unsub.decorator';
 
 @Component({
     selector: 'app-admin-website-settings-radio-settings',
@@ -18,7 +19,8 @@ export class RadioSettingsComponent implements OnDestroy {
     data = new RadioSettingsClass();
 
     serverType = ServerType;
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
     contentActions: Array<UserAction> = [
         { label: 'Save', value: this.ACTIONS.SAVE },
         { label: 'Go back', value: this.ACTIONS.GO_BACK }
@@ -29,7 +31,7 @@ export class RadioSettingsComponent implements OnDestroy {
         private router: Router,
         activatedRoute: ActivatedRoute
     ) {
-        this.subscriptions.push(activatedRoute.data.subscribe(data => this.data = data.data));
+        this.subscriber = activatedRoute.data.subscribe(data => this.data = data.data);
     }
 
     async onAction (action: UserAction): Promise<void> {

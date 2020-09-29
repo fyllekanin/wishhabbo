@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy } from '@angular/core';
 import { BbcodeService } from './bbcode.service';
 import { Unsubscribable } from 'rxjs';
-import { UnSub } from 'src/app/shared/decorators/unsub.decorator';
+import { CombineSubscriptions, UnSub } from 'src/app/shared/decorators/unsub.decorator';
 import { UserAction } from 'src/app/shared/constants/common.interfaces';
 import { GlobalBbcodeService } from 'src/app/core/common-services/global-bbcode.service';
 
@@ -21,7 +21,8 @@ export class BbcodeComponent implements OnDestroy {
     };
     contentActions: Array<UserAction> = [];
     data = new BbcodeClass();
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
 
     constructor (
         private globalBbcodeService: GlobalBbcodeService,
@@ -30,7 +31,7 @@ export class BbcodeComponent implements OnDestroy {
         private dialogService: DialogService,
         activatedRoute: ActivatedRoute
     ) {
-        this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
+        this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
     ngOnDestroy (): void {

@@ -2,7 +2,7 @@ import { DialogService } from './../../../../../../core/common-services/dialog.s
 import { Component, OnDestroy } from '@angular/core';
 import { TableActionResponse, TableHeader, TableRow } from '../../../../../../shared/components/table/table.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UnSub } from '../../../../../../shared/decorators/unsub.decorator';
+import { CombineSubscriptions, UnSub } from '../../../../../../shared/decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
 import { BbcodeClass } from '../../../../../../shared/classes/bbcode.class';
 import { TimeHelper } from '../../../../../../shared/helpers/time.helper';
@@ -25,7 +25,8 @@ export class BbcodeListComponent implements OnDestroy {
         {label: 'Last modified'}
     ];
     contentActions: Array<UserAction> = [{label: 'Create', value: 'create'}];
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
     editableTableRows: Array<TableRow> = [];
     systemTableRows: Array<TableRow> = [];
 
@@ -35,7 +36,7 @@ export class BbcodeListComponent implements OnDestroy {
         private router: Router,
         activatedRoute: ActivatedRoute
     ) {
-        this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
+        this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
     ngOnDestroy () {

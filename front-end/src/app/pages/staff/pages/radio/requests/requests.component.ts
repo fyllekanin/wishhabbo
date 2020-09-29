@@ -1,7 +1,7 @@
 import { DialogService } from './../../../../../core/common-services/dialog.service';
 import { RequestsService } from './requests.service';
 import { AuthService } from './../../../../../core/auth/auth.service';
-import { UnSub } from '../../../../../shared/decorators/unsub.decorator';
+import { CombineSubscriptions, UnSub } from '../../../../../shared/decorators/unsub.decorator';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnDestroy } from '@angular/core';
 import { RadioRequest } from './requests.model';
@@ -16,7 +16,8 @@ import { UserAction } from 'src/app/shared/constants/common.interfaces';
 @UnSub()
 export class RequestsComponent implements OnDestroy {
     data: Array<RadioRequest> = [];
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
     canDeleteRequest = false;
 
     contentActions: Array<UserAction> = [
@@ -30,7 +31,7 @@ export class RequestsComponent implements OnDestroy {
         activatedRoute: ActivatedRoute
     ) {
         this.canDeleteRequest = authService.getAuthUser().staffPermissions.CAN_UNBOOK_OTHERS_RADIO;
-        this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
+        this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
     ngOnDestroy(): void {

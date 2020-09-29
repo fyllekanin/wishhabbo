@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UnSub } from '../../../../../../shared/decorators/unsub.decorator';
+import { CombineSubscriptions, UnSub } from '../../../../../../shared/decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
 import {
     ARTICLE_DIFFICULTIES,
@@ -26,7 +26,8 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
     };
     actions: Array<UserAction> = [];
     data = new ArticleClass(null);
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
 
     types: Array<{ label: string, value: number, isBadgeIncluded: boolean }> = [];
     difficulties: Array<{ label: string, value: number }> = [];
@@ -41,7 +42,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         private dialogService: DialogService,
         activatedRoute: ActivatedRoute
     ) {
-        this.subscriptions.push(activatedRoute.data.subscribe(this.onData.bind(this)));
+        this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
         this.types = Object.keys(ARTICLE_TYPES).map(key => {
             const type = ARTICLE_TYPES[key];
             return {label: type.name, value: Number(key), isBadgeIncluded: type.isBadgeIncluded};

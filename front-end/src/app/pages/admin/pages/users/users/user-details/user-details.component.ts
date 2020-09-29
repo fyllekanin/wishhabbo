@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { UnSub } from '../../../../../../shared/decorators/unsub.decorator';
+import { CombineSubscriptions, UnSub } from '../../../../../../shared/decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
 import { UserDetailsService } from './user-details.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,7 +25,8 @@ export class UserDetailsComponent implements OnDestroy {
         repassword: '',
         role: ''
     };
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
     canEditAdvanced = false;
     contentActions: Array<UserAction> = [
         { label: 'Save', value: this.ACTIONS.SAVE },
@@ -38,12 +39,12 @@ export class UserDetailsComponent implements OnDestroy {
         private router: Router,
         activatedRoute: ActivatedRoute
     ) {
-        this.subscriptions.push(activatedRoute.data.subscribe(data => {
+        this.subscriber = activatedRoute.data.subscribe(data => {
             this.data.userId = data.data.userId;
             this.data.username = data.data.username;
             this.data.habbo = data.data.habbo;
             this.data.role = data.data.role;
-        }));
+        });
         this.canEditAdvanced = this.authService.getAuthUser().adminPermissions.CAN_MANAGE_USER_ADVANCED;
     }
 

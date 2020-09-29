@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { UnSub } from '../../decorators/unsub.decorator';
+import { CombineSubscriptions, UnSub } from '../../decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
 
 @Component({
@@ -15,7 +15,8 @@ export class PaginationComponent implements OnDestroy {
 
     currentPage: number;
     queryParameters: Params;
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
     fillBackwardItems: Array<number> = [];
     backwardItems: Array<number> = [];
 
@@ -31,7 +32,7 @@ export class PaginationComponent implements OnDestroy {
         const currentPath = `/${activatedRoute.snapshot.url.map(segment => segment.path).join('/')}`;
         const prefix = this.router.url.replace(currentPath, '');
         this._url = `${prefix}/${activatedRoute.snapshot.routeConfig.path}`;
-        this.subscriptions.push(activatedRoute.queryParams.subscribe(params => this.queryParameters = params));
+        this.subscriber = activatedRoute.queryParams.subscribe(params => this.queryParameters = params);
     }
 
     @Input()

@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Slot, Timetable, TimeTableTypes } from './timetable.interface';
-import { UnSub } from '../../decorators/unsub.decorator';
+import { CombineSubscriptions, UnSub } from '../../decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
 import { TimetableService } from './timetable.service';
 import { TimeHelper } from '../../helpers/time.helper';
@@ -19,7 +19,8 @@ export class TimetableComponent implements OnDestroy {
     private day: number;
 
     readonly isPublic: boolean;
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
     title: string;
     data: Timetable;
     isRadio = false;
@@ -36,10 +37,10 @@ export class TimetableComponent implements OnDestroy {
         this.isPublic = activatedRoute.snapshot.data.isPublic;
         this.isRadio = this.type === TimeTableTypes.RADIO;
         this.day = Number(activatedRoute.snapshot.params.day);
-        this.subscriptions.push(activatedRoute.params.subscribe(async data => {
+        this.subscriber = activatedRoute.params.subscribe(async data => {
             this.day = Number(data.day);
             await this.doSetup();
-        }));
+        });
     }
 
     onDaySwitch (action: UserAction): void {

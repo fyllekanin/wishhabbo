@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SlimUserGroup, UserGroupsModel } from './user-groups.model';
 import { UserAction } from '../../../../../../shared/constants/common.interfaces';
 import { UserGroupsService } from './user-groups.service';
+import { CombineSubscriptions } from 'src/app/shared/decorators/unsub.decorator';
 
 @Component({
     selector: 'app-admin-users-users-groups',
@@ -15,7 +16,8 @@ export class UserGroupsComponent {
         GO_BACK: 'go_back'
     };
     data = new UserGroupsModel();
-    subscriptions: Array<Unsubscribable> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
     possibleDisplayGroups: Array<SlimUserGroup> = [];
     contentActions: Array<UserAction> = [
         {
@@ -33,8 +35,7 @@ export class UserGroupsComponent {
         private service: UserGroupsService,
         activatedRoute: ActivatedRoute
     ) {
-        this.subscriptions
-            .push(activatedRoute.data.subscribe(this.onData.bind(this)));
+        this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
     async onAction (action: UserAction): Promise<void> {

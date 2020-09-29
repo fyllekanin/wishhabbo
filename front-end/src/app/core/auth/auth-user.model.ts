@@ -72,9 +72,7 @@ export class AuthUser {
     @objectOf(StaffPermissions)
     staffPermissions: StaffPermissions = new StaffPermissions(null);
 
-    @primitiveOf(Boolean)
     doHaveAdminPermissions: boolean;
-    @primitiveOf(Boolean)
     doHaveStaffPermissions: boolean;
 
     constructor (source: Partial<AuthUser>) {
