@@ -6,6 +6,8 @@ import { TimetableType } from '../../../persistance/entities/staff/timetable.ent
 import { ErrorCodes } from '../../error.codes';
 import { PayloadValidator } from '../payload-validator.interface';
 import { Permissions } from '../../../constants/permissions.constant';
+import { PaginationWhereOperators } from '../../../persistance/repositories/base.repository';
+import { UserGroupOrchestrator } from '../../../persistance/repositories/group/user-group.orchestrator';
 
 export class TimetableSlotPayloadValidator implements PayloadValidator<TimetableSlot> {
 
@@ -46,8 +48,8 @@ export class TimetableSlotPayloadValidator implements PayloadValidator<Timetable
         }
 
         const canBookForOther = timetableSlot.getIsRadio() ?
-            await serviceConfig.groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO) :
-            await serviceConfig.groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_EVENTS);
+            await UserGroupOrchestrator.doUserHaveStaffPermission(serviceConfig, user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO) :
+            await UserGroupOrchestrator.doUserHaveStaffPermission(serviceConfig, user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_EVENTS);
         if (!canBookForOther) {
             errors.push(ValidationError.newBuilder()
                 .withField('user')
@@ -61,7 +63,11 @@ export class TimetableSlotPayloadValidator implements PayloadValidator<Timetable
             page: 1,
             take: 1,
             where: [
-                { key: 'username', operator: '=', value: timetableSlot.getUser().getUsername() }
+                {
+                    key: 'username',
+                    operator: PaginationWhereOperators.EQUALS,
+                    value: timetableSlot.getUser().getUsername()
+                }
             ]
         });
 
@@ -81,10 +87,10 @@ export class TimetableSlotPayloadValidator implements PayloadValidator<Timetable
             page: 1,
             take: 1,
             where: [
-                { key: 'isArchived', operator: '=', value: 0 },
-                { key: 'day', operator: '=', value: timetableSlot.getDay() },
-                { key: 'hour', operator: '=', value: timetableSlot.getHour() },
-                { key: 'type', operator: '=', value: type }
+                { key: 'isArchived', operator: PaginationWhereOperators.EQUALS, value: 0 },
+                { key: 'day', operator: PaginationWhereOperators.EQUALS, value: timetableSlot.getDay() },
+                { key: 'hour', operator: PaginationWhereOperators.EQUALS, value: timetableSlot.getHour() },
+                { key: 'type', operator: PaginationWhereOperators.EQUALS, value: type }
             ]
         });
 

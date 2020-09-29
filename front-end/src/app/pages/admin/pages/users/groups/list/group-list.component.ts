@@ -8,23 +8,28 @@ import { DialogService } from '../../../../../../core/common-services/dialog.ser
 import { GroupClass } from '../../../../../../shared/classes/admin/group.class';
 import { TimeHelper } from '../../../../../../shared/helpers/time.helper';
 import { GroupService } from '../group/group.service';
+import { SearchablePage } from '../../../../../../shared/classes/searchable-page.class';
 
 @Component({
     selector: 'app-admin-users-group-list',
     templateUrl: 'group-list.component.html'
 })
 @UnSub()
-export class GroupListComponent implements OnDestroy {
+export class GroupListComponent extends SearchablePage implements OnDestroy {
     private readonly ACTIONS = {
         EDIT: 'edit',
         DELETE: 'delete'
     };
 
-    contentActions = [ { label: 'Create new', value: 'createNew' } ];
+    contentActions = [{ label: 'Create new', value: 'createNew' }];
     data: IPagination<GroupClass>;
     @CombineSubscriptions()
     subscriber: Unsubscribable;
 
+    params = {
+        name: null,
+        isExactSearch: false
+    };
     rows: Array<TableRow> = [];
     headers: Array<TableHeader> = [
         { label: 'Name' },
@@ -34,17 +39,20 @@ export class GroupListComponent implements OnDestroy {
 
     constructor (
         private groupService: GroupService,
-        private route: Router,
         private dialogService: DialogService,
-        activatedRoute: ActivatedRoute
+        protected  router: Router,
+        protected activatedRoute: ActivatedRoute
     ) {
+        super();
         this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
+        this.params.name = activatedRoute.snapshot.queryParams.name;
+        this.params.isExactSearch = activatedRoute.snapshot.queryParams.isExactSearch === 'true';
     }
 
     onAction (response: TableActionResponse): void {
         switch (response.action.value) {
             case this.ACTIONS.EDIT:
-                this.route.navigateByUrl(`/admin/users/groups/${response.row.rowId}`);
+                this.router.navigateByUrl(`/admin/users/groups/${response.row.rowId}`);
                 break;
             case this.ACTIONS.DELETE:
                 this.onDelete(response.row.rowId as number);
@@ -53,7 +61,7 @@ export class GroupListComponent implements OnDestroy {
     }
 
     onCreateNew (): void {
-        this.route.navigateByUrl(`/admin/users/groups/new`);
+        this.router.navigateByUrl(`/admin/users/groups/new`);
     }
 
     ngOnDestroy (): void {

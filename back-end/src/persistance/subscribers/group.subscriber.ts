@@ -1,10 +1,10 @@
 import { EntitySubscriberInterface, EventSubscriber, RemoveEvent } from 'typeorm';
 import { GroupEntity } from '../entities/group/group.entity';
-import { GroupRepository } from '../repositories/group.repository';
 import { UserRepository } from '../repositories/user/user.repository';
 import { SettingRepository } from '../repositories/setting.repository';
 import { SettingKey } from '../entities/settings/setting.entity';
 import { StaffListModel } from '../entities/settings/models/staff-list.model';
+import { UserGroupRepository } from '../repositories/group/user-group.repository';
 
 @EventSubscriber()
 export class GroupSubscriber implements EntitySubscriberInterface {
@@ -36,9 +36,9 @@ export class GroupSubscriber implements EntitySubscriberInterface {
     }
 
     private async removeUserGroupsAndDisplayGroupId (groupId: number): Promise<void> {
-        const groupRepository = new GroupRepository();
+        const userGroupRepository = new UserGroupRepository();
         const userRepository = new UserRepository();
-        await groupRepository.deleteUsersFromGroup(groupId);
+        await userGroupRepository.deleteUsersFromGroup(groupId);
         await userRepository.removeDisplayGroupId(groupId);
     }
 }

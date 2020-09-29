@@ -14,9 +14,16 @@ import { HasherUtility } from '../../../utilities/hasher.utility';
 import { Logger } from '../../../logging/log.logger';
 import { LogTypes } from '../../../logging/log.types';
 import { UserGroupsView, UserGroupsViewGroup } from '../../../rest-service-views/two-way/admin/user-groups.view';
+import { PaginationValue, RequestUtility } from '../../../utilities/request.utility';
+import { PaginationWhereOperators } from '../../../persistance/repositories/base.repository';
+import { UserGroupOrchestrator } from '../../../persistance/repositories/group/user-group.orchestrator';
 
 @Controller('api/admin/users/users')
 export class UserController {
+    private static readonly SUPPORTED_SEARCH_VALUES: Array<PaginationValue> = [
+        { key: 'username', operator: PaginationWhereOperators.LIKE },
+        { key: 'habbo', operator: PaginationWhereOperators.LIKE }
+    ];
 
     @Get('page/:page')
     @Middleware([
@@ -28,14 +35,16 @@ export class UserController {
         ])
     ])
     private async getUsers (req: InternalRequest, res: Response): Promise<void> {
-        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
-        const skipUserIds = await req.serviceConfig.groupRepository.getUserIdsWithSameOrHigherImmunity(immunity);
+        const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
+        const skipUserIds = await UserGroupOrchestrator.getUserIdsWithMoreOrEqualImmunity(req.serviceConfig, immunity);
+
         const data = await req.serviceConfig.userRepository.paginate({
             take: PaginationHelper.TWENTY_ITEMS,
             page: Number(req.params.page),
-            where: [
-                { key: 'userId', operator: null, isNotIn: true, value: skipUserIds }
-            ],
+            where: RequestUtility.getPaginationWheresFromQuery(req, UserController.SUPPORTED_SEARCH_VALUES)
+                .concat([
+                    { key: 'userId', operator: null, isNotIn: true, value: skipUserIds }
+                ]),
             orderBy: {
                 sort: 'username',
                 order: 'ASC'
@@ -63,8 +72,8 @@ export class UserController {
     ])
     private async getUserDetails (req: InternalRequest, res: Response): Promise<void> {
         const user = await req.serviceConfig.userRepository.getUserById(Number(req.params.userId));
-        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
-        const userImmunity = user ? await req.serviceConfig.groupRepository.getUserIdImmunity(user.userId) : 0;
+        const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
+        const userImmunity = user ? await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, user.userId) : 0;
         if (!user || userImmunity >= immunity) {
             res.status(NOT_FOUND).json();
             return;
@@ -88,14 +97,14 @@ export class UserController {
     ])
     private async getUserGroups (req: InternalRequest, res: Response): Promise<void> {
         const user = await req.serviceConfig.userRepository.getUserById(Number(req.params.userId));
-        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
-        const userImmunity = user ? await req.serviceConfig.groupRepository.getUserIdImmunity(user.userId) : 0;
+        const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
+        const userImmunity = user ? await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, user.userId) : 0;
         if (!user || userImmunity >= immunity) {
             res.status(NOT_FOUND).json();
             return;
         }
 
-        const groupIds = await req.serviceConfig.groupRepository.getGroupIdsFromUser(user.userId);
+        const groupIds = await req.serviceConfig.userGroupRepository.getGroupIdsFromUser(user.userId);
         const groups: Array<UserGroupsViewGroup> =
             await req.serviceConfig.groupRepository.getGroups()
                 .then(items => items
@@ -126,8 +135,8 @@ export class UserController {
     private async updateUserGroups (req: InternalRequest, res: Response): Promise<void> {
         const payload = UserGroupsView.of(req);
         const user = await req.serviceConfig.userRepository.getUserById(payload.getUserId());
-        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
-        const userImmunity = user ? await req.serviceConfig.groupRepository.getUserIdImmunity(user.userId) : 0;
+        const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
+        const userImmunity = user ? await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, user.userId) : 0;
         if (!user || userImmunity >= immunity) {
             res.status(NOT_FOUND).json();
             return;
@@ -139,10 +148,10 @@ export class UserController {
             return;
         }
 
-        const groupIdsBefore = await req.serviceConfig.groupRepository.getGroupIdsFromUser(user.userId);
-        await req.serviceConfig.groupRepository.deleteGroupsFromUser(user.userId);
+        const groupIdsBefore = await req.serviceConfig.userGroupRepository.getGroupIdsFromUser(user.userId);
+        await req.serviceConfig.userGroupRepository.deleteGroupsFromUser(user.userId);
         const promises = payload.getSelectedGroupIds()
-            .map(groupId => req.serviceConfig.groupRepository.addGroupToUser(groupId, user.userId));
+            .map(groupId => req.serviceConfig.userGroupRepository.addGroupToUser(groupId, user.userId));
         await Promise.all(promises);
         user.displayGroupId = payload.getDisplayGroupId();
         await req.serviceConfig.userRepository.save(user);
@@ -169,8 +178,8 @@ export class UserController {
         const payload = UserDetailsPayload.of(req);
         const user = await req.serviceConfig.userRepository.getUserById(payload.getUserId());
         const userdata = await req.serviceConfig.userRepository.getUserdataByUserId(user.userId);
-        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
-        const userImmunity = user ? await req.serviceConfig.groupRepository.getUserIdImmunity(user.userId) : 0;
+        const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
+        const userImmunity = user ? await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, user.userId) : 0;
         if (!user || userImmunity >= immunity) {
             res.status(NOT_FOUND).json();
             return;
@@ -186,7 +195,10 @@ export class UserController {
             .withHabbo(payload.getHabbo());
 
         let userdataUpdated = null;
-        if (await req.serviceConfig.groupRepository.haveAdminPermission(req.user.userId, Permissions.ADMIN.CAN_MANAGE_USER_ADVANCED)) {
+        if (await UserGroupOrchestrator.doUserHaveAdminPermission(
+            req.serviceConfig,
+            req.user.userId,
+            Permissions.ADMIN.CAN_MANAGE_USER_ADVANCED)) {
             builder.withPassword(await HasherUtility.hash(payload.getPassword()));
 
             if (payload.getRole()) {

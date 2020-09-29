@@ -13,11 +13,11 @@ export class UserListService implements Resolve<IPagination<SlimUser>> {
     }
 
     resolve (route: ActivatedRouteSnapshot): Observable<IPagination<SlimUser>> {
-        return this.getPage(route.params.page);
+        return this.getPage(route.params.page, route.queryParams);
     }
 
-    getPage (page: number): Observable<IPagination<SlimUser>> {
-        return this.httpService.get(`/admin/users/users/page/${page}`)
+    getPage (page: number, params?: { [key: string]: string }): Observable<IPagination<SlimUser>> {
+        return this.httpService.get(`/admin/users/users/page/${page}`, { params: params })
             .pipe(map((data: IPagination<SlimUser>) => {
                 data.items = data.items.map(item => new SlimUser(item));
                 return data;

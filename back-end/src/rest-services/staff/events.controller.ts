@@ -13,10 +13,11 @@ import { Logger } from '../../logging/log.logger';
 import { LogTypes } from '../../logging/log.types';
 import { EventEntity } from '../../persistance/entities/staff/event.entity';
 import { TimetableUtility } from '../../utilities/timetable.utility';
+import { UserGroupOrchestrator } from '../../persistance/repositories/group/user-group.orchestrator';
 
 const middlewares = [
     AUTHORIZATION_MIDDLEWARE,
-    GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_BOOK_EVENTS ])
+    GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_BOOK_EVENTS])
 ];
 
 @Controller('api/staff/events')
@@ -36,7 +37,7 @@ export class EventsController extends TimetableController {
     @Post('event')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_MANAGE_EVENT_TYPES ])
+        GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_MANAGE_EVENT_TYPES])
     ])
     private async createEvent (req: InternalRequest, res: Response): Promise<void> {
         const entity = EventEntity.of(req);
@@ -60,7 +61,7 @@ export class EventsController extends TimetableController {
     @Delete('event/:eventId')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_STAFF_PERMISSION_MIDDLEWARE([ Permissions.STAFF.CAN_MANAGE_EVENT_TYPES ])
+        GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_MANAGE_EVENT_TYPES])
     ])
     private async deleteEvent (req: InternalRequest, res: Response): Promise<void> {
         const entity = await req.serviceConfig.eventsRepository.get(Number(req.params.eventId));
@@ -145,8 +146,10 @@ export class EventsController extends TimetableController {
         }
 
         const canUnbookThisSlot = entity.userId === req.user.userId ||
-            await req.serviceConfig.groupRepository
-                .haveStaffPermission(req.user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_EVENTS);
+            await UserGroupOrchestrator.doUserHaveStaffPermission(
+                req.serviceConfig,
+                req.user.userId,
+                Permissions.STAFF.CAN_UNBOOK_OTHERS_EVENTS);
 
         if (!canUnbookThisSlot) {
             res.status(NOT_FOUND).json();

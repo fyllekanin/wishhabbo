@@ -5,7 +5,6 @@ import { GET_STAFF_PERMISSION_MIDDLEWARE } from '../../middlewares/staff-permiss
 import { Permissions } from '../../../constants/permissions.constant';
 import { PaginationHelper } from '../../../helpers/pagination.helper';
 import { BAD_REQUEST, NOT_FOUND, OK } from 'http-status-codes';
-import { GroupRepository } from '../../../persistance/repositories/group.repository';
 import { ArticlePayload } from '../../../rest-service-views/payloads/staff/media/article.payload';
 import { ValidationValidators } from '../../../validation/validation.validators';
 import { ArticleEntity } from '../../../persistance/entities/staff/media/article.entity';
@@ -15,6 +14,7 @@ import { ArticleView } from '../../../rest-service-views/respond-views/staff/med
 import { Logger } from '../../../logging/log.logger';
 import { LogTypes } from '../../../logging/log.types';
 import ExpressFormidable from 'express-formidable';
+import { UserGroupOrchestrator } from '../../../persistance/repositories/group/user-group.orchestrator';
 
 @Controller('api/staff/articles')
 export class ArticleController {
@@ -290,8 +290,10 @@ export class ArticleController {
         res.status(OK).json();
     }
 
-    private async canRequesterManageArticles ({user}: InternalRequest): Promise<boolean> {
-        const groupRepository = new GroupRepository();
-        return await groupRepository.haveStaffPermission(user.userId, Permissions.STAFF.CAN_MANAGE_ARTICLES);
+    private async canRequesterManageArticles (req: InternalRequest): Promise<boolean> {
+        return UserGroupOrchestrator.doUserHaveStaffPermission(
+            req.serviceConfig,
+            req.user.userId,
+            Permissions.STAFF.CAN_MANAGE_ARTICLES);
     }
 }

@@ -21,7 +21,8 @@ export const usersRoutes: Routes = [
                 component: GroupListComponent,
                 resolve: {
                     pagination: GroupListService
-                }
+                },
+                runGuardsAndResolvers: 'paramsOrQueryParamsChange'
             },
             {
                 path: 'groups/:groupId',
@@ -35,7 +36,8 @@ export const usersRoutes: Routes = [
                 component: UserListComponent,
                 resolve: {
                     pagination: UserListService
-                }
+                },
+                runGuardsAndResolvers: 'paramsOrQueryParamsChange'
             },
             {
                 path: 'users/:userId/details',

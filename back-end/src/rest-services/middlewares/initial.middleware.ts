@@ -5,12 +5,13 @@ import { InternalRequest, ServiceConfig } from '../../utilities/internal.request
 import { UserRepository } from '../../persistance/repositories/user/user.repository';
 import { ResourceRepository } from '../../persistance/repositories/resource.repository';
 import { HabboRepository } from '../../persistance/repositories/habbo.repository';
-import { GroupRepository } from '../../persistance/repositories/group.repository';
+import { GroupRepository } from '../../persistance/repositories/group/group.repository';
 import { ArticleRepository } from '../../persistance/repositories/staff/media/article.repository';
 import { TimetableRepository } from '../../persistance/repositories/staff/timetable.repository';
 import { EventsRepository } from '../../persistance/repositories/staff/events.repository';
 import { SettingRepository } from '../../persistance/repositories/setting.repository';
 import { BbcodeRepository } from '../../persistance/repositories/bbcode.repository';
+import { UserGroupRepository } from '../../persistance/repositories/group/user-group.repository';
 
 function getServiceConfig (): ServiceConfig {
     return {
@@ -24,7 +25,8 @@ function getServiceConfig (): ServiceConfig {
         eventsRepository: new EventsRepository(),
         settingRepository: new SettingRepository(),
         bbcodeRepository: new BbcodeRepository(),
-        radioRequestRepository: new RadioRequestRepository()
+        radioRequestRepository: new RadioRequestRepository(),
+        userGroupRepository: new UserGroupRepository()
     };
 }
 

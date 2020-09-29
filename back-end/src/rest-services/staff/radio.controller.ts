@@ -19,6 +19,8 @@ import { ErrorsCreator } from '../../validation/errors.creator';
 import { RadioStatsModel } from '../../persistance/entities/settings/models/radio-stats.model';
 import { SettingKey } from '../../persistance/entities/settings/setting.entity';
 import { SlimUserView } from '../../rest-service-views/two-way/slim-user.view';
+import { PaginationWhereOperators } from '../../persistance/repositories/base.repository';
+import { UserGroupOrchestrator } from '../../persistance/repositories/group/user-group.orchestrator';
 
 const middlewares = [
     AUTHORIZATION_MIDDLEWARE,
@@ -81,13 +83,14 @@ export class RadioController extends TimetableController {
 
         const slimDj = SlimUserView.of(radioStats.currentDj);
         const djEntity = await req.serviceConfig.userRepository.getUserById(slimDj.getUserId());
+        const thirtyMinutesAgo = TimeUtility.getCurrentTime() - RadioController.THIRTY_MINUTES;
         const items = await LogRepository.getRepositoryForUser().paginate({
             page: 1,
             take: 1,
             where: [
-                {key: 'userId', operator: '=', value: req.user.userId},
-                {key: 'id', operator: '=', value: LogTypes.LIKED_RADIO},
-                {key: 'createdAt', operator: '>=', value: TimeUtility.getCurrentTime() - RadioController.THIRTY_MINUTES}
+                { key: 'userId', operator: PaginationWhereOperators.EQUALS, value: req.user.userId },
+                { key: 'id', operator: PaginationWhereOperators.EQUALS, value: LogTypes.LIKED_RADIO },
+                { key: 'createdAt', operator: PaginationWhereOperators.EQUALS, value: thirtyMinutesAgo }
             ]
         });
 
@@ -186,8 +189,9 @@ export class RadioController extends TimetableController {
         }
 
         const canUnbookThisSlot = entity.userId === req.user.userId ||
-            await req.serviceConfig.groupRepository
-                .haveStaffPermission(req.user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO);
+            await UserGroupOrchestrator.doUserHaveStaffPermission(req.serviceConfig,
+                req.user.userId,
+                Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO);
 
         if (!canUnbookThisSlot) {
             res.status(NOT_FOUND).json();

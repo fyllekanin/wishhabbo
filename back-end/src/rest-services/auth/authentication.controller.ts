@@ -38,9 +38,9 @@ export class AuthenticationController {
                     .withAccessToken(token.access)
                     .withRefreshToken(token.refresh)
                     .withStaffPermissions(await PermissionHelper
-                        .getConvertedStaffPermissionsForUser(user, req.serviceConfig.groupRepository))
+                        .getConvertedStaffPermissionsForUser(user, req.serviceConfig))
                     .withAdminPermissions(await PermissionHelper
-                        .getConvertedAdminPermissionsForUser(user, req.serviceConfig.groupRepository))
+                        .getConvertedAdminPermissionsForUser(user, req.serviceConfig))
                     .build());
         }
         builder.withRadioSettings(await this.getRadioSettings(req.serviceConfig.settingRepository));
@@ -77,8 +77,8 @@ export class AuthenticationController {
             .withHabbo(user.habbo)
             .withAccessToken(token.access)
             .withRefreshToken(token.refresh)
-            .withStaffPermissions(await PermissionHelper.getConvertedStaffPermissionsForUser(user, req.serviceConfig.groupRepository))
-            .withAdminPermissions(await PermissionHelper.getConvertedAdminPermissionsForUser(user, req.serviceConfig.groupRepository))
+            .withStaffPermissions(await PermissionHelper.getConvertedStaffPermissionsForUser(user, req.serviceConfig))
+            .withAdminPermissions(await PermissionHelper.getConvertedAdminPermissionsForUser(user, req.serviceConfig))
             .build());
     }
 

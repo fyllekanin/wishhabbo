@@ -4,6 +4,7 @@ import { InternalUser, ServiceConfig } from '../../../utilities/internal.request
 import { PayloadValidator } from '../payload-validator.interface';
 import { UserGroupsView } from '../../../rest-service-views/two-way/admin/user-groups.view';
 import { ErrorCodes } from '../../error.codes';
+import { UserGroupOrchestrator } from '../../../persistance/repositories/group/user-group.orchestrator';
 
 export class UserGroupsPayloadValidator implements PayloadValidator<UserGroupsView> {
 
@@ -23,7 +24,7 @@ export class UserGroupsPayloadValidator implements PayloadValidator<UserGroupsVi
 
     private async validateGroupsAdded (payload: UserGroupsView, serviceConfig: ServiceConfig,
                                        user: InternalUser, errors: Array<ValidationError>): Promise<void> {
-        const immunity = await serviceConfig.groupRepository.getUserIdImmunity(user.userId);
+        const immunity = await UserGroupOrchestrator.getImmunityByUserId(serviceConfig, user.userId);
         for (const groupId of payload.getSelectedGroupIds()) {
             const group = await serviceConfig.groupRepository.getGroupById(groupId);
             if (group.immunity >= immunity) {

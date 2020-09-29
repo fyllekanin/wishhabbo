@@ -7,6 +7,7 @@ import { ValidationError } from '../validation.error';
 import { IEntity } from '../../persistance/entities/entity.interface';
 import { InternalUser, ServiceConfig } from '../../utilities/internal.request';
 import { ErrorCodes } from '../error.codes';
+import { PaginationWhereOperators } from '../../persistance/repositories/base.repository';
 
 export class RadioRequestValidator implements EntityValidator<RadioRequestEntity> {
     private static readonly TWO_MINUTES = 120;
@@ -40,11 +41,11 @@ export class RadioRequestValidator implements EntityValidator<RadioRequestEntity
             take: 1,
             page: 1,
             where: [
-                {key: 'id', operator: '=', value: LogTypes.RADIO_REQUEST},
-                {key: 'userId', operator: '=', value: user.userId},
+                { key: 'id', operator: PaginationWhereOperators.EQUALS, value: LogTypes.RADIO_REQUEST },
+                { key: 'userId', operator: PaginationWhereOperators.EQUALS, value: user.userId },
                 {
                     key: 'createdAt',
-                    operator: '>',
+                    operator: PaginationWhereOperators.BIGGER,
                     value: TimeUtility.getCurrentTime() - RadioRequestValidator.TWO_MINUTES
                 }
             ]

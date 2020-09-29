@@ -5,6 +5,7 @@ import { InternalUser, ServiceConfig } from '../../../utilities/internal.request
 import { EventEntity } from '../../../persistance/entities/staff/event.entity';
 import { EventsRepository } from '../../../persistance/repositories/staff/events.repository';
 import { ErrorCodes } from '../../error.codes';
+import { PaginationWhereOperators } from '../../../persistance/repositories/base.repository';
 
 export class EventValidator implements EntityValidator<EventEntity> {
 
@@ -27,7 +28,7 @@ export class EventValidator implements EntityValidator<EventEntity> {
             page: 1,
             take: 1,
             where: [
-                { key: 'name', operator: '=', value: entity.name }
+                { key: 'name', operator: PaginationWhereOperators.EQUALS, value: entity.name }
             ]
         });
         if (items.getItems().length > 0) {

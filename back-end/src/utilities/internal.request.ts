@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { ResourceRepository } from '../persistance/repositories/resource.repository';
 import { HabboRepository } from '../persistance/repositories/habbo.repository';
-import { GroupRepository } from '../persistance/repositories/group.repository';
+import { GroupRepository } from '../persistance/repositories/group/group.repository';
 import { TokenRepository } from '../persistance/repositories/user/token.repository';
 import { ArticleRepository } from '../persistance/repositories/staff/media/article.repository';
 import { UserRepository } from '../persistance/repositories/user/user.repository';
@@ -11,6 +11,7 @@ import { TokenEntity } from '../persistance/entities/user/token.entity';
 import { SettingRepository } from '../persistance/repositories/setting.repository';
 import { BbcodeRepository } from '../persistance/repositories/bbcode.repository';
 import { RadioRequestRepository } from '../persistance/repositories/radio-request.repository';
+import { UserGroupRepository } from '../persistance/repositories/group/user-group.repository';
 
 export interface ServiceConfig {
     resourceRepository: ResourceRepository;
@@ -24,6 +25,7 @@ export interface ServiceConfig {
     settingRepository: SettingRepository;
     bbcodeRepository: BbcodeRepository;
     radioRequestRepository: RadioRequestRepository;
+    userGroupRepository: UserGroupRepository;
 }
 
 export interface InternalUser {

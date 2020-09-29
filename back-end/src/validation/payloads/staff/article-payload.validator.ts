@@ -8,6 +8,7 @@ import { InternalUser, ServiceConfig } from '../../../utilities/internal.request
 import { ResourceRepository } from '../../../persistance/repositories/resource.repository';
 import { PayloadValidator } from '../payload-validator.interface';
 import { HabboService } from '../../../external/services/habbo.service';
+import { PaginationWhereOperators } from '../../../persistance/repositories/base.repository';
 
 export class ArticlePayloadValidator implements PayloadValidator<ArticlePayload> {
 
@@ -128,7 +129,7 @@ export class ArticlePayloadValidator implements PayloadValidator<ArticlePayload>
             take: 1,
             page: 1,
             where: [
-                {key: 'title', operator: '=', value: payload.getTitle()}
+                { key: 'title', operator: PaginationWhereOperators.EQUALS, value: payload.getTitle() }
             ]
         });
 

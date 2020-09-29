@@ -4,16 +4,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CombineSubscriptions, UnSub } from '../../../../../../shared/decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
 import { IPagination, IPaginationResolver } from '../../../../../../shared/components/pagination/pagination.model';
-import { TimeHelper } from '../../../../../../shared/helpers/time.helper';
 import { AuthService } from '../../../../../../core/auth/auth.service';
 import { SlimUser } from '../../../../../../shared/classes/slim-user.class';
+import { SearchablePage } from '../../../../../../shared/classes/searchable-page.class';
 
 @Component({
     selector: 'app-admin-users-users-list',
     templateUrl: 'user-list.component.html'
 })
 @UnSub()
-export class UserListComponent implements OnDestroy {
+export class UserListComponent extends SearchablePage implements OnDestroy {
     private readonly ACTIONS = {
         EDIT_DETAILS: 'edit_details',
         EDIT_GROUPS: 'edit_groups'
@@ -23,6 +23,11 @@ export class UserListComponent implements OnDestroy {
     @CombineSubscriptions()
     subscriber: Unsubscribable;
 
+    params = {
+        username: null,
+        habbo: null,
+        isExactSearch: false
+    };
     rows: Array<TableRow> = [];
     headers: Array<TableHeader> = [
         { label: 'Username' },
@@ -31,20 +36,24 @@ export class UserListComponent implements OnDestroy {
     ];
 
     constructor (
-        private route: Router,
         private authService: AuthService,
-        activatedRoute: ActivatedRoute
+        protected router: Router,
+        protected activatedRoute: ActivatedRoute
     ) {
+        super();
         this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
+        this.params.username = activatedRoute.snapshot.queryParams.username;
+        this.params.habbo = activatedRoute.snapshot.queryParams.habbo;
+        this.params.isExactSearch = activatedRoute.snapshot.queryParams.isExactSearch === 'true';
     }
 
     onAction (response: TableActionResponse): void {
         switch (response.action.value) {
             case this.ACTIONS.EDIT_DETAILS:
-                this.route.navigateByUrl(`/admin/users/users/${response.row.rowId}/details`);
+                this.router.navigateByUrl(`/admin/users/users/${response.row.rowId}/details`);
                 break;
             case this.ACTIONS.EDIT_GROUPS:
-                this.route.navigateByUrl(`/admin/users/users/${response.row.rowId}/groups`);
+                this.router.navigateByUrl(`/admin/users/users/${response.row.rowId}/groups`);
                 break;
         }
     }
@@ -78,7 +87,7 @@ export class UserListComponent implements OnDestroy {
             cells: [
                 { label: item.username },
                 { label: item.habbo },
-                { label: TimeHelper.getLongDateWithTime(item.updatedAt) }
+                { label: item.updatedAt }
             ]
         }));
     }

@@ -12,7 +12,7 @@ import { AuthUser } from '../../../../../../core/auth/auth-user.model';
 @Component({
     selector: 'app-admin-users-groups-group',
     templateUrl: 'group.component.html',
-    styleUrls: [ 'group.component.css' ]
+    styleUrls: ['group.component.css']
 })
 @UnSub()
 export class GroupComponent implements OnDestroy {

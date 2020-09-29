@@ -3,11 +3,12 @@ import { IPayload } from '../../../rest-service-views/payloads/payload.interface
 import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { PayloadValidator } from '../payload-validator.interface';
 import { GroupView } from '../../../rest-service-views/two-way/admin/group.view';
-import { GroupRepository } from '../../../persistance/repositories/group.repository';
+import { GroupRepository } from '../../../persistance/repositories/group/group.repository';
 import { ErrorCodes } from '../../error.codes';
 import { StringKeyValue } from '../../../utilities/object.interface';
 import { PermissionHelper } from '../../../helpers/permission.helper';
 import { Permissions } from '../../../constants/permissions.constant';
+import { UserGroupOrchestrator } from '../../../persistance/repositories/group/user-group.orchestrator';
 
 export class GroupPayloadValidator implements PayloadValidator<GroupView> {
     private static readonly VALID_HEX = /#([a-zA-Z0-9]{6}|[a-zA-Z0-9]{3})/;
@@ -18,10 +19,10 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
 
         await this.validateUniqueName(groupView, serviceConfig.groupRepository, errors);
         await this.validateUniqueDisplayName(groupView, serviceConfig.groupRepository, errors);
-        await this.validateImmunity(groupView, serviceConfig.groupRepository, errors, user);
+        await this.validateImmunity(groupView, serviceConfig, errors, user);
         await this.validateNameColor(groupView, errors);
-        await this.validateAdminPermissions(groupView, serviceConfig.groupRepository, errors, user);
-        await this.validateStaffPermissions(groupView, serviceConfig.groupRepository, errors, user);
+        await this.validateAdminPermissions(groupView, serviceConfig, errors, user);
+        await this.validateStaffPermissions(groupView, serviceConfig, errors, user);
 
         return errors;
     }
@@ -57,9 +58,9 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
         }
     }
 
-    private async validateImmunity (groupView: GroupView, groupRepository: GroupRepository,
+    private async validateImmunity (groupView: GroupView, serviceConfig: ServiceConfig,
                                     errors: Array<ValidationError>, user: InternalUser): Promise<void> {
-        const immunity = await groupRepository.getUserIdImmunity(user.userId);
+        const immunity = await UserGroupOrchestrator.getImmunityByUserId(serviceConfig, user.userId);
         if (immunity <= groupView.getImmunity()) {
             errors.push(ValidationError.newBuilder()
                 .withField('immunity')
@@ -79,9 +80,9 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
         }
     }
 
-    private async validateAdminPermissions (groupView: GroupView, groupRepository: GroupRepository,
+    private async validateAdminPermissions (groupView: GroupView, serviceConfig: ServiceConfig,
                                             errors: Array<ValidationError>, user: InternalUser): Promise<void> {
-        const existingGroup = await groupRepository.getGroupById(groupView.getGroupId());
+        const existingGroup = await serviceConfig.groupRepository.getGroupById(groupView.getGroupId());
         const existingPerms = existingGroup ?
             <StringKeyValue<boolean>><unknown>PermissionHelper.getConvertedAdminPermissionsToUI(existingGroup)
             : {};
@@ -91,7 +92,7 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
             const perms = <StringKeyValue<boolean>><unknown>groupView.getAdminPermissions();
             const permission = Permissions.ADMIN[key];
             const value = perms[key];
-            const havePermission = await groupRepository.haveAdminPermission(user.userId, permission);
+            const havePermission = await UserGroupOrchestrator.doUserHaveAdminPermission(serviceConfig, user.userId, permission);
             if (value && !existingPerms[key] && !havePermission) {
                 isInvalid = true;
                 break;
@@ -110,9 +111,9 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
         }
     }
 
-    private async validateStaffPermissions (groupView: GroupView, groupRepository: GroupRepository,
+    private async validateStaffPermissions (groupView: GroupView, serviceConfig: ServiceConfig,
                                             errors: Array<ValidationError>, user: InternalUser): Promise<void> {
-        const existingGroup = await groupRepository.getGroupById(groupView.getGroupId());
+        const existingGroup = await serviceConfig.groupRepository.getGroupById(groupView.getGroupId());
         const existingPerms = existingGroup ?
             <StringKeyValue<boolean>><unknown>PermissionHelper.getConvertedStaffPermissionsToUI(existingGroup)
             : {};
@@ -122,7 +123,7 @@ export class GroupPayloadValidator implements PayloadValidator<GroupView> {
             const perms = <StringKeyValue<boolean>><unknown>groupView.getStaffPermissions();
             const permission = Permissions.STAFF[key];
             const value = perms[key];
-            const havePermission = await groupRepository.haveStaffPermission(user.userId, permission);
+            const havePermission = await UserGroupOrchestrator.doUserHaveStaffPermission(serviceConfig, user.userId, permission);
             if (value && !existingPerms[key] && !havePermission) {
                 isInvalid = true;
                 break;

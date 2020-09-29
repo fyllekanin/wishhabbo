@@ -3,7 +3,7 @@ import { IPayload } from '../../../rest-service-views/payloads/payload.interface
 import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { PayloadValidator } from '../payload-validator.interface';
 import { StaffListView } from '../../../rest-service-views/two-way/admin/staff-list.view';
-import { GroupRepository } from '../../../persistance/repositories/group.repository';
+import { GroupRepository } from '../../../persistance/repositories/group/group.repository';
 import { ErrorCodes } from '../../error.codes';
 
 export class StaffListPayloadValidator implements PayloadValidator<StaffListView> {

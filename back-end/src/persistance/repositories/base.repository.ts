@@ -6,13 +6,23 @@ interface PaginationOptions {
     page: number;
     take: number;
     orderBy?: { sort: string, order?: 'ASC' | 'DESC' };
-    where?: Array<{
-        key: string,
-        operator: string,
-        value: string | number | boolean | Array<string | number | boolean>,
-        isIn?: boolean,
-        isNotIn?: boolean
-    }>;
+    where?: Array<PaginationWhere>;
+}
+
+export enum PaginationWhereOperators {
+    EQUALS = '=',
+    LIKE = 'LIKE',
+    NOT_EQUALS = '!=',
+    BIGGER = '>',
+    LESSER = '<'
+}
+
+export interface PaginationWhere {
+    key: string;
+    operator: PaginationWhereOperators;
+    value: string | number | boolean | Array<string | number | boolean>;
+    isIn?: boolean;
+    isNotIn?: boolean;
 }
 
 export abstract class BaseRepository<T> {

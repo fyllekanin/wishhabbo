@@ -13,11 +13,11 @@ export class GroupListService implements Resolve<IPagination<GroupClass>> {
     }
 
     resolve (route: ActivatedRouteSnapshot): Observable<IPagination<GroupClass>> {
-        return this.getPage(route.params.page);
+        return this.getPage(route.params.page, route.queryParams);
     }
 
-    getPage (page: number): Observable<IPagination<GroupClass>> {
-        return this.httpService.get(`/admin/users/groups/page/${page}`)
+    getPage (page: number, params?: { [key: string]: string }): Observable<IPagination<GroupClass>> {
+        return this.httpService.get(`/admin/users/groups/page/${page}`, { params: params })
             .pipe(map((data: IPagination<GroupClass>) => {
                 data.items = data.items.map(item => new GroupClass(item));
                 return data;

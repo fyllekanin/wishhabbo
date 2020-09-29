@@ -13,25 +13,37 @@ import { ValidationValidators } from '../../../validation/validation.validators'
 import { GroupEntity } from '../../../persistance/entities/group/group.entity';
 import { Logger } from '../../../logging/log.logger';
 import { LogTypes } from '../../../logging/log.types';
+import { UserGroupOrchestrator } from '../../../persistance/repositories/group/user-group.orchestrator';
+import { PaginationValue, RequestUtility } from '../../../utilities/request.utility';
+import { PaginationWhereOperators } from '../../../persistance/repositories/base.repository';
 
 @Controller('api/admin/users/groups')
 export class GroupController {
-    private static readonly GROUP_PER_PAGE = 15;
+    private static readonly SUPPORTED_SEARCH_VALUES: Array<PaginationValue> = [
+        { key: 'name', operator: PaginationWhereOperators.LIKE }
+    ];
 
     @Get('page/:page')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_MANAGE_GROUPS ])
+        GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_GROUPS])
     ])
     private async getGroups (req: InternalRequest, res: Response): Promise<void> {
-        const page = Number(req.params.page);
-        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
-        const groups = await req.serviceConfig.groupRepository.getGroups();
-        const filteredOnImmunity = groups.filter(group => group.immunity < immunity).sort((a, b) => a.name > b.name ? 1 : -1);
+        const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
+        const data = await req.serviceConfig.groupRepository.paginate({
+            take: PaginationHelper.TWENTY_ITEMS,
+            page: Number(req.params.page),
+            where: RequestUtility.getPaginationWheresFromQuery(req, GroupController.SUPPORTED_SEARCH_VALUES)
+                .concat([
+                    { key: 'immunity', operator: PaginationWhereOperators.LESSER, value: immunity }
+                ]),
+            orderBy: {
+                sort: 'name',
+                order: 'ASC'
+            }
+        });
 
-        const start = PaginationHelper.getSkip(page, GroupController.GROUP_PER_PAGE);
-        const end = start + GroupController.GROUP_PER_PAGE;
-        const items = filteredOnImmunity.slice(start, end).map(item => GroupView.newBuilder()
+        const items = data.getItems().map(item => GroupView.newBuilder()
             .withGroupId(item.groupId)
             .withName(item.name)
             .withImmunity(item.immunity)
@@ -41,18 +53,18 @@ export class GroupController {
 
         res.status(OK).json(PaginationView.newBuilder()
             .withItems(items)
-            .withPage(page)
-            .withTotal(PaginationHelper.getTotalAmountOfPages(GroupController.GROUP_PER_PAGE, filteredOnImmunity.length))
+            .withPage(data.getPage())
+            .withTotal(data.getTotal())
             .build());
     }
 
     @Get(':groupId')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_MANAGE_GROUPS ])
+        GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_GROUPS])
     ])
     private async getGroup (req: InternalRequest, res: Response): Promise<void> {
-        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
+        const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
         const group = await req.serviceConfig.groupRepository.getGroupById(Number(req.params.groupId));
         if (!group || group.immunity >= immunity) {
             res.status(NOT_FOUND).json();
@@ -76,7 +88,7 @@ export class GroupController {
     @Post()
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_MANAGE_GROUPS ])
+        GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_GROUPS])
     ])
     private async createGroup (req: InternalRequest, res: Response): Promise<void> {
         const payload = GroupView.of(req);
@@ -116,7 +128,7 @@ export class GroupController {
     @Put(':groupId')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_MANAGE_GROUPS ])
+        GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_GROUPS])
     ])
     private async updateGroup (req: InternalRequest, res: Response): Promise<void> {
         const group = await req.serviceConfig.groupRepository.getGroupById(Number(req.params.groupId));
@@ -162,7 +174,7 @@ export class GroupController {
     @Delete(':groupId')
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_MANAGE_GROUPS ])
+        GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_GROUPS])
     ])
     private async deleteGroup (req: InternalRequest, res: Response): Promise<void> {
         const group = await req.serviceConfig.groupRepository.getGroupById(Number(req.params.groupId));
@@ -171,7 +183,7 @@ export class GroupController {
             return;
         }
 
-        const immunity = await req.serviceConfig.groupRepository.getUserIdImmunity(req.user.userId);
+        const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
         if (immunity <= group.immunity) {
             res.status(NOT_FOUND).json();
             return;

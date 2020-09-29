@@ -12,6 +12,7 @@ import { TimetableSlot } from '../rest-service-views/two-way/staff/timetable.slo
 import { TimetableType } from '../persistance/entities/staff/timetable.entity';
 import { TimeUtility } from '../utilities/time.utility';
 import { TimetableUtility } from '../utilities/timetable.utility';
+import { PaginationWhereOperators } from '../persistance/repositories/base.repository';
 
 @Controller('api/page')
 export class PageController {
@@ -44,7 +45,7 @@ export class PageController {
         const badges = await req.serviceConfig.habboRepository.paginate({
             take: 12,
             page: 1,
-            orderBy: {sort: 'createdAt', order: 'DESC'}
+            orderBy: { sort: 'createdAt', order: 'DESC' }
         });
 
         res.status(OK).json(HomePage.newBuilder()
@@ -87,10 +88,10 @@ export class PageController {
         const paginate = await req.serviceConfig.articleRepository.paginate({
             take: amount,
             page: 1,
-            orderBy: {sort: 'createdAt', order: 'DESC'},
+            orderBy: { sort: 'createdAt', order: 'DESC' },
             where: [
-                {key: 'type', operator: '=', value: String(type)},
-                {key: 'isApproved', operator: '=', value: true}
+                { key: 'type', operator: PaginationWhereOperators.EQUALS, value: String(type) },
+                { key: 'isApproved', operator: PaginationWhereOperators.EQUALS, value: true }
             ]
         });
 
@@ -121,7 +122,7 @@ export class PageController {
         const entries: Array<StaffListRow> = [];
         for (const entry of (staffListModel ? staffListModel.entries : [])) {
             const group = await req.serviceConfig.groupRepository.getGroupById(entry.groupId);
-            const userIds = await req.serviceConfig.groupRepository.getUserIdsWithGroup(group.groupId);
+            const userIds = await req.serviceConfig.userGroupRepository.getUserIdsWithGroup(group.groupId);
             if (userIds.length === 0) {
                 continue;
             }

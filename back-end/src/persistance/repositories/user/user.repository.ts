@@ -2,7 +2,7 @@ import { UserEntity } from '../../entities/user/user.entity';
 import { getConnection, Repository } from 'typeorm';
 import { BaseRepository } from '../base.repository';
 import { SlimUserView } from '../../../rest-service-views/two-way/slim-user.view';
-import { GroupRepository } from '../group.repository';
+import { GroupRepository } from '../group/group.repository';
 import { UserdataEntity } from '../../entities/user/userdata.entity';
 
 export class UserRepository extends BaseRepository<UserEntity> {
@@ -29,8 +29,9 @@ export class UserRepository extends BaseRepository<UserEntity> {
             .withHabbo(user.habbo)
             .withUsername(user.username)
             .withUserId(user.userId)
-            .withNameColors(displayGroup ? [ displayGroup.nameColor ] : [])
+            .withNameColors(displayGroup ? [displayGroup.nameColor] : [])
             .withLikes(user.likes)
+            .withUpdatedAt(user.updatedAt)
             .build();
     }
 

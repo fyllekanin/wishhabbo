@@ -1,4 +1,4 @@
-import { ClassHelper, primitiveOf } from '../helpers/class.helper';
+import { ClassHelper, dateAndTime, primitiveOf } from '../helpers/class.helper';
 
 export class SlimUser {
     @primitiveOf(Number)
@@ -9,8 +9,8 @@ export class SlimUser {
     habbo: string;
     @primitiveOf(Number)
     likes: number;
-    @primitiveOf(Number)
-    updatedAt: number;
+    @dateAndTime()
+    updatedAt: string;
 
     constructor (source: Partial<SlimUser>) {
         ClassHelper.assign(this, source);

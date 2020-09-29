@@ -1,6 +1,6 @@
 import { PermissionHelper } from '../../src/helpers/permission.helper';
 import { GroupEntity } from '../../src/persistance/entities/group/group.entity';
-import { GroupRepository } from '../../src/persistance/repositories/group.repository';
+import { GroupRepository } from '../../src/persistance/repositories/group/group.repository';
 import { UserEntity } from '../../src/persistance/entities/user/user.entity';
 import { AdminPermissions, StaffPermissions } from '../../src/rest-service-views/respond-views/user/auth-user.view';
 

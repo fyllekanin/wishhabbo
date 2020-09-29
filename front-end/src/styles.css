@@ -489,6 +489,10 @@ i:focus ~ .action-list {
     min-height: 20px;
 }
 
+.checkbox-container-align-with-input {
+    margin-top: 30px;
+}
+
 .checkbox-container .label {
     position: absolute;
     color: #9e9e9e;

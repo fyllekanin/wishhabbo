@@ -4,6 +4,7 @@ import { IEntity } from '../../../persistance/entities/entity.interface';
 import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { BbcodeEntity } from '../../../persistance/entities/settings/bbcode.entity';
 import { ErrorCodes } from '../../error.codes';
+import { PaginationWhereOperators } from '../../../persistance/repositories/base.repository';
 
 export class BbcodeValidator implements EntityValidator<BbcodeEntity> {
 
@@ -25,7 +26,7 @@ export class BbcodeValidator implements EntityValidator<BbcodeEntity> {
     }
 
     private async validateIfSystemBbcode (entity: BbcodeEntity, serviceConfig: ServiceConfig,
-        errors: Array<ValidationError>): Promise<void> {
+                                          errors: Array<ValidationError>): Promise<void> {
         if (!entity.bbcodeId) {
             return;
         }
@@ -34,8 +35,8 @@ export class BbcodeValidator implements EntityValidator<BbcodeEntity> {
             take: 1,
             page: 1,
             where: [
-                {key: 'bbcodeId', operator: '=', value: entity.bbcodeId},
-                {key: 'isSystem', operator: '=', value: true}
+                { key: 'bbcodeId', operator: PaginationWhereOperators.EQUALS, value: entity.bbcodeId },
+                { key: 'isSystem', operator: PaginationWhereOperators.EQUALS, value: true }
             ]
         });
 
@@ -59,12 +60,12 @@ export class BbcodeValidator implements EntityValidator<BbcodeEntity> {
         }
 
         const wheres = entity.bbcodeId ?
-            [{key: 'bbcodeId', operator: '!=', value: entity.bbcodeId}, {
+            [{ key: 'bbcodeId', operator: PaginationWhereOperators.NOT_EQUALS, value: entity.bbcodeId }, {
                 key: 'name',
-                operator: '=',
+                operator: PaginationWhereOperators.EQUALS,
                 value: entity.name
             }]
-            : [{key: 'name', operator: '=', value: entity.name}];
+            : [{ key: 'name', operator: PaginationWhereOperators.EQUALS, value: entity.name }];
         const items = await serviceConfig.bbcodeRepository.paginate({
             take: 1,
             page: 1,
@@ -91,12 +92,12 @@ export class BbcodeValidator implements EntityValidator<BbcodeEntity> {
         }
 
         const wheres = entity.bbcodeId ?
-            [{key: 'bbcodeId', operator: '!=', value: entity.bbcodeId}, {
+            [{ key: 'bbcodeId', operator: PaginationWhereOperators.NOT_EQUALS, value: entity.bbcodeId }, {
                 key: 'example',
-                operator: '=',
+                operator: PaginationWhereOperators.EQUALS,
                 value: entity.example
             }]
-            : [{key: 'example', operator: '=', value: entity.example}];
+            : [{ key: 'example', operator: PaginationWhereOperators.EQUALS, value: entity.example }];
         const items = await serviceConfig.bbcodeRepository.paginate({
             take: 1,
             page: 1,
