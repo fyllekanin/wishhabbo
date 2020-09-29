@@ -121,7 +121,6 @@ span {
 /** Button Styles **/
 button, button[type='submit'] {
     display: inline-block;
-    background-color: #eee;
     text-transform: uppercase;
     letter-spacing: 2px;
     font-size: 10px;

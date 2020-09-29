@@ -13,7 +13,7 @@
                 <div *ngIf="!user; else isLoggedIn" class="not-logged-in">
                     <button id="top-login-button" class="green" routerLink="/auth/login">Login</button>
                     <span class="slash">/</span>
-                    <button class="blue">Register</button>
+                    <button class="blue" routerLink="/auth/register">Register</button>
                 </div>
                 <ng-template #isLoggedIn>
 

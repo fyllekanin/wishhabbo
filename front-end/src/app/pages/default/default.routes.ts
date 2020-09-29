@@ -9,6 +9,7 @@ import { HomeResolver } from './home/home.resolver';
 import { ArticleComponent } from './article/article.component';
 import { TimeTableTypes } from '../../shared/components/timetable/timetable.interface';
 import { TimetableComponent } from '../../shared/components/timetable/timetable.component';
+import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 
 export const defaultRoutes: Routes = [
     {
@@ -25,6 +26,10 @@ export const defaultRoutes: Routes = [
             {
                 path: 'not-found',
                 component: NotFoundComponent
+            },
+            {
+                path: 'not-authorized',
+                component: NotAuthorizedComponent
             },
             {
                 path: 'staff-list',

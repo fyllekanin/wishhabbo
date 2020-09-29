@@ -5,13 +5,14 @@ import { AuthService } from '../../core/auth/auth.service';
 @Component({
     selector: 'app-admin',
     templateUrl: 'admin.component.html',
-    styleUrls: [ 'admin.component.css' ]
+    styleUrls: ['admin.component.css']
 })
 export class AdminComponent {
     menus: Array<ISideMenu> = [];
 
     constructor (authService: AuthService) {
         const user = authService.getAuthUser();
+
         this.menus = [
             {
                 title: 'General',

@@ -27,9 +27,9 @@ export function init_app (appLoadService: AppLoadService) {
     ],
     providers: [
         AppLoadService,
-        { provide: APP_INITIALIZER, useFactory: init_app, deps: [ AppLoadService ], multi: true },
+        { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppLoadService], multi: true },
     ],
-    bootstrap: [ AppComponent ]
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

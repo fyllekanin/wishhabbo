@@ -6,8 +6,10 @@ import { HabboService } from '../../../external/services/habbo.service';
 import { InternalUser, ServiceConfig } from '../../../utilities/internal.request';
 import { PayloadValidator } from '../payload-validator.interface';
 import { RegexConstants } from '../../../constants/regex.constants';
+import { TimeUtility } from '../../../utilities/time.utility';
 
 export class RegisterPayloadValidator implements PayloadValidator<RegisterPayload> {
+    private static readonly ONE_WEEK = 604800;
 
     async validate (payload: IPayload, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {
         const registerPayload = payload as RegisterPayload;
@@ -26,8 +28,17 @@ export class RegisterPayloadValidator implements PayloadValidator<RegisterPayloa
 
     private async validateHabboMotto (registerPayload: RegisterPayload, errors: Array<ValidationError>,
                                       serviceConfig: ServiceConfig): Promise<void> {
+        if (await serviceConfig.userRepository.getUserWithHabbo(registerPayload.getHabbo())) {
+            errors.push(ValidationError.newBuilder()
+                .withCode(ErrorCodes.USER_WITH_HABBO_EXISTS.code)
+                .withField('habbo')
+                .withMessage(ErrorCodes.USER_WITH_HABBO_EXISTS.description)
+                .build());
+            return;
+        }
+
         const habboService = new HabboService();
-        const habbo = await habboService.getHabbo(registerPayload.getHabbo());
+        const habbo = registerPayload.getHabbo() ? await habboService.getHabbo(registerPayload.getHabbo()) : null;
         if (!habbo) {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.NO_HABBO_WITH_NAME.code)
@@ -37,19 +48,20 @@ export class RegisterPayloadValidator implements PayloadValidator<RegisterPayloa
             return;
         }
 
-        if (!habbo.getMotto() || habbo.getMotto() !== 'apa') {
+        const memberSince = new Date(habbo.getMemberSince()).getTime() / 1000;
+        if (memberSince > (TimeUtility.getCurrentTime() - RegisterPayloadValidator.ONE_WEEK)) {
+            errors.push(ValidationError.newBuilder()
+                .withCode(ErrorCodes.HABBO_TO_YOUNG.code)
+                .withField('habbo')
+                .withMessage(ErrorCodes.HABBO_TO_YOUNG.description)
+                .build());
+        }
+
+        if (!habbo.getMotto() || habbo.getMotto() !== 'wishhabbo-register') {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.HABBO_MOTTO_INCORRECT.code)
                 .withField('habbo')
                 .withMessage(ErrorCodes.HABBO_MOTTO_INCORRECT.description)
-                .build());
-        }
-
-        if (await serviceConfig.userRepository.getUserWithHabbo(registerPayload.getHabbo())) {
-            errors.push(ValidationError.newBuilder()
-                .withCode(ErrorCodes.USER_WITH_HABBO_EXISTS.code)
-                .withField('habbo')
-                .withMessage(ErrorCodes.USER_WITH_HABBO_EXISTS.description)
                 .build());
         }
     }

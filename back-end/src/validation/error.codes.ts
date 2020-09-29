@@ -237,4 +237,10 @@ export class ErrorCodes {
         name: 'Field can not be empty',
         description: 'The given field can not be empty'
     };
+
+    static readonly HABBO_TO_YOUNG: ErrorCode = {
+        code: 39,
+        name: 'To young habbo',
+        description: 'Your habbo needs to be at least 1 week old'
+    };
 }

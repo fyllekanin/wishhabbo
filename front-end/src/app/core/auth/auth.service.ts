@@ -6,10 +6,15 @@ import { catchError, map } from 'rxjs/operators';
 import { LocalStorageKeys } from '../../shared/constants/local-storage.constants';
 import { SiteNotificationService } from '../common-services/site-notification.service';
 import { SiteNotificationType } from '../../shared/app-views/site-notification/site-notification.interface';
-import { Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
+
+export enum Checks {
+    STAFF,
+    ADMIN
+}
 
 @Injectable()
-export class AuthService {
+export class AuthService implements Resolve<void> {
     private authUser: AuthUser;
     private onAuthChangeSubject: Subject<void> = new Subject<void>();
     onAuthChange = this.onAuthChangeSubject.asObservable();
@@ -19,6 +24,32 @@ export class AuthService {
         private siteNotificationService: SiteNotificationService,
         private router: Router) {
         this.authUser = this.getStoredAuthUser();
+    }
+
+    async resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<void> {
+        const path = this.router.getCurrentNavigation().extractedUrl.root.children.primary.segments.reduce((prev, curr) => {
+            return `${prev}/${curr}`;
+        }, '');
+        if (!this.isLoggedIn()) {
+            await this.router.navigate(['auth', 'login'], {
+                queryParams: {
+                    path: encodeURIComponent(path)
+                }
+            });
+            return;
+        }
+        switch (route.data.type) {
+            case Checks.STAFF:
+                if (!this.authUser.doHaveStaffPermissions) {
+                    await this.router.navigateByUrl('/default/not-authorized');
+                }
+                break;
+            case Checks.ADMIN:
+                if (!this.authUser.doHaveAdminPermissions) {
+                    await this.router.navigateByUrl('/default/not-authorized');
+                }
+                break;
+        }
     }
 
     isLoggedIn (): boolean {
@@ -53,6 +84,25 @@ export class AuthService {
                     });
                     res(true);
                 }, () => {
+                    res(false);
+                });
+        });
+    }
+
+    doRegister (data: { username: string, habbo: string, password: string, repassword: string }): Promise<boolean> {
+        return new Promise(res => {
+            this.httpService.post('/auth/register', data)
+                .subscribe(user => {
+                    this.setAuthUser(<AuthUser>user);
+                    this.siteNotificationService.create({
+                        title: 'Success',
+                        message: 'You have registered!',
+                        type: SiteNotificationType.SUCCESS
+                    });
+                    this.router.navigateByUrl('/auth/login');
+                    res(true);
+                }, error => {
+                    this.siteNotificationService.onError(error.error);
                     res(false);
                 });
         });

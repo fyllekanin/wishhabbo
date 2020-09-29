@@ -16,6 +16,11 @@ export const websiteSettingsRoutes: Routes = [
         component: WebsiteSettingsComponent,
         children: [
             {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'list'
+            },
+            {
                 path: 'list',
                 component: WebsiteSettingsListComponent
             },

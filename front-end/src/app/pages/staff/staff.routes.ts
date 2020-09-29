@@ -2,11 +2,18 @@ import { Routes } from '@angular/router';
 import { StaffComponent } from './staff.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
+import { AuthService, Checks } from '../../core/auth/auth.service';
 
 export const staffRoutes: Routes = [
     {
         path: '',
         component: StaffComponent,
+        data: {
+            type: Checks.STAFF
+        },
+        resolve: {
+            check: AuthService
+        },
         children: [
             {
                 path: '',

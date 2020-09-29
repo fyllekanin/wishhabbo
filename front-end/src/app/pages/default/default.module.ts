@@ -15,6 +15,7 @@ import { ArticleService } from './article/article.service';
 import { ArticleComponent } from './article/article.component';
 import { NgxTwitterTimelineModule } from 'ngx-twitter-timeline';
 import { TimetableModule } from '../../shared/components/timetable/timetable.module';
+import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import { TimetableModule } from '../../shared/components/timetable/timetable.mod
         NotFoundComponent,
         DefaultComponent,
         StaffListComponent,
-        ArticleComponent
+        ArticleComponent,
+        NotAuthorizedComponent
     ],
     providers: [
         StaffListResolver,

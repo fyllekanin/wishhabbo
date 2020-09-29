@@ -17,6 +17,11 @@ import { AuthService } from '../auth/auth.service';
 import { SiteNotificationService } from '../common-services/site-notification.service';
 import { SiteNotificationType } from '../../shared/app-views/site-notification/site-notification.interface';
 
+interface UnauthorizedResponse {
+    isTokenExisting: boolean,
+    isPermissionRelated: boolean;
+}
+
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
     private isRefreshingToken = false;
@@ -36,10 +41,23 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                 if (error instanceof HttpErrorResponse) {
                     switch ((<HttpErrorResponse>error).status) {
                         case 401:
-                            if ((<{ isTokenExisting: boolean }>error.error).isTokenExisting) {
+                            const response = <UnauthorizedResponse>error.error;
+                            if (response.isPermissionRelated) {
+                                this.router.navigateByUrl('/default/not-authorized');
+                                return of(null);
+                            }
+                            if (response.isTokenExisting) {
                                 return this.handleAuthenticationRefresh(req, next);
                             } else {
-                                this.authService.logout();
+                                this.authService.setAuthUser(null);
+                                const path = this.router.getCurrentNavigation().extractedUrl.root.children.primary.segments.reduce((prev, curr) => {
+                                    return `${prev}/${curr}`;
+                                }, '');
+                                this.router.navigate(['auth', 'login'], {
+                                    queryParams: {
+                                        path: encodeURIComponent(path)
+                                    }
+                                });
                                 return of(null);
                             }
                         case 404:
