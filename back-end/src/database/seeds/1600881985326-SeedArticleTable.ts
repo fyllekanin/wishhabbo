@@ -16,6 +16,7 @@ export class SeedArticleTable1600881985326 implements MigrationInterface {
                 .withType(0)
                 .withIsApproved(true)
                 .withIsAvailable(true)
+                .withIsPaid(false)
                 .build(),
             ArticleEntity.newBuilder()
                 .withUserId(1)
@@ -28,6 +29,7 @@ export class SeedArticleTable1600881985326 implements MigrationInterface {
                 .withType(0)
                 .withIsApproved(true)
                 .withIsAvailable(true)
+                 .withIsPaid(false)
                 .build(),
             ArticleEntity.newBuilder()
                 .withUserId(1)
@@ -40,6 +42,7 @@ export class SeedArticleTable1600881985326 implements MigrationInterface {
                 .withType(0)
                 .withIsApproved(true)
                 .withIsAvailable(true)
+                .withIsPaid(true)
                 .build(),
             ArticleEntity.newBuilder()
                 .withUserId(1)
@@ -52,6 +55,7 @@ export class SeedArticleTable1600881985326 implements MigrationInterface {
                 .withType(0)
                 .withIsApproved(true)
                 .withIsAvailable(true)
+                .withIsPaid(true)
                 .build()
         ]);
     }
