@@ -39,7 +39,9 @@ class MainServer extends Server {
         createConnection(Database as ConnectionOptions).then(() => {
             this.setupControllers();
             this.backgroundTaskHandler.activate();
-            this.app.get('*', (req, res) => res.sendFile(__dirname + '/public'));
+            this.app.get('/*', (req, res) => {
+                res.sendFile(__dirname + '/public/index.html')
+            });
             this.app.listen(port, () => {
                 console.log(`Server started on port ${port}`);
             });
