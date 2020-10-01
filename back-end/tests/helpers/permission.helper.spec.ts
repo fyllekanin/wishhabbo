@@ -1,8 +1,8 @@
 import { PermissionHelper } from '../../src/helpers/permission.helper';
 import { GroupEntity } from '../../src/persistance/entities/group/group.entity';
-import { GroupRepository } from '../../src/persistance/repositories/group/group.repository';
 import { UserEntity } from '../../src/persistance/entities/user/user.entity';
 import { AdminPermissions, StaffPermissions } from '../../src/rest-service-views/respond-views/user/auth-user.view';
+import { ServiceConfig } from '../../src/utilities/internal.request';
 
 describe('PermissionHelper', () => {
 
@@ -69,12 +69,18 @@ describe('PermissionHelper', () => {
     it('getConvertedStaffPermissionsForUser should return correct permissions', async () => {
         // Given
         const user = <UserEntity><unknown>{ userId: 1 };
-        const groupRepository = <GroupRepository><unknown>{
-            haveStaffPermission: (_userId: number, _permission: number) => true
+        const serviceConfig = <ServiceConfig><unknown>{
+            userGroupRepository: {
+                getGroupIdsFromUser: () => <Array<number>>[1]
+            },
+            groupRepository: {
+                getSuperAdmins: () => <Array<number>>[],
+                doAnyGroupIdHaveStaffPermission: (_userId: number, _permission: number) => true
+            }
         };
 
         // When
-        const result = await PermissionHelper.getConvertedStaffPermissionsForUser(user, groupRepository);
+        const result = await PermissionHelper.getConvertedStaffPermissionsForUser(user, serviceConfig);
 
         // Then
         expect(result.CAN_UNBOOK_OTHERS_RADIO).toBeTrue();
@@ -83,12 +89,18 @@ describe('PermissionHelper', () => {
     it('getConvertedAdminPermissionsForUser should return correct permissions', async () => {
         // Given
         const user = <UserEntity><unknown>{ userId: 1 };
-        const groupRepository = <GroupRepository><unknown>{
-            haveAdminPermission: (_userId: number, _permission: number) => true
+        const serviceConfig = <ServiceConfig><unknown>{
+            userGroupRepository: {
+                getGroupIdsFromUser: () => <Array<number>>[1]
+            },
+            groupRepository: {
+                getSuperAdmins: () => <Array<number>>[],
+                doAnyGroupIdHaveAdminPermission: (_userId: number, _permission: number) => true
+            }
         };
 
         // When
-        const result = await PermissionHelper.getConvertedAdminPermissionsForUser(user, groupRepository);
+        const result = await PermissionHelper.getConvertedAdminPermissionsForUser(user, serviceConfig);
 
         // Then
         expect(result.CAN_MANAGE_GROUPS).toBeTrue();

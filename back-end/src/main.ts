@@ -28,7 +28,7 @@ class MainServer extends Server {
     constructor () {
         super();
         this.backgroundTaskHandler = new BackgroundTaskHandler();
-        this.app.use(bodyParser.urlencoded({extended: true}));
+        this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(bodyParser.json());
         this.app.use(compression());
         this.app.use('/', express.static(__dirname + '/public'));
@@ -39,6 +39,7 @@ class MainServer extends Server {
         createConnection(Database as ConnectionOptions).then(() => {
             this.setupControllers();
             this.backgroundTaskHandler.activate();
+            this.app.get('*', (req, res) => res.sendFile(__dirname + '/public'));
             this.app.listen(port, () => {
                 console.log(`Server started on port ${port}`);
             });
