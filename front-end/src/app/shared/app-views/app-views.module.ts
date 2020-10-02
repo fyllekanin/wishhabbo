@@ -8,6 +8,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import { RouterModule } from '@angular/router';
 import { SiteNotificationComponent } from './site-notification/site-notification.component';
 import { FormsModule } from '@angular/forms';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
     imports: [
@@ -21,13 +22,15 @@ import { FormsModule } from '@angular/forms';
         NavigationComponent,
         DialogComponent,
         SiteNotificationComponent,
-        RadioContentComponent
+        RadioContentComponent,
+        FooterComponent
     ],
     exports: [
         HeaderComponent,
         NavigationComponent,
         DialogComponent,
-        SiteNotificationComponent
+        SiteNotificationComponent,
+        FooterComponent
     ]
 })
 export class AppViewsModule {

@@ -20,8 +20,6 @@ import { RadioSettingsController } from './rest-services/admin/website-settings/
 import { InformationController } from './rest-services/information.controller';
 import { BbcodeController } from './rest-services/admin/website-settings/bbcode.controller';
 
-process.env.NODE_ENV = 'production';
-
 class MainServer extends Server {
     private backgroundTaskHandler: BackgroundTaskHandler;
 
