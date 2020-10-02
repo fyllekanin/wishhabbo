@@ -69,6 +69,7 @@ export class PageController {
             const article = await serviceConfig.articleRepository.getArticleWithBadgeId(item.badgeId);
 
             badges.push(BadgeView.newBuilder()
+                .withHabboBadgeId(item.habboBadgeId)
                 .withBadgeId(item.badgeId)
                 .withDescription(item.description)
                 .withDescription(item.description)

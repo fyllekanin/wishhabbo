@@ -1,14 +1,20 @@
 export class BadgeView {
+    private readonly habboBadgeId: number;
     private readonly badgeId: string;
     private readonly description: string;
     private readonly articleId: number;
     private readonly createdAt: number;
 
     constructor (builder: Builder) {
+        this.habboBadgeId = builder.habboBadgeId;
         this.badgeId = builder.badgeId;
         this.description = builder.description;
         this.articleId = builder.articleId;
         this.createdAt = builder.createdAt;
+    }
+
+    getHabboBadgeId (): number {
+        return this.habboBadgeId;
     }
 
     getBadgeId (): string {
@@ -33,10 +39,16 @@ export class BadgeView {
 }
 
 class Builder {
+    habboBadgeId: number;
     badgeId: string;
     description: string;
     articleId: number;
     createdAt: number;
+
+    withHabboBadgeId (habboBadgeId: number): Builder {
+        this.habboBadgeId = habboBadgeId;
+        return this;
+    }
 
     withBadgeId (badgeId: string): Builder {
         this.badgeId = badgeId;
