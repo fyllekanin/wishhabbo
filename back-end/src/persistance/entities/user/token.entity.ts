@@ -2,7 +2,7 @@ import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
 interface ITokenEntity {
-    tokenId: number;
+    tokenId: string;
     userId: number;
     access: string;
     refresh: string;
@@ -10,8 +10,8 @@ interface ITokenEntity {
 
 @Entity('tokens')
 export class TokenEntity extends CreatedUpdatedAtEntity implements ITokenEntity {
-    @PrimaryGeneratedColumn()
-    tokenId: number;
+    @PrimaryGeneratedColumn('uuid')
+    tokenId: string;
     @Column()
     @Index()
     userId: number;
@@ -53,7 +53,7 @@ class Builder {
         Object.assign(this.myData, entity);
     }
 
-    withTokenId (tokenId: number): Builder {
+    withTokenId (tokenId: string): Builder {
         this.myData.tokenId = tokenId;
         return this;
     }

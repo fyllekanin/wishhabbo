@@ -7,22 +7,21 @@ export class CreateTokenTable1596049000584 implements MigrationInterface {
             name: 'tokens',
             indices: [
                 {
-                    columnNames: [ 'createdAt' ]
+                    columnNames: ['createdAt']
                 },
                 {
-                    columnNames: [ 'updatedAt' ]
+                    columnNames: ['updatedAt']
                 },
                 {
-                    columnNames: [ 'userId' ]
+                    columnNames: ['userId']
                 }
             ],
             columns: [
                 {
                     name: 'tokenId',
-                    type: 'int',
-                    isGenerated: true,
-                    generationStrategy: 'increment',
-                    isPrimary: true
+                    type: 'varchar',
+                    isPrimary: true,
+                    generationStrategy: 'uuid'
                 },
                 {
                     name: 'userId',
