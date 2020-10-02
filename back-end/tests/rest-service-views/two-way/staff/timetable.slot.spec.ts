@@ -8,7 +8,7 @@ describe('TimetableSlot', () => {
         // When
         const result = TimetableSlot.newBuilder()
             .withTimetableId(0)
-            .withUser(null)
+            .withUser(SlimUserView.newBuilder().build())
             .withDay(1)
             .withHour(1)
             .withEvent(null)
@@ -28,11 +28,23 @@ describe('TimetableSlot', () => {
         expect(result.getIsRadio()).toBeTrue();
     });
 
+    it('should be possible to build', () => {
+        // When
+        const result = TimetableSlot.newBuilder()
+            .withTimetableId(0)
+            .withUser(null)
+            .build();
+
+        // Then
+        expect(result.getTimetableId()).toEqual(0);
+        expect(result.getUser()).toBeNull();
+    });
+
     it('should build correctly with of', () => {
         // Given
         const req = <InternalRequest><unknown>{
             body: {
-                user: null,
+                user: {},
                 day: 1,
                 hour: 1,
                 event: null,

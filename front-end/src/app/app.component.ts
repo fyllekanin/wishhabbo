@@ -5,7 +5,7 @@ import { ContinuesInformationService } from './core/common-services/continues-in
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: [ './app.component.css' ]
+    styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterContentInit {
     @ViewChild('radio', { static: true }) radioElement: ElementRef<HTMLAudioElement>;

@@ -20,7 +20,7 @@ export function init_app (appLoadService: AppLoadService) {
             anchorScrolling: 'enabled'
         }),
         AppViewsModule,
-        BrowserModule,
+        BrowserModule
     ],
     declarations: [
         AppComponent
