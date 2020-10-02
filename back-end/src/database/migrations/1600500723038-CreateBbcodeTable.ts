@@ -7,13 +7,13 @@ export class CreateBbcodeTable1600500723038 implements MigrationInterface {
             name: 'bbcodes',
             indices: [
                 {
-                    columnNames: [ 'createdAt' ]
+                    columnNames: ['createdAt']
                 },
                 {
-                    columnNames: [ 'updatedAt' ]
+                    columnNames: ['updatedAt']
                 },
                 {
-                    columnNames: [ 'isSystem' ]
+                    columnNames: ['isSystem']
                 }
             ],
             columns: [
@@ -47,12 +47,14 @@ export class CreateBbcodeTable1600500723038 implements MigrationInterface {
                 {
                     name: 'editorPattern',
                     type: 'varchar',
-                    isUnique: true
+                    isUnique: true,
+                    isNullable: true
                 },
                 {
                     name: 'editorReplacement',
                     type: 'varchar',
-                    isUnique: true
+                    isUnique: true,
+                    isNullable: true
                 },
                 {
                     name: 'isSystem',

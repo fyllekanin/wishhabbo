@@ -231,6 +231,15 @@ export class SeedBbcodesTable1600506005547 implements MigrationInterface {
                 .withIsSystem(true)
                 .build(),
             BbcodeEntity.newBuilder()
+                .withName('httpToHttps')
+                .withExample('http://')
+                .withPattern('http://')
+                .withReplacement('https://')
+                .withEditorPattern(null)
+                .withEditorReplacement(null)
+                .withIsSystem(true)
+                .build(),
+            BbcodeEntity.newBuilder()
                 .withName('video')
                 .withExample('[video]youtube ID[/video]')
                 .withPattern('\\[video\\](.+?)\\[\\/video\\]')

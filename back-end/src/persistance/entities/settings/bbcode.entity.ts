@@ -18,17 +18,17 @@ interface IBbcode extends IEntity {
 export class BbcodeEntity extends CreatedUpdatedAtEntity implements IBbcode {
     @PrimaryGeneratedColumn()
     bbcodeId: number;
-    @Column({unique: true})
+    @Column({ unique: true })
     name: string;
-    @Column({unique: true})
+    @Column({ unique: true })
     example: string;
-    @Column({unique: true})
+    @Column({ unique: true })
     pattern: string;
-    @Column({unique: true})
+    @Column({ unique: true })
     replacement: string;
-    @Column({unique: true})
+    @Column({ unique: true, nullable: true })
     editorPattern: string;
-    @Column({unique: true})
+    @Column({ unique: true, nullable: true })
     editorReplacement: string;
     @Column()
     @Index()

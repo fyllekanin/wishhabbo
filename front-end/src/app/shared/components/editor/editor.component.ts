@@ -59,13 +59,15 @@ export class EditorComponent implements AfterViewInit {
 
     private getSettings (id: string): any {
         const atitleTransform = {};
-        const systr = this.bbcodes.reduce((prev, curr) => {
-            if (curr.editorPattern === '[atitle]{DATA}[/atitle]') {
-                atitleTransform[curr.editorReplacement] = curr.editorPattern;
-            }
-            prev[curr.editorReplacement] = curr.editorPattern;
-            return prev;
-        }, {});
+        const systr = this.bbcodes
+            .filter(bbcode => bbcode.editorPattern)
+            .reduce((prev, curr) => {
+                if (curr.editorPattern === '[atitle]{DATA}[/atitle]') {
+                    atitleTransform[curr.editorReplacement] = curr.editorPattern;
+                }
+                prev[curr.editorReplacement] = curr.editorPattern;
+                return prev;
+            }, {});
         return {
             id: id,
             debug: false,
