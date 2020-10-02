@@ -24,7 +24,7 @@ export class TimetableSlot implements IPayload {
         isRadio: boolean
     ) {
         this.timetableId = timetableId;
-        this.user = SlimUserView.of(user);
+        this.user = user ? SlimUserView.of(user) : null;
         this.day = day;
         this.hour = hour;
         this.event = event;

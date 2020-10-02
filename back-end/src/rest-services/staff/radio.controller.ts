@@ -118,7 +118,6 @@ export class RadioController extends TimetableController {
     }
 
     @Get('slots')
-    @Middleware(middlewares)
     private async getSlots (req: InternalRequest, res: Response): Promise<void> {
         const slots = await req.serviceConfig.timetableRepository.getSlots(TimetableType.RADIO);
         res.status(OK).json(await TimetableUtility.getConvertedSlots(req, slots));

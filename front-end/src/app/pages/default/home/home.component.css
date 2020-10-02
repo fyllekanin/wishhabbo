@@ -12,3 +12,7 @@ h5 {
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+.upcoming-event {
+    padding: 5px;
+}

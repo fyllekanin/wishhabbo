@@ -52,6 +52,8 @@ export class Slot {
     @primitiveOf(Boolean)
     isCurrentSlot: boolean;
 
+    displayHour: string;
+
     constructor (source: Partial<Slot>) {
         ClassHelper.assign(this, source);
     }

@@ -24,12 +24,12 @@ export class NavigationComponent {
         new NavigationItem({
             title: 'Radio',
             icon: 'fa-headphones',
-            path: `/default/timetable/0/${new Date().getDay() === 0 ? 7 : new Date().getDay()}`
+            path: `/default/timetable/radio/${new Date().getDay() === 0 ? 7 : new Date().getDay()}`
         }),
         new NavigationItem({
             title: 'Events',
             icon: 'fa-gamepad',
-            path: `/default/timetable/1/${new Date().getDay() === 0 ? 7 : new Date().getDay()}`
+            path: `/default/timetable/events/${new Date().getDay() === 0 ? 7 : new Date().getDay()}`
         })
     ];
 

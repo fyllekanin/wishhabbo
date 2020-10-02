@@ -53,30 +53,38 @@ export class PageController {
             .withGuides(await this.getArticles(req, 4, ArticleConstants.TYPES.GUIDE.value))
             .withHabboNews(await this.getArticles(req, 4, ArticleConstants.TYPES.NEWS.value))
             .withSiteNews(await this.getArticles(req, 4, ArticleConstants.TYPES.SITE_NEWS.value))
-            .withTodaysEvents(await this.getTodayEvents(req))
+            .withTodaysEvents(await this.getNextSlots(req))
             .build());
     }
 
-    private async getTodayEvents (req: InternalRequest): Promise<Array<TimetableSlot>> {
-        const items = await req.serviceConfig.timetableRepository.getSlots(TimetableType.EVENTS);
-        const convertedSlots = await TimetableUtility.getConvertedSlots(req, items);
+    private async getNextSlots (req: InternalRequest): Promise<Array<TimetableSlot>> {
         let day = TimeUtility.getCurrentDay();
         let hour = TimeUtility.getCurrentHour();
 
-
+        const items = await req.serviceConfig.timetableRepository.getSlotsFrom(TimetableType.EVENTS, day, hour);
+        const convertedSlots = await TimetableUtility.getConvertedSlots(req, items)
+            .then(data => data.filter(slot => slot.getUser() !== null));
         const slots: Array<TimetableSlot> = [];
-        for (const item of convertedSlots) {
-            if (item.getDay() === day && item.getHour() === hour) {
-                slots.push(item);
 
-                hour++;
-                if (hour >= 24) {
-                    day = (day + 1) >= 8 ? 1 : day + 1;
-                    hour = 0;
+        while (true) {
+            for (const slot of convertedSlots) {
+                if (slot.getHour() === hour && slot.getDay() === day) {
+                    slots.push(slot);
+                    break;
                 }
             }
 
             if (slots.length === 4) {
+                break;
+            }
+
+            hour++;
+            if (hour >= 24) {
+                hour = 0;
+                day++;
+            }
+
+            if (day >= 7) {
                 break;
             }
         }

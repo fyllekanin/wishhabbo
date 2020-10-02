@@ -44,7 +44,11 @@ export class TimetableComponent implements OnDestroy {
     }
 
     onDaySwitch (action: UserAction): void {
-        this.router.navigateByUrl(`/staff/radio/timetable/${action.value}`);
+        if (this.isPublic) {
+            this.router.navigateByUrl(`/default/timetable/${this.type}/${action.value}`);
+        } else {
+            this.router.navigateByUrl(`/staff/radio/timetable/${action.value}`);
+        }
     }
 
     async clickHour (slot: Slot): Promise<void> {
@@ -102,23 +106,23 @@ export class TimetableComponent implements OnDestroy {
         const slots = await this.service.fetchSlots(this.type);
         this.data = this.getDataWithCurrentSlots(slots);
         this.actions = [
-            {label: 'Mon', value: 1, isActive: this.day === 1},
-            {label: 'Tue', value: 2, isActive: this.day === 2},
-            {label: 'Wed', value: 3, isActive: this.day === 3},
-            {label: 'Thu', value: 4, isActive: this.day === 4},
-            {label: 'Fri', value: 5, isActive: this.day === 5},
-            {label: 'Sat', value: 6, isActive: this.day === 6},
-            {label: 'Sun', value: 7, isActive: this.day === 7}
+            { label: 'Mon', value: 1, isActive: this.day === 1 },
+            { label: 'Tue', value: 2, isActive: this.day === 2 },
+            { label: 'Wed', value: 3, isActive: this.day === 3 },
+            { label: 'Thu', value: 4, isActive: this.day === 4 },
+            { label: 'Fri', value: 5, isActive: this.day === 5 },
+            { label: 'Sat', value: 6, isActive: this.day === 6 },
+            { label: 'Sun', value: 7, isActive: this.day === 7 }
         ];
     }
 
     private getDataWithCurrentSlots (data: Timetable): Timetable {
         const offset = TimeHelper.getTimeOffsetInHours();
         data.current = data.all.map(item => {
-            const copy = {...item};
+            const copy = { ...item };
             copy.hour = TimeHelper.getConvertedHour(item.hour + offset);
             copy.day = TimeHelper.getConvertedDay(item.hour + offset, item.day);
-            copy.event = copy.event ? copy.event : {eventId: 0, name: 'Unknown', createdAt: 0, updatedAt: 0};
+            copy.event = copy.event ? copy.event : { eventId: 0, name: 'Unknown', createdAt: 0, updatedAt: 0 };
             return copy;
         }).filter(item => item.day === this.day).sort((a, b) => {
             if (a.hour > b.hour) {

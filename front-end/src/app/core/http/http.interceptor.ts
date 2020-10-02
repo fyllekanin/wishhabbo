@@ -50,14 +50,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                                 return this.handleAuthenticationRefresh(req, next);
                             } else {
                                 this.authService.setAuthUser(null);
-                                const path = this.router.getCurrentNavigation()
-                                    .extractedUrl
-                                    .root
-                                    .children
-                                    .primary
-                                    .segments.reduce((prev, curr) => {
-                                        return `${prev}/${curr}`;
-                                    }, '');
+                                const path = this.router.routerState.snapshot.url;
                                 this.router.navigate(['auth', 'login'], {
                                     queryParams: {
                                         path: encodeURIComponent(path)

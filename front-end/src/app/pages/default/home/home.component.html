@@ -28,13 +28,14 @@
         <div class="grid-container">
             <div class="grid-x grid-margin-x">
                 <div class="cell small-12">
-                    <app-content header="Todays Events">
+                    <app-content header="Upcoming Events">
                         <div *ngIf="data.todayEvents.length === 0">
                             No events upcoming
                         </div>
 
-                        <div *ngFor="let event of data.todayEvents">
-                            {{ 'something' }}
+                        <div *ngFor="let event of slots" class="upcoming-event">
+                            {{event.user.username}} <br>
+                            Hosting {{event.event.name}} at {{event.displayHour}}
                         </div>
 
                     </app-content>

@@ -46,7 +46,7 @@ export const defaultRoutes: Routes = [
                 }
             },
             {
-                path: 'timetable/0/:day',
+                path: 'timetable/radio/:day',
                 component: TimetableComponent,
                 data: {
                     type: TimeTableTypes.RADIO,
@@ -54,7 +54,7 @@ export const defaultRoutes: Routes = [
                 }
             },
             {
-                path: 'timetable/1/:day',
+                path: 'timetable/events/:day',
                 component: TimetableComponent,
                 data: {
                     type: TimeTableTypes.EVENTS,

@@ -12,6 +12,15 @@ export class TimetableRepository extends BaseRepository<TimetableEntity> {
             .getMany();
     }
 
+    async getSlotsFrom (type: TimetableType, day: number, hour: number): Promise<Array<TimetableEntity>> {
+        return await this.getRepository().createQueryBuilder()
+            .where('isArchived = :isArchived', { isArchived: 0 })
+            .andWhere('type = :type', { type: type })
+            .andWhere('day >= :day', { day: day })
+            .andWhere('hour >= :hour', { hour: hour })
+            .getMany();
+    }
+
     async getSlotForTime (day: number, hour: number, type: TimetableType): Promise<TimetableEntity> {
         return await this.getRepository().createQueryBuilder()
             .where('isArchived = :isArchived', { isArchived: 0 })

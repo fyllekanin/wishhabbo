@@ -12,13 +12,13 @@ import { SiteNotificationType } from '../../app-views/site-notification/site-not
 @Injectable()
 export class TimetableService {
     private bookingActions: Array<DialogButton> = [
-        new DialogButton({label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true}),
-        new DialogButton({label: 'Book', action: 'book', type: ButtonTypes.GREEN})
+        new DialogButton({ label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true }),
+        new DialogButton({ label: 'Book', action: 'book', type: ButtonTypes.GREEN })
     ];
     private editingActions: Array<DialogButton> = [
-        new DialogButton({label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true}),
-        new DialogButton({label: 'Unbook', action: 'unbook', type: ButtonTypes.BLUE}),
-        new DialogButton({label: 'Save', action: 'book', type: ButtonTypes.GREEN})
+        new DialogButton({ label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true }),
+        new DialogButton({ label: 'Unbook', action: 'unbook', type: ButtonTypes.BLUE }),
+        new DialogButton({ label: 'Save', action: 'book', type: ButtonTypes.GREEN })
     ];
 
     constructor (
@@ -66,7 +66,7 @@ export class TimetableService {
     }
 
     async book (slot: Slot, isRadio: boolean): Promise<unknown> {
-        const copy = {...slot};
+        const copy = { ...slot };
         const offsetInHours = copy.hour + TimeHelper.getHourOffsetRounded();
         const convertedHour = TimeHelper.getConvertedHour(offsetInHours);
         const convertedDay = TimeHelper.getConvertedDay(offsetInHours, slot.day);
