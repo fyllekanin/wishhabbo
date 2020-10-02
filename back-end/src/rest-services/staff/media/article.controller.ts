@@ -72,7 +72,7 @@ export class ArticleController {
             .withArticleId(article.articleId)
             .withTitle(article.title)
             .withContent(article.content)
-            .withBadges(JSON.parse(article.badges))
+            .withBadges((article.badges || '').split(','))
             .withRoom(article.room)
             .withRoomOwner(article.roomOwner)
             .withDifficulty(article.difficulty)

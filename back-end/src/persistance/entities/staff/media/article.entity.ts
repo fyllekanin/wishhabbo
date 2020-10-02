@@ -122,7 +122,7 @@ class Builder {
     }
 
     withBadges (badges: Array<string>): Builder {
-        this.myData.badges = JSON.stringify(badges);
+        this.myData.badges = (badges || []).join(',');
         return this;
     }
 
@@ -156,12 +156,12 @@ class Builder {
         return this;
     }
 
-    withIsPaid(isPaid: boolean): Builder {
+    withIsPaid (isPaid: boolean): Builder {
         this.myData.isPaid = isPaid;
         return this;
     }
 
-    withUpdatedAt(updatedAt: number): Builder {
+    withUpdatedAt (updatedAt: number): Builder {
         this.myData.updatedAt = updatedAt;
         return this;
     }

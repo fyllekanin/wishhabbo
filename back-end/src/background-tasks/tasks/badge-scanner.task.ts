@@ -34,7 +34,7 @@ export class BadgeScannerTask implements IBackgroundTask {
     }
 
     getSchedule (): string {
-        return '0/15 * * * *';
+        return '*/15 * * * *';
     }
 
     private getBadge (item: string): { badgeId: string, description: string } {

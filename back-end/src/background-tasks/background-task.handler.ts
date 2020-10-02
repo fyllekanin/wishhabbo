@@ -14,7 +14,13 @@ export class BackgroundTaskHandler {
 
     activate (): void {
         BackgroundTaskHandler.TASKS
-            .filter(task => cron.validate(task.getSchedule()))
+            .filter(task => {
+                if (!cron.validate(task.getSchedule())) {
+                    console.log(`${task.constructor.name} does not have a valid schedule`);
+                    return false;
+                }
+                return true;
+            })
             .forEach(task => cron.schedule(task.getSchedule(), task.run.bind(task)));
     }
 }
