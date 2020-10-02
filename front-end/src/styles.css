@@ -8,10 +8,13 @@ html, body {
     margin: 0;
     padding: 0;
     font-family: Roboto, serif;
-    min-height: 101vh;
     overflow-x: hidden;
     color: #656565;
     background-image: url('assets/images/background.png');
+}
+
+main {
+    min-height: calc(101vh + 85px);
 }
 
 .no-padding {

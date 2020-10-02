@@ -1,6 +1,6 @@
 import { Controller, Get } from '@overnightjs/core';
 import { Response } from 'express';
-import { InternalRequest } from '../utilities/internal.request';
+import { InternalRequest, ServiceConfig } from '../utilities/internal.request';
 import { StaffListModel } from '../persistance/entities/settings/models/staff-list.model';
 import { SettingKey } from '../persistance/entities/settings/setting.entity';
 import { StaffListPage, StaffListRow } from '../rest-service-views/respond-views/pages/staff-list.page';
@@ -13,6 +13,8 @@ import { TimetableType } from '../persistance/entities/staff/timetable.entity';
 import { TimeUtility } from '../utilities/time.utility';
 import { TimetableUtility } from '../utilities/timetable.utility';
 import { PaginationWhereOperators } from '../persistance/repositories/base.repository';
+import { ArticlePage } from '../rest-service-views/respond-views/pages/article.page';
+import { BadgeView } from '../rest-service-views/respond-views/badge.view';
 
 @Controller('api/page')
 export class PageController {
@@ -25,36 +27,56 @@ export class PageController {
             return;
         }
 
-        res.status(OK).json(ArticleView.newBuilder()
-            .withArticleId(article.articleId)
-            .withTitle(article.title)
-            .withParsedContent(await req.serviceConfig.bbcodeRepository.parseContent(article.content))
-            .withContent(article.content)
-            .withBadges((article.badges || '').split(','))
-            .withRoom(article.room)
-            .withDifficulty(article.difficulty)
-            .withType(article.type)
-            .withIsApproved(article.isApproved)
-            .withIsAvailable(article.isAvailable)
-            .withIsPaid(article.isPaid)
+        res.status(OK).json(ArticlePage.newBuilder()
+            .withArticle(ArticleView.newBuilder()
+                .withArticleId(article.articleId)
+                .withTitle(article.title)
+                .withParsedContent(await req.serviceConfig.bbcodeRepository.parseContent(article.content))
+                .withContent(article.content)
+                .withBadges((article.badges || '').split(','))
+                .withRoom(article.room)
+                .withDifficulty(article.difficulty)
+                .withType(article.type)
+                .withIsApproved(article.isApproved)
+                .withIsAvailable(article.isAvailable)
+                .withIsPaid(article.isPaid)
+                .build())
+            .withBadges(await this.getBadges(req.serviceConfig))
             .build());
     }
 
     @Get('home')
     private async getHomePage (req: InternalRequest, res: Response): Promise<void> {
-        const badges = await req.serviceConfig.habboRepository.paginate({
-            take: 12,
-            page: 1,
-            orderBy: { sort: 'createdAt', order: 'DESC' }
-        });
-
         res.status(OK).json(HomePage.newBuilder()
-            .withBadges(badges.getItems())
+            .withBadges(await this.getBadges(req.serviceConfig))
             .withGuides(await this.getArticles(req, 4, ArticleConstants.TYPES.GUIDE.value))
             .withHabboNews(await this.getArticles(req, 4, ArticleConstants.TYPES.NEWS.value))
             .withSiteNews(await this.getArticles(req, 4, ArticleConstants.TYPES.SITE_NEWS.value))
             .withTodaysEvents(await this.getNextSlots(req))
             .build());
+    }
+
+    private async getBadges (serviceConfig: ServiceConfig): Promise<Array<BadgeView>> {
+        const items = await serviceConfig.habboRepository.paginate({
+            take: 12,
+            page: 1,
+            orderBy: { sort: 'createdAt', order: 'DESC' }
+        });
+
+        const badges: Array<BadgeView> = [];
+
+        for (const item of items.getItems()) {
+            const article = await serviceConfig.articleRepository.getArticleWithBadgeId(item.badgeId);
+
+            badges.push(BadgeView.newBuilder()
+                .withBadgeId(item.badgeId)
+                .withDescription(item.description)
+                .withDescription(item.description)
+                .withArticleId(article ? article.articleId : null)
+                .build());
+        }
+
+        return badges;
     }
 
     private async getNextSlots (req: InternalRequest): Promise<Array<TimetableSlot>> {

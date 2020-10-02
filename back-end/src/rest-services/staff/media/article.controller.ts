@@ -41,7 +41,7 @@ export class ArticleController {
                 .withUser(await req.serviceConfig.userRepository.getSlimUserById(item.userId))
                 .withTitle(item.title)
                 .withContent(item.content)
-                .withBadges(JSON.parse(item.badges))
+                .withBadges((item.badges || '').split(','))
                 .withRoom(item.room)
                 .withDifficulty(item.difficulty)
                 .withType(item.type)

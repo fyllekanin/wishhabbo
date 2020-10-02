@@ -7,6 +7,8 @@ export class HabboBadgeClass {
     badgeId: string;
     @primitiveOf(String)
     description: string;
+    @primitiveOf(Number)
+    articleId: number;
 
     constructor (source: Partial<HabboBadgeClass>) {
         ClassHelper.assign(this, source);

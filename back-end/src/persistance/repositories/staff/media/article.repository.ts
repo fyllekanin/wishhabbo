@@ -9,8 +9,15 @@ export class ArticleRepository extends BaseRepository<ArticleEntity> {
         return await this.getRepository().findOne({ articleId: articleId });
     }
 
-    async update(entity: ArticleEntity): Promise<UpdateResult> {
+    async update (entity: ArticleEntity): Promise<UpdateResult> {
         return await this.getRepository().update({ articleId: entity.articleId }, entity);
+    }
+
+    async getArticleWithBadgeId (badgeId: string): Promise<ArticleEntity> {
+        return await this.getRepository().createQueryBuilder()
+            .where('find_in_set(:badgeId, badges) <> 0', { badgeId: badgeId })
+            .orderBy('articleId', 'DESC')
+            .getOne();
     }
 
     protected getRepository (): Repository<ArticleEntity> {

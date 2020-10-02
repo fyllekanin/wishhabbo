@@ -1,9 +1,9 @@
-import { HabboBadgeEntity } from '../../../persistance/entities/habbo/habbo-badge.entity';
 import { ArticleView } from '../staff/media/article.view';
 import { TimetableSlot } from '../../two-way/staff/timetable.slot';
+import { BadgeView } from '../badge.view';
 
 export class HomePage {
-    private readonly badges: Array<HabboBadgeEntity>;
+    private readonly badges: Array<BadgeView>;
     private readonly guides: Array<ArticleView>;
     private readonly habboNews: Array<ArticleView>;
     private readonly siteNews: Array<ArticleView>;
@@ -17,7 +17,7 @@ export class HomePage {
         this.todayEvents = [...builder.todayEvents];
     }
 
-    getBadges (): Array<HabboBadgeEntity> {
+    getBadges (): Array<BadgeView> {
         return [...this.badges];
     }
 
@@ -43,13 +43,13 @@ export class HomePage {
 }
 
 class Builder {
-    badges: Array<HabboBadgeEntity>;
+    badges: Array<BadgeView>;
     guides: Array<ArticleView>;
     habboNews: Array<ArticleView>;
     siteNews: Array<ArticleView>;
     todayEvents: Array<TimetableSlot>;
 
-    withBadges (badges: Array<HabboBadgeEntity>): Builder {
+    withBadges (badges: Array<BadgeView>): Builder {
         this.badges = [...badges];
         return this;
     }

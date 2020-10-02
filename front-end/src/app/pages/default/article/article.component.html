@@ -10,8 +10,8 @@
     </div>
     <div class="cell medium-3">
         <app-content header="Badges">
-            <div class="text-align-center">
-                <img *ngFor="let badgeId of data.badges" appHabboBadge [code]="badgeId" />
+            <div class="text-align-center article-badges">
+                <img *ngFor="let badgeId of data.article.badges" appHabboBadge [code]="badgeId"/>
             </div>
         </app-content>
 
@@ -20,7 +20,14 @@
         </app-content>
 
         <app-content header="Other badges">
-            Meh?
+            <div class="grid-container no-padding">
+                <div class="grid-x text-align-center">
+                    <div *ngFor="let badge of data.badges" class="cell small-6 medium-3 badge-style"
+                         [attr.tooltip]="badge.description + '&#013;' + badge.badgeId">
+                        <img appHabboBadge [code]="badge.badgeId"/>
+                    </div>
+                </div>
+            </div>
         </app-content>
     </div>
 </div>

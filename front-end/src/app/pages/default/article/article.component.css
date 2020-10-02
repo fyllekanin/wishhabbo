@@ -3,6 +3,6 @@
     width: 100%;
 }
 
-img[appHabboBadge] {
+.article-badges img[appHabboBadge] {
     margin: 0 10px !important;
 }

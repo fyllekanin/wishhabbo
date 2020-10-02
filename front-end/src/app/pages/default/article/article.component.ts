@@ -1,9 +1,9 @@
 import { CombineSubscriptions, UnSub } from '../../../shared/decorators/unsub.decorator';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnDestroy } from '@angular/core';
-import { ArticleClass } from '../../../shared/classes/media/article.class';
 import { Unsubscribable } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ArticlePage } from './article.model';
 
 @Component({
     selector: 'app-default-article',
@@ -12,7 +12,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 @UnSub()
 export class ArticleComponent implements OnDestroy {
-    data = new ArticleClass(null);
+    data = new ArticlePage(null);
 
     @CombineSubscriptions()
     subscriber: Unsubscribable;
@@ -29,8 +29,8 @@ export class ArticleComponent implements OnDestroy {
         // Empty
     }
 
-    private onData ({data}: { data: ArticleClass }): void {
+    private onData ({ data }: { data: ArticlePage }): void {
         this.data = data;
-        this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(this.data.parsedContent);
+        this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(this.data.article.parsedContent);
     }
 }
