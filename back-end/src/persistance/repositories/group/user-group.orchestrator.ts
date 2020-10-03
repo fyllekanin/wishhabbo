@@ -3,6 +3,13 @@ import { GroupEntity } from '../../entities/group/group.entity';
 
 export class UserGroupOrchestrator {
 
+    static async getAmountOfMembersWithStaffPermissions (serviceConfig: ServiceConfig): Promise<number> {
+        const groups = await serviceConfig.groupRepository.getGroups();
+        const groupIds = groups.filter(group => group.staffPermissions > 0).map(group => group.groupId);
+
+        return await serviceConfig.userGroupRepository.getAmountOfUsersWithGroupIds(groupIds);
+    }
+
     static async getUserIdsWithMoreOrEqualImmunity (serviceConfig: ServiceConfig, immunity: number): Promise<Array<number>> {
         const groups = await serviceConfig.groupRepository.getGroupsWithMoreOrEqual(immunity);
         if (groups.length === 0) {
@@ -34,6 +41,24 @@ export class UserGroupOrchestrator {
         }
         const groupIds = await serviceConfig.userGroupRepository.getGroupIdsFromUser(userId);
         return groupIds.length > 0 && await serviceConfig.groupRepository.doAnyGroupIdHaveStaffPermission(groupIds, permission);
+    }
+
+    static async doUserHaveAnyStaffPermission (serviceConfig: ServiceConfig, userId: number): Promise<boolean> {
+        if (serviceConfig.groupRepository.getSuperAdmins().includes(userId)) {
+            return true;
+        }
+        const groupIds = await serviceConfig.userGroupRepository.getGroupIdsFromUser(userId);
+        const groups = groupIds.length > 0 ? await serviceConfig.groupRepository.getGroupsInIds(groupIds) : [];
+        return groups.some(group => group.staffPermissions > 0);
+    }
+
+    static async doUserHaveAnyAdminPermission (serviceConfig: ServiceConfig, userId: number): Promise<boolean> {
+        if (serviceConfig.groupRepository.getSuperAdmins().includes(userId)) {
+            return true;
+        }
+        const groupIds = await serviceConfig.userGroupRepository.getGroupIdsFromUser(userId);
+        const groups = groupIds.length > 0 ? await serviceConfig.groupRepository.getGroupsInIds(groupIds) : [];
+        return groups.some(group => group.adminPermissions > 0);
     }
 
     static async getImmunityByUserId (serviceConfig: ServiceConfig, userId: number): Promise<number> {

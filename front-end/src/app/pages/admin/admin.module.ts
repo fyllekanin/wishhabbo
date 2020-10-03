@@ -6,6 +6,7 @@ import { ContentModule } from '../../shared/components/content/content.module';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { RouterModule } from '@angular/router';
 import { adminRoutes } from './admin.routes';
+import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
 
 @NgModule({
     imports: [
@@ -18,7 +19,9 @@ import { adminRoutes } from './admin.routes';
         AdminComponent,
         DashboardComponent
     ],
-    providers: [],
+    providers: [
+        DashboardResolver
+    ],
     exports: [
         RouterModule
     ]

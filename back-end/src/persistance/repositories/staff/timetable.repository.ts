@@ -5,6 +5,12 @@ import { TimetableEntity, TimetableType } from '../../entities/staff/timetable.e
 export class TimetableRepository extends BaseRepository<TimetableEntity> {
     protected repository: Repository<TimetableEntity>;
 
+    async getAmountOfTotalSlots (type: TimetableType): Promise<number> {
+        return await this.getRepository().count({
+            type: type
+        });
+    }
+
     async getSlotCount (type: TimetableType, userId: number): Promise<number> {
         return await this.getRepository().count({
             userId: userId,

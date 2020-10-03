@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuthService, Checks } from '../../core/auth/auth.service';
+import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
 
 export const adminRoutes: Routes = [
     {
@@ -16,7 +17,10 @@ export const adminRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: DashboardComponent
+                component: DashboardComponent,
+                resolve: {
+                    data: DashboardResolver
+                }
             },
             {
                 path: 'users',

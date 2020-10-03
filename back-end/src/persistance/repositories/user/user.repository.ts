@@ -9,6 +9,10 @@ export class UserRepository extends BaseRepository<UserEntity> {
     private userdataRepository: Repository<UserdataEntity>;
     protected repository: Repository<UserEntity>;
 
+    async getAmountOfMembers (): Promise<number> {
+        return await this.getRepository().count();
+    }
+
     async removeDisplayGroupId (groupId: number): Promise<void> {
         await this.getRepository().update({
             displayGroupId: groupId

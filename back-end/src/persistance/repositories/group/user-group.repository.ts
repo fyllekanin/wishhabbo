@@ -5,6 +5,12 @@ import { BaseRepository } from '../base.repository';
 export class UserGroupRepository extends BaseRepository<UserGroupEntity> {
     private repository: Repository<UserGroupEntity>;
 
+    async getAmountOfUsersWithGroupIds (groupIds: Array<number>): Promise<number> {
+        return await this.getRepository().count({
+            groupId: In(groupIds)
+        });
+    }
+
     async getUserIdsWithGroup (groupId: number): Promise<Array<number>> {
         return await this.getRepository().find({
             where: { groupId: groupId }
