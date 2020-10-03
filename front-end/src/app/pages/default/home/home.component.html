@@ -44,9 +44,8 @@
                     <app-content header="Latest Badges">
                         <div class="grid-container no-padding">
                             <div class="grid-x text-align-center">
-                                <div *ngFor="let badge of data.badges" class="cell small-6 medium-3 badge-style"
-                                     [attr.tooltip]="badge.description + '&#013;' + badge.badgeId">
-                                    <img appHabboBadge [code]="badge.badgeId"/>
+                                <div *ngFor="let badge of data.badges" class="cell small-6 medium-3">
+                                    <app-habbo-badge [badge]="badge"></app-habbo-badge>
                                 </div>
                             </div>
                         </div>

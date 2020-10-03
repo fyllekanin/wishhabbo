@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, Input, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, Input } from '@angular/core';
 
 @Directive({
     selector: '[appHabboBadge]'
@@ -13,6 +13,7 @@ export class HabboBadgeDirective {
         'jpg'
     ];
     private _code: string;
+    private _isActive: boolean;
     private _timeout: number;
 
     @HostBinding('style.width') myWidth = '50px';
@@ -22,6 +23,7 @@ export class HabboBadgeDirective {
     @HostBinding('style.transition') myTransition = '0.6s';
     @HostBinding('style.padding') myPadding = '7px';
     @HostBinding('style.margin') myMargin = '5px 0';
+    @HostBinding('style.opacity') myOpacity = 0.5;
     @HostBinding('style.-webkit-box-shadow') myWebkitBoxShadow = HabboBadgeDirective.BOX_SHADOW;
     @HostBinding('style.-moz-box-shadow') myMozBoxShadow = HabboBadgeDirective.BOX_SHADOW;
     @HostBinding('style.box-shadow') myBoxShadow = HabboBadgeDirective.BOX_SHADOW;
@@ -39,14 +41,22 @@ export class HabboBadgeDirective {
         }, 200);
     }
 
+    @Input()
+    set isActive (isActive) {
+        this._isActive = isActive;
+        this.myOpacity = this._isActive ? 1 : 0.5;
+    }
+
     @HostListener('mouseover')
-    onMouseOver(): void {
-        this.myBackgroundColor = '#9a7993';
+    onMouseOver (): void {
+        this.myBackgroundColor = '#2f2f2f';
+        this.myOpacity = 1;
     }
 
     @HostListener('mouseleave')
-    onMouseLeave(): void {
+    onMouseLeave (): void {
         this.myBackgroundColor = '#eaeae6';
+        this.myOpacity = this._isActive ? 1 : 0.5;
     }
 
     private setImage (index: number): void {

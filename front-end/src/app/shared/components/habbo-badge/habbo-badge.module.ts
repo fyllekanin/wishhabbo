@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
 import { HabboBadgeDirective } from './habbo-badge.directive';
+import { HabboBadgeComponent } from './habbo-badge.component';
 
 @NgModule({
     declarations: [
-        HabboBadgeDirective
+        HabboBadgeDirective,
+        HabboBadgeComponent
     ],
     exports: [
-        HabboBadgeDirective
+        HabboBadgeDirective,
+        HabboBadgeComponent
     ]
 })
 export class HabboBadgeModule {
