@@ -5,6 +5,13 @@ import { TimetableEntity, TimetableType } from '../../entities/staff/timetable.e
 export class TimetableRepository extends BaseRepository<TimetableEntity> {
     protected repository: Repository<TimetableEntity>;
 
+    async getSlotCount (type: TimetableType, userId: number): Promise<number> {
+        return await this.getRepository().count({
+            userId: userId,
+            type: type
+        });
+    }
+
     async getSlots (type: TimetableType): Promise<Array<TimetableEntity>> {
         return await this.getRepository().createQueryBuilder()
             .where('isArchived = :isArchived', { isArchived: 0 })

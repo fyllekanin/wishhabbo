@@ -501,3 +501,17 @@ i:focus ~ .action-list {
     color: #9e9e9e;
     left: 25px;
 }
+
+/** Stats Box */
+.stats-box {
+    text-align: center;
+}
+
+.stats-box i {
+    font-size: 25px;
+}
+
+.stats-box span {
+    display: block;
+    font-size: 12px;
+}

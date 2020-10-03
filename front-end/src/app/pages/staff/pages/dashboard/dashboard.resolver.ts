@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { HttpService } from '../../../../core/http/http.service';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { DashboardPage } from './dashboard.model';
 
 @Injectable()
-export class DashboardResolver implements Resolve<any> {
+export class DashboardResolver implements Resolve<DashboardPage> {
 
     constructor (private httpService: HttpService) {
     }
 
-    resolve (): Observable<any> {
-        return of(null);
+    resolve (): Observable<DashboardPage> {
+        return this.httpService.get('/staff/dashboard')
+            .pipe(map(data => new DashboardPage(data)));
     }
 }

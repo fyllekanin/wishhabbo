@@ -5,6 +5,10 @@ import { BaseRepository } from '../../base.repository';
 export class ArticleRepository extends BaseRepository<ArticleEntity> {
     protected repository: Repository<ArticleEntity>;
 
+    async getArticleCount (userId: number): Promise<number> {
+        return await this.getRepository().count({ userId: userId });
+    }
+
     async getByArticleId (articleId: number): Promise<ArticleEntity> {
         return await this.getRepository().findOne({ articleId: articleId });
     }

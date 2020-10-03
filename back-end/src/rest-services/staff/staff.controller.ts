@@ -1,9 +1,10 @@
 import { Controller, Get, Middleware } from '@overnightjs/core';
 import { Response } from 'express';
-import { NOT_FOUND, OK } from 'http-status-codes';
+import { OK } from 'http-status-codes';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
 import { InternalRequest } from '../../utilities/internal.request';
-import { UserGroupOrchestrator } from '../../persistance/repositories/group/user-group.orchestrator';
+import { DashboardPage } from '../../rest-service-views/respond-views/staff/dashboard.page';
+import { TimetableType } from '../../persistance/entities/staff/timetable.entity';
 
 @Controller('api/staff')
 export class StaffController {
@@ -11,13 +12,12 @@ export class StaffController {
     @Get('dashboard')
     @Middleware([AUTHORIZATION_MIDDLEWARE])
     private async getDashboard (req: InternalRequest, res: Response): Promise<void> {
-        const groups = await UserGroupOrchestrator.getGroupsByUser(req.serviceConfig, req.user.userId);
 
-        if (groups.every(group => group.staffPermissions === 0)) {
-            res.status(NOT_FOUND).json(null);
-            return;
-        }
 
-        res.status(OK).json(null);
+        res.status(OK).json(DashboardPage.newBuilder()
+            .withRadioSlotcount(await req.serviceConfig.timetableRepository.getSlotCount(TimetableType.RADIO, req.user.userId))
+            .withArticleCount(await req.serviceConfig.articleRepository.getArticleCount(req.user.userId))
+            .withEventSlotCount(await req.serviceConfig.timetableRepository.getSlotCount(TimetableType.RADIO, req.user.userId))
+            .build());
     }
 }
