@@ -1,3 +1,7 @@
+import { ArticleEntity } from './../persistance/entities/staff/media/article.entity';
+import { PaginationView } from './../rest-service-views/respond-views/pagination.view';
+import { PaginationHelper } from './../helpers/pagination.helper';
+import { PaginationValue, RequestUtility } from './../utilities/request.utility';
 import { Controller, Get } from '@overnightjs/core';
 import { Response } from 'express';
 import { InternalRequest, ServiceConfig } from '../utilities/internal.request';
@@ -18,6 +22,12 @@ import { BadgeView } from '../rest-service-views/respond-views/badge.view';
 
 @Controller('api/page')
 export class PageController {
+    private static readonly SUPPORTED_ARTICLE_SEARCH_VALUES: Array<PaginationValue> = [
+        { key: 'difficulty', operator: PaginationWhereOperators.EQUALS },
+        { key: 'type', operator: PaginationWhereOperators.EQUALS },
+        { key: 'isAvailable', operator: PaginationWhereOperators.EQUALS },
+        { key: 'isPaid', operator: PaginationWhereOperators.EQUALS }
+    ];
 
     @Get('article/:articleId')
     private async getArticle (req: InternalRequest, res: Response): Promise<void> {
@@ -45,13 +55,40 @@ export class PageController {
             .build());
     }
 
+    @Get('articles/page/:page')
+    private async getArticles(req: InternalRequest, res: Response): Promise<void> {
+        const data = await req.serviceConfig.articleRepository.paginate({
+            take: PaginationHelper.TWENTY_ITEMS,
+            page: Number(req.params.page),
+            where: RequestUtility.getPaginationWheresFromQuery(req, PageController.SUPPORTED_ARTICLE_SEARCH_VALUES)
+                .concat([
+                    { key: 'isApproved', operator: PaginationWhereOperators.EQUALS, value: true }
+                ]),
+            orderBy: {
+                sort: 'createdAt',
+                order: 'DESC'
+            }
+        })
+
+        const items = [];
+        for (const article of data.getItems()) {
+            items.push(await this.getConvertedArticle(req, article));
+        }
+
+        res.status(OK)
+            .json(PaginationView.newBuilder()
+                .withItems(items)
+                .withPage(data.getPage())
+                .withTotal(data.getTotal()));
+    }
+
     @Get('home')
     private async getHomePage (req: InternalRequest, res: Response): Promise<void> {
         res.status(OK).json(HomePage.newBuilder()
             .withBadges(await this.getBadges(req.serviceConfig))
-            .withGuides(await this.getArticles(req, 4, ArticleConstants.TYPES.GUIDE.value))
-            .withHabboNews(await this.getArticles(req, 4, ArticleConstants.TYPES.NEWS.value))
-            .withSiteNews(await this.getArticles(req, 4, ArticleConstants.TYPES.SITE_NEWS.value))
+            .withGuides(await this.getArticlesFor(req, 4, ArticleConstants.TYPES.GUIDE.value))
+            .withHabboNews(await this.getArticlesFor(req, 4, ArticleConstants.TYPES.NEWS.value))
+            .withSiteNews(await this.getArticlesFor(req, 4, ArticleConstants.TYPES.SITE_NEWS.value))
             .withTodaysEvents(await this.getNextSlots(req))
             .build());
     }
@@ -115,7 +152,7 @@ export class PageController {
         return slots;
     }
 
-    private async getArticles (req: InternalRequest, amount: number, type: number): Promise<Array<ArticleView>> {
+    private async getArticlesFor (req: InternalRequest, amount: number, type: number): Promise<Array<ArticleView>> {
         const paginate = await req.serviceConfig.articleRepository.paginate({
             take: amount,
             page: 1,
@@ -128,21 +165,7 @@ export class PageController {
 
         const articles = [];
         for (const article of paginate.getItems()) {
-            const user = await req.serviceConfig.userRepository.getSlimUserById(article.userId);
-            articles.push(ArticleView.newBuilder()
-                .withArticleId(article.articleId)
-                .withUser(user)
-                .withTitle(article.title)
-                .withContent(article.content)
-                .withBadges((article.badges || '').split(','))
-                .withRoom(article.room)
-                .withRoomOwner(article.roomOwner)
-                .withDifficulty(article.difficulty)
-                .withIsAvailable(article.isAvailable)
-                .withIsPaid(article.isPaid)
-                .withType(type)
-                .withUpdatedAt(article.updatedAt)
-                .build());
+            articles.push(await this.getConvertedArticle(req, article));
         }
         return articles;
     }
@@ -172,5 +195,23 @@ export class PageController {
         }
 
         res.status(OK).json(StaffListPage.newBuilder().withRows(entries).build());
+    }
+
+    private async getConvertedArticle(req: InternalRequest, article: ArticleEntity): Promise<ArticleView> {
+        const user = await req.serviceConfig.userRepository.getSlimUserById(article.userId);
+        return ArticleView.newBuilder()
+            .withArticleId(article.articleId)
+            .withUser(user)
+            .withTitle(article.title)
+            .withContent(article.content)
+            .withBadges((article.badges || '').split(','))
+            .withRoom(article.room)
+            .withRoomOwner(article.roomOwner)
+            .withDifficulty(article.difficulty)
+            .withIsAvailable(article.isAvailable)
+            .withIsPaid(article.isPaid)
+            .withType(article.type)
+            .withUpdatedAt(article.updatedAt)
+            .build();
     }
 }
