@@ -15,9 +15,15 @@ import { Logger } from '../../../logging/log.logger';
 import { LogTypes } from '../../../logging/log.types';
 import ExpressFormidable from 'express-formidable';
 import { UserGroupOrchestrator } from '../../../persistance/repositories/group/user-group.orchestrator';
+import { PaginationValue, RequestUtility } from '../../../utilities/request.utility';
 
 @Controller('api/staff/articles')
 export class ArticleController {
+    private static readonly SEARCHABLE_VALUES: Array<PaginationValue> = [
+        { key: 'title', operator: 'LIKE' },
+        { key: 'type', operator: '=' },
+        { key: 'isApproved', operator: '=' }
+    ];
 
     @Get('page/:page')
     @Middleware([AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([
@@ -28,6 +34,7 @@ export class ArticleController {
         const data = await req.serviceConfig.articleRepository.paginate({
             take: PaginationHelper.TWENTY_ITEMS,
             page: Number(req.params.page),
+            where: RequestUtility.getPaginationWheresFromQuery(req, ArticleController.SEARCHABLE_VALUES),
             orderBy: {
                 sort: 'articleId',
                 order: 'DESC'

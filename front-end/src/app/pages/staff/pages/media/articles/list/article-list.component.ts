@@ -7,13 +7,14 @@ import { IPagination, IPaginationResolver } from '../../../../../../shared/compo
 import { ArticleClass } from '../../../../../../shared/classes/media/article.class';
 import { ArticleService } from '../article/article.service';
 import { DialogService } from '../../../../../../core/common-services/dialog.service';
+import { SearchablePage } from '../../../../../../shared/classes/searchable-page.class';
 
 @Component({
     selector: 'app-staff-articles-article-list',
     templateUrl: 'article-list.component.html'
 })
 @UnSub()
-export class ArticleListComponent implements OnDestroy {
+export class ArticleListComponent extends SearchablePage implements OnDestroy {
     private readonly ACTIONS = {
         EDIT: 'edit',
         APPROVE: 'approve',
@@ -21,7 +22,7 @@ export class ArticleListComponent implements OnDestroy {
         DELETE: 'delete'
     };
 
-    contentActions = [ { label: 'Create new', value: 'createNew' } ];
+    contentActions = [{ label: 'Create new', value: 'createNew' }];
     data: IPagination<ArticleClass>;
     @CombineSubscriptions()
     subscriber: Unsubscribable;
@@ -34,19 +35,31 @@ export class ArticleListComponent implements OnDestroy {
         { label: 'Is Approved' }
     ];
 
+    params = {
+        title: undefined,
+        type: undefined,
+        isApproved: undefined,
+        isExactSearch: false
+    };
+
     constructor (
-        private route: Router,
         private articleService: ArticleService,
         private dialogService: DialogService,
-        activatedRoute: ActivatedRoute
+        protected router: Router,
+        protected activatedRoute: ActivatedRoute
     ) {
+        super();
+        this.params.title = activatedRoute.snapshot.queryParams.isApproved;
+        this.params.type = activatedRoute.snapshot.queryParams.type;
+        this.params.isApproved = activatedRoute.snapshot.queryParams.isApproved;
+
         this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
     onAction (response: TableActionResponse): void {
         switch (response.action.value) {
             case this.ACTIONS.EDIT:
-                this.route.navigateByUrl(`/staff/media/articles/${response.row.rowId}`);
+                this.router.navigateByUrl(`/staff/media/articles/${response.row.rowId}`);
                 break;
             case this.ACTIONS.DELETE:
                 this.onDelete(response.row.rowId as number);
@@ -61,7 +74,7 @@ export class ArticleListComponent implements OnDestroy {
     }
 
     onCreateNew (): void {
-        this.route.navigateByUrl(`/staff/media/articles/new`);
+        this.router.navigateByUrl(`/staff/media/articles/new`);
     }
 
     ngOnDestroy (): void {

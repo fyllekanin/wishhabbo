@@ -15,7 +15,8 @@ export const mediaRoutes: Routes = [
                 component: ArticleListComponent,
                 resolve: {
                     pagination: ArticleListService
-                }
+                },
+                runGuardsAndResolvers: 'paramsOrQueryParamsChange'
             },
             {
                 path: 'articles/:articleId',
