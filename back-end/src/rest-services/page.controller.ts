@@ -68,7 +68,7 @@ export class PageController {
                 sort: 'createdAt',
                 order: 'DESC'
             }
-        })
+        });
 
         const items = [];
         for (const article of data.getItems()) {

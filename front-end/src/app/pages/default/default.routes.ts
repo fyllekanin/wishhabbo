@@ -10,6 +10,8 @@ import { ArticleComponent } from './article/article.component';
 import { TimeTableTypes } from '../../shared/components/timetable/timetable.interface';
 import { TimetableComponent } from '../../shared/components/timetable/timetable.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
+import { ArticlesComponent } from './articles/articles.component';
+import { ArticlesService } from './articles/articles.service';
 
 export const defaultRoutes: Routes = [
     {
@@ -60,6 +62,14 @@ export const defaultRoutes: Routes = [
                     type: TimeTableTypes.EVENTS,
                     isPublic: true
                 }
+            },
+            {
+                path: 'articles/page/:page',
+                component: ArticlesComponent,
+                resolve: {
+                    data: ArticlesService
+                },
+                runGuardsAndResolvers: 'paramsOrQueryParamsChange'
             }
         ]
     }

@@ -1,6 +1,6 @@
 <div class="grid-x">
     <div class="cell medium-9">
-        <app-content header="Latest Habbo Guides">
+        <app-content header="Latest Habbo Guides" [actions]="contentActions" (onAction)="onSeeMore(0)">
             <div class="grid-x grid-margin-x">
                 <div class="cell small-3" *ngFor="let article of data.guides">
                     <app-slim-article [article]="article"></app-slim-article>
@@ -8,7 +8,7 @@
             </div>
         </app-content>
 
-        <app-content header="Latest Habbo News">
+        <app-content header="Latest Habbo News" [actions]="contentActions" (onAction)="onSeeMore(1)">
             <div class="grid-x grid-margin-x">
                 <div class="cell small-3" *ngFor="let article of data.habboNews">
                     <app-slim-article [article]="article"></app-slim-article>
@@ -16,7 +16,7 @@
             </div>
         </app-content>
 
-        <app-content header="Latest Site News">
+        <app-content header="Latest Site News" [actions]="contentActions" (onAction)="onSeeMore(2)">
             <div class="grid-x grid-margin-x">
                 <div class="cell small-3" *ngFor="let article of data.siteNews">
                     <app-slim-article [article]="article"></app-slim-article>

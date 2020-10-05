@@ -23,7 +23,7 @@ export class RequestUtility {
     }
 
     static getPaginationWheresFromQuery (req: InternalRequest, values: Array<PaginationValue>): Array<PaginationWhere> {
-        const isExactSearch = req.query.isExactSearch;
+        const isExactSearch = req.query.isExactSearch ? req.query.isExactSearch : 'true';
         return values.map(value => {
             const queryValue = req.query[value.key];
             if (!queryValue) {

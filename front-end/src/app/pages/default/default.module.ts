@@ -16,6 +16,10 @@ import { ArticleComponent } from './article/article.component';
 import { NgxTwitterTimelineModule } from 'ngx-twitter-timeline';
 import { TimetableModule } from '../../shared/components/timetable/timetable.module';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
+import { ArticlesComponent } from './articles/articles.component';
+import { ArticlesService } from './articles/articles.service';
+import { FormsModule } from '@angular/forms';
+import { PaginationModule } from '../../shared/components/pagination/pagination.module';
 
 @NgModule({
     imports: [
@@ -25,7 +29,9 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
         ContentModule,
         HabboBadgeModule,
         NgxTwitterTimelineModule,
-        TimetableModule
+        TimetableModule,
+        FormsModule,
+        PaginationModule
     ],
     declarations: [
         HomeComponent,
@@ -33,12 +39,14 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
         DefaultComponent,
         StaffListComponent,
         ArticleComponent,
-        NotAuthorizedComponent
+        NotAuthorizedComponent,
+        ArticlesComponent
     ],
     providers: [
         StaffListResolver,
         HomeResolver,
-        ArticleService
+        ArticleService,
+        ArticlesService
     ],
     exports: [
         RouterModule

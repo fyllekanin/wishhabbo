@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { HomeModel } from './home.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Slot } from '../../../shared/components/timetable/timetable.interface';
 import { TimeHelper } from '../../../shared/helpers/time.helper';
+import { UserAction } from '../../../shared/constants/common.interfaces';
 
 @Component({
     selector: 'app-default-home',
@@ -13,9 +14,27 @@ export class HomeComponent {
     data = new HomeModel();
     slots: Array<Slot> = [];
 
-    constructor (activatedRoute: ActivatedRoute) {
+    contentActions: Array<UserAction> = [
+        { label: 'See More', value: 0 }
+    ];
+
+    constructor (
+        private router: Router,
+        activatedRoute: ActivatedRoute
+    ) {
         this.data = activatedRoute.snapshot.data.data;
         this.slots = this.getTimeConvertedSlots(this.data.todayEvents);
+    }
+
+    async onSeeMore (type: number): Promise<void> {
+        await this.router.navigate(
+            ['default', 'articles', 'page', 1],
+            {
+                queryParams: {
+                    type: type
+                }
+            }
+        );
     }
 
     private getTimeConvertedSlots (slots: Array<Slot>): Array<Slot> {
