@@ -26,12 +26,18 @@ export class WebsiteSettingsListComponent {
             description: 'Create, edit or delete bbcodes in the system',
             permissions: ['CAN_MANAGE_BBCODES'],
             url: '/admin/website-settings/bbcodes'
+        },
+        {
+            name: 'Home Page',
+            description: 'Edit banner, spotlight etc',
+            permissions: ['CAN_MANAGE_HOME_PAGE'],
+            url: '/admin/website-settings/home-page'
         }
     ];
 
     headers: Array<TableHeader> = [
-        {label: 'Name'},
-        {label: 'Description'}
+        { label: 'Name' },
+        { label: 'Description' }
     ];
     rows: Array<TableRow> = [];
 
@@ -45,8 +51,8 @@ export class WebsiteSettingsListComponent {
             .map(setting => ({
                 rowId: setting.name,
                 cells: [
-                    {label: setting.name},
-                    {label: setting.description}
+                    { label: setting.name },
+                    { label: setting.description }
                 ],
                 actions: [
                     {

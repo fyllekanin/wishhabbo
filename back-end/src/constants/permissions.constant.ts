@@ -22,6 +22,7 @@ export class Permissions {
         CAN_MANAGE_USER_ADVANCED: 16,
         CAN_MANAGE_STAFF_LIST: 32,
         CAN_MANAGE_RADIO_SETTINGS: 64,
-        CAN_MANAGE_BBCODES: 128
+        CAN_MANAGE_BBCODES: 128,
+        CAN_MANAGE_HOME_PAGE: 256
     };
 }
