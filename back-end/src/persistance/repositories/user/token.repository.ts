@@ -1,4 +1,4 @@
-import { DeleteResult, getConnection, LessThan, Repository } from 'typeorm';
+import { DeleteResult, getConnection, LessThan, Not, Repository } from 'typeorm';
 import { TokenEntity } from '../../entities/user/token.entity';
 import { UserEntity } from '../../entities/user/user.entity';
 import { IdHelper } from '../../../helpers/id.helper';
@@ -16,7 +16,14 @@ export class TokenRepository {
     }
 
     async delete (entity: TokenEntity): Promise<DeleteResult> {
-        return await this.getRepository().delete({tokenId: entity.tokenId});
+        return await this.getRepository().delete({ tokenId: entity.tokenId });
+    }
+
+    async deleteTokensForUserIdExcept (userId: number, except: string): Promise<void> {
+        await this.getRepository().delete({
+            userId: userId,
+            tokenId: Not(except)
+        });
     }
 
     async getTokenFromRequest (req: InternalRequest): Promise<TokenEntity> {
@@ -62,7 +69,7 @@ export class TokenRepository {
 
     async deleteExpiredTokens (): Promise<DeleteResult> {
         return await this.getRepository()
-            .delete({updatedAt: LessThan(TimeUtility.getCurrentTime() - TokenRepository.REFRESH_TOKEN_LIFE_TIME)});
+            .delete({ updatedAt: LessThan(TimeUtility.getCurrentTime() - TokenRepository.REFRESH_TOKEN_LIFE_TIME) });
     }
 
     async getToken (user: UserEntity): Promise<TokenEntity> {
@@ -78,13 +85,13 @@ export class TokenRepository {
 
     private async getAvailableAccessToken (): Promise<string> {
         const newToken = IdHelper.newUuid();
-        const isAvailable = await this.getRepository().count({access: newToken}) === 0;
+        const isAvailable = await this.getRepository().count({ access: newToken }) === 0;
         return isAvailable ? newToken : await this.getAvailableAccessToken();
     }
 
     private async getAvailableRefreshToken (): Promise<string> {
         const newToken = IdHelper.newUuid();
-        const isAvailable = await this.getRepository().count({refresh: newToken}) === 0;
+        const isAvailable = await this.getRepository().count({ refresh: newToken }) === 0;
         return isAvailable ? newToken : await this.getAvailableRefreshToken();
     }
 

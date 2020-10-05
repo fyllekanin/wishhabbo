@@ -29,5 +29,7 @@ export enum LogTypes {
     DELETED_BBCODE = 21,
 
     RADIO_REQUEST = 22,
-    DELETE_RADIO_REQUEST = 23
+    DELETE_RADIO_REQUEST = 23,
+
+    CHANGED_PASSWORD = 24
 }

@@ -17,6 +17,7 @@ export const adminRoutes: Routes = [
         children: [
             {
                 path: '',
+                pathMatch: 'full',
                 component: DashboardComponent,
                 resolve: {
                     data: DashboardResolver

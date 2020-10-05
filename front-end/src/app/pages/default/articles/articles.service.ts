@@ -21,6 +21,6 @@ export class ArticlesService implements Resolve<IPagination<ArticleClass>> {
             .pipe(map((data: IPagination<ArticleClass>) => {
                 data.items = data.items.map(item => new ArticleClass(item));
                 return data;
-            }))
+            }));
     }
 }

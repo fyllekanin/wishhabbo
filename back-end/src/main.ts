@@ -20,6 +20,7 @@ import { RadioSettingsController } from './rest-services/admin/website-settings/
 import { InformationController } from './rest-services/information.controller';
 import { BbcodeController } from './rest-services/admin/website-settings/bbcode.controller';
 import { AdminController } from './rest-services/admin/admin.controller';
+import { AccountController } from './rest-services/user/account.controller';
 
 class MainServer extends Server {
     private backgroundTaskHandler: BackgroundTaskHandler;
@@ -62,7 +63,8 @@ class MainServer extends Server {
                 new RadioSettingsController(),
                 new InformationController(),
                 new BbcodeController(),
-                new AdminController()
+                new AdminController(),
+                new AccountController()
             ],
             null,
             INITIAL_MIDDLEWARE
