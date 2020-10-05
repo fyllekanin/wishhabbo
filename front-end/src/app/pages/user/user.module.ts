@@ -9,6 +9,8 @@ import { userRoutes } from './user.routes';
 import { ChangePasswordService } from './pages/change-password/change-password.service';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { FormsModule } from '@angular/forms';
+import { ChangeHabboComponent } from './pages/change-habbo/change-habbo.component';
+import { ChangeHabboService } from './pages/change-habbo/change-habbo.service';
 
 @NgModule({
     imports: [
@@ -21,10 +23,12 @@ import { FormsModule } from '@angular/forms';
     declarations: [
         UserComponent,
         DashboardComponent,
-        ChangePasswordComponent
+        ChangePasswordComponent,
+        ChangeHabboComponent
     ],
     providers: [
-        ChangePasswordService
+        ChangePasswordService,
+        ChangeHabboService
     ],
     exports: [
         RouterModule

@@ -9,9 +9,34 @@ import { HasherUtility } from '../../utilities/hasher.utility';
 import { RequestUtility } from '../../utilities/request.utility';
 import { Logger } from '../../logging/log.logger';
 import { LogTypes } from '../../logging/log.types';
+import { ChangeHabboPayload } from '../../rest-service-views/payloads/user/change-habbo.payload';
 
 @Controller('api/user/account')
 export class AccountController {
+
+    @Put('change-habbo')
+    private async updateHabbo (req: InternalRequest, res: Response): Promise<void> {
+        const payload = ChangeHabboPayload.of(req);
+        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
+        if (errors.length > 0) {
+            res.status(BAD_REQUEST).json(errors);
+            return;
+        }
+
+        const user = await req.serviceConfig.userRepository.getUserById(req.user.userId);
+        const oldHabbo = user.habbo;
+        user.habbo = payload.getHabbo();
+        await req.serviceConfig.userRepository.save(user);
+
+        await Logger.createUserLog(req, {
+            id: LogTypes.CHANGED_HABBO,
+            contentId: req.user.userId,
+            userId: req.user.userId,
+            beforeChange: JSON.stringify({ habbo: oldHabbo }),
+            afterChange: JSON.stringify({ habbo: payload.getHabbo() })
+        });
+        res.status(OK).json();
+    }
 
     @Put('change-password')
     @Middleware([AUTHORIZATION_MIDDLEWARE])

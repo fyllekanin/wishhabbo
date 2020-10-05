@@ -4,8 +4,7 @@ import { ChangePasswordService } from './change-password.service';
 
 @Component({
     selector: 'app-user-change-password',
-    templateUrl: 'change-password.component.html',
-    styleUrls: ['change-password.component.css']
+    templateUrl: 'change-password.component.html'
 })
 export class ChangePasswordComponent {
     password: string;

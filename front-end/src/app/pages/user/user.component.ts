@@ -28,7 +28,7 @@ export class UserComponent {
                     },
                     {
                         label: 'Change Habbo',
-                        url: '/user/habbo',
+                        url: '/user/change-habbo',
                         icon: 'fas fa-home',
                         isApplicable: true
                     }
