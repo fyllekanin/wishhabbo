@@ -15,11 +15,17 @@ export class NavigationComponent {
         new NavigationItem({
             title: 'WishHabbo',
             path: '/default',
-            icon: 'fa-home'
-        }),
-        new NavigationItem({
-            title: 'Staff list',
-            path: '/default/staff-list'
+            icon: 'fa-home',
+            children: [
+                new NavigationItem({
+                    title: 'Staff list',
+                    path: '/default/staff-list'
+                }),
+                new NavigationItem({
+                    title: 'News',
+                    path: '/default/articles/page/1'
+                })
+            ]
         }),
         new NavigationItem({
             title: 'Radio',

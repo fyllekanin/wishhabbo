@@ -67,3 +67,7 @@
 .no-padding {
     padding: 0;
 }
+
+.dropdown-content a {
+    color: #333333;
+}
