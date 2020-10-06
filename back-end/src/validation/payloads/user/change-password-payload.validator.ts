@@ -24,7 +24,7 @@ export class ChangePasswordPayloadValidator implements PayloadValidator<ChangePa
         return payload instanceof ChangePasswordPayload;
     }
 
-    private async validateHabboMotto (serviceConfig: ServiceConfig, userId: number, errors: Array<ValidationError>): void {
+    private async validateHabboMotto (serviceConfig: ServiceConfig, userId: number, errors: Array<ValidationError>): Promise<void> {
         const habboService = new HabboService();
         const user = await serviceConfig.userRepository.getUserById(userId);
         const habbo = await habboService.getHabbo(user.habbo);
