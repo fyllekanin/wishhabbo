@@ -34,7 +34,7 @@
     margin-left: 0;
 }
 
-.main-navigation-item a {
+.main-navigation-item > a {
     color: #ffffff;
 }
 
@@ -66,8 +66,4 @@
 
 .no-padding {
     padding: 0;
-}
-
-.dropdown-content a {
-    color: #333333;
 }
