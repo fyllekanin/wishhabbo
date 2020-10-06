@@ -14,5 +14,13 @@ h5 {
 }
 
 .upcoming-event {
-    padding: 5px;
+    padding: 11px 5px;
+    position: relative;
+}
+
+.upcoming-event img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0.6;
 }

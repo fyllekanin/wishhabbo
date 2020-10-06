@@ -36,6 +36,8 @@
                         <div *ngFor="let event of slots" class="upcoming-event">
                             {{event.user.username}} <br>
                             Hosting {{event.event.name}} at {{event.displayHour}}
+                            <img
+                                [src]="'https://www.habbo.com/habbo-imaging/avatarimage?user=' + event.user.habbo + '&gesture=nrm&direction=6&head_direction=4&headonly=1'"/>
                         </div>
 
                     </app-content>
