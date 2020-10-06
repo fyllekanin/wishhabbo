@@ -8,7 +8,7 @@
     padding-top: 10px;
     font-size: 11px;
 
-    height: 85px;
+    min-height: 85px;
 }
 
 .social-media {
