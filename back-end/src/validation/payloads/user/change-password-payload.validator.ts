@@ -5,6 +5,7 @@ import { InternalUser, ServiceConfig } from '../../../utilities/internal.request
 import { ValidationError } from '../../validation.error';
 import { RegexConstants } from '../../../constants/regex.constants';
 import { ErrorCodes } from '../../error.codes';
+import { HabboService } from '../../../external/services/habbo.service';
 
 export class ChangePasswordPayloadValidator implements PayloadValidator<ChangePasswordPayload> {
 
@@ -14,12 +15,26 @@ export class ChangePasswordPayloadValidator implements PayloadValidator<ChangePa
 
         this.validateInvalidPassword(changePasswordPayload, errors);
         this.validateConfirmedPassword(changePasswordPayload, errors);
+        await this.validateHabboMotto(serviceConfig, user.userId, errors);
 
         return errors;
     }
 
     isValidEntity (payload: IPayload): boolean {
         return payload instanceof ChangePasswordPayload;
+    }
+
+    private async validateHabboMotto (serviceConfig: ServiceConfig, userId: number, errors: Array<ValidationError>): void {
+        const habboService = new HabboService();
+        const user = await serviceConfig.userRepository.getUserById(userId);
+        const habbo = await habboService.getHabbo(user.habbo);
+        if (!habbo || habbo.getMotto() !== `wishhabbo-${userId}`) {
+            errors.push(ValidationError.newBuilder()
+                .withCode(ErrorCodes.HABBO_MOTTO_INCORRECT.code)
+                .withField('motto')
+                .withMessage(ErrorCodes.HABBO_MOTTO_INCORRECT.description)
+                .build());
+        }
     }
 
     private validateInvalidPassword (changePasswordPayload: ChangePasswordPayload, errors: Array<ValidationError>): void {
