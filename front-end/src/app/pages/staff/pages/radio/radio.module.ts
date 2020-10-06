@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { RadioComponent } from './radio.component';
 import { TimetableModule } from '../../../../shared/components/timetable/timetable.module';
 import { radioRoutes } from './radio.routes';
+import { ConnectionInformationComponent } from './connection-information/connection-information.component';
+import { ConnectionInformationResolver } from './connection-information/connection-information.resolver';
 
 @NgModule({
     imports: [
@@ -17,10 +19,12 @@ import { radioRoutes } from './radio.routes';
     ],
     declarations: [
         RadioComponent,
-        RequestsComponent
+        RequestsComponent,
+        ConnectionInformationComponent
     ],
     providers: [
-        RequestsService
+        RequestsService,
+        ConnectionInformationResolver
     ],
     exports: [
         RouterModule

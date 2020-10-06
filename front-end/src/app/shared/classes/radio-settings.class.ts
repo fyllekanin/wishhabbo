@@ -6,6 +6,16 @@ export enum ServerType {
     ICECAST_V2 = 'ICECAST_V2'
 }
 
+export class ServerTypeLabel {
+    static [ServerType.SHOUTCAST_V1] = 'Shoutcast V1';
+    static [ServerType.SHOUTCAST_V2] = 'Shoutcast V2';
+    static [ServerType.ICECAST_V2] = 'Icecast V2';
+
+    static of (value: string): string {
+        return ServerTypeLabel[value] || 'Unknown';
+    }
+}
+
 export class RadioSettingsClass {
     @primitiveOf(String)
     host: string;

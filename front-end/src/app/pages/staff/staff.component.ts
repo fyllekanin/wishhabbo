@@ -40,7 +40,14 @@ export class StaffComponent {
                         url: `/staff/radio/requests`,
                         icon: 'fas fa-table',
                         isApplicable: user.staffPermissions.CAN_BOOK_RADIO
-                    }
+                    },
+                    {
+                        label: 'Connection Information',
+                        url: `/staff/radio/connection-information`,
+                        icon: 'fas fa-table',
+                        isApplicable: user.staffPermissions.CAN_BOOK_RADIO ||
+                            user.staffPermissions.CAN_UNBOOK_OTHERS_RADIO
+                    },
                 ]
             },
             {

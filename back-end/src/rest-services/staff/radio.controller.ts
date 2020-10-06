@@ -5,7 +5,7 @@ import { Controller, Delete, Get, Middleware, Post, Put } from '@overnightjs/cor
 import { Response } from 'express';
 import { BAD_REQUEST, NOT_FOUND, OK } from 'http-status-codes';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
-import { InternalRequest } from '../../utilities/internal.request';
+import { InternalRequest, ServiceConfig } from '../../utilities/internal.request';
 import { GET_STAFF_PERMISSION_MIDDLEWARE } from '../middlewares/staff-permission.middleware';
 import { Permissions } from '../../constants/permissions.constant';
 import { TimetableController } from './timetable.controller';
@@ -21,6 +21,8 @@ import { SettingKey } from '../../persistance/entities/settings/setting.entity';
 import { SlimUserView } from '../../rest-service-views/two-way/slim-user.view';
 import { PaginationWhereOperators } from '../../persistance/repositories/base.repository';
 import { UserGroupOrchestrator } from '../../persistance/repositories/group/user-group.orchestrator';
+import { ConnectionInformationPage } from '../../rest-service-views/respond-views/staff/radio/connection-information.page';
+import { RadioSettingsModel } from '../../persistance/entities/settings/models/radio-settings.model';
 
 const middlewares = [
     AUTHORIZATION_MIDDLEWARE,
@@ -30,6 +32,50 @@ const middlewares = [
 @Controller('api/staff/radio')
 export class RadioController extends TimetableController {
     private static readonly THIRTY_MINUTES = 1800;
+
+    @Get('connection-information')
+    @Middleware([AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_BOOK_RADIO])])
+    private async getConnectionInformation (req: InternalRequest, res: Response): Promise<void> {
+        const canSeeInformation = await UserGroupOrchestrator
+                .doUserHaveStaffPermission(req.serviceConfig, req.user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO) ||
+            await this.isUserCurrentOrNextDj(req.serviceConfig, req.user.userId);
+
+        if (!canSeeInformation) {
+            res.status(OK).json(ConnectionInformationPage.newBuilder()
+                .withCanSeeInformation(false)
+                .build());
+            return;
+        }
+
+        const radioSettings = await req.serviceConfig.settingRepository.getKeyValue<RadioSettingsModel>(SettingKey.RADIO_SETTINGS)
+            .then(result => result || {
+                serverType: null,
+                host: null,
+                port: null,
+                password: null,
+                mountPoint: null
+            });
+        res.status(OK).json(ConnectionInformationPage.newBuilder()
+            .withCanSeeInformation(true)
+            .withServerType(radioSettings.serverType)
+            .withHost(radioSettings.host)
+            .withPort(radioSettings.port)
+            .withPassword(radioSettings.password)
+            .withMountPoint(radioSettings.mountPoint)
+            .build());
+    }
+
+    private async isUserCurrentOrNextDj (serviceConfig: ServiceConfig, userId: number): Promise<boolean> {
+        const day = TimeUtility.getCurrentDay();
+        const hour = TimeUtility.getCurrentHour();
+        const currentSlot = await serviceConfig.timetableRepository.getSlotForTime(day, hour, TimetableType.RADIO);
+
+        const nextHour = hour + 1 >= 24 ? 0 : hour + 1;
+        const nextDay = nextHour === 0 ? (day + 1 > 7 ? 1 : day + 1) : day;
+        const nextSlot = await serviceConfig.timetableRepository.getSlotForTime(nextDay, nextHour, TimetableType.RADIO);
+
+        return currentSlot.userId === userId || nextSlot.userId === userId;
+    }
 
     @Get('requests')
     @Middleware([AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_BOOK_RADIO])])

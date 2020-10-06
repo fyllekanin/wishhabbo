@@ -4,6 +4,8 @@ import { TimetableComponent } from '../../../../shared/components/timetable/time
 import { TimeTableTypes } from '../../../../shared/components/timetable/timetable.interface';
 import { RequestsComponent } from './requests/requests.component';
 import { RequestsService } from './requests/requests.service';
+import { ConnectionInformationComponent } from './connection-information/connection-information.component';
+import { ConnectionInformationResolver } from './connection-information/connection-information.resolver';
 
 export const radioRoutes: Routes = [
     {
@@ -22,6 +24,13 @@ export const radioRoutes: Routes = [
                 component: RequestsComponent,
                 resolve: {
                     data: RequestsService
+                }
+            },
+            {
+                path: 'connection-information',
+                component: ConnectionInformationComponent,
+                resolve: {
+                    data: ConnectionInformationResolver
                 }
             }
         ]
