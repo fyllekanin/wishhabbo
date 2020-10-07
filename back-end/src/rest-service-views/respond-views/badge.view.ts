@@ -3,6 +3,7 @@ export class BadgeView {
     private readonly badgeId: string;
     private readonly description: string;
     private readonly articleId: number;
+    private readonly isCompleted: boolean;
     private readonly createdAt: number;
 
     constructor (builder: Builder) {
@@ -10,6 +11,7 @@ export class BadgeView {
         this.badgeId = builder.badgeId;
         this.description = builder.description;
         this.articleId = builder.articleId;
+        this.isCompleted = builder.isCompleted;
         this.createdAt = builder.createdAt;
     }
 
@@ -29,6 +31,10 @@ export class BadgeView {
         return this.articleId;
     }
 
+    getIsCompleted (): boolean {
+        return this.isCompleted;
+    }
+
     getCreatedAt (): number {
         return this.createdAt;
     }
@@ -43,6 +49,7 @@ class Builder {
     badgeId: string;
     description: string;
     articleId: number;
+    isCompleted: boolean;
     createdAt: number;
 
     withHabboBadgeId (habboBadgeId: number): Builder {
@@ -62,6 +69,11 @@ class Builder {
 
     withArticleId (articleId: number): Builder {
         this.articleId = articleId;
+        return this;
+    }
+
+    withIsCompleted (isCompleted: boolean): Builder {
+        this.isCompleted = isCompleted;
         return this;
     }
 

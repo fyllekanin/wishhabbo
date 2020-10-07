@@ -32,5 +32,7 @@ export enum LogTypes {
     DELETE_RADIO_REQUEST = 23,
 
     CHANGED_PASSWORD = 24,
-    CHANGED_HABBO = 25
+    CHANGED_HABBO = 25,
+
+    MARKED_BADGE_COMPLETE = 26
 }

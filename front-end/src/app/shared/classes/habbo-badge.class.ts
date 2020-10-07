@@ -9,6 +9,10 @@ export class HabboBadgeClass {
     description: string;
     @primitiveOf(Number)
     articleId: number;
+    @primitiveOf(Boolean)
+    isCompleted: boolean;
+    @primitiveOf(Number)
+    createdAt: number;
 
     constructor (source: Partial<HabboBadgeClass>) {
         ClassHelper.assign(this, source);

@@ -4,6 +4,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Unsubscribable } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ArticlePage } from './article.model';
+import { ArticleService } from './article.service';
 
 @Component({
     selector: 'app-default-article',
@@ -19,6 +20,7 @@ export class ArticleComponent implements OnDestroy {
     sanitizedContent: SafeHtml;
 
     constructor (
+        private service: ArticleService,
         private sanitizer: DomSanitizer,
         activatedRoute: ActivatedRoute
     ) {

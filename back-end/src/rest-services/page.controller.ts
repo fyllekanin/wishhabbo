@@ -2,7 +2,7 @@ import { ArticleEntity } from './../persistance/entities/staff/media/article.ent
 import { PaginationView } from './../rest-service-views/respond-views/pagination.view';
 import { PaginationHelper } from './../helpers/pagination.helper';
 import { PaginationValue, RequestUtility } from './../utilities/request.utility';
-import { Controller, Get } from '@overnightjs/core';
+import { Controller, Get, Middleware, Post } from '@overnightjs/core';
 import { Response } from 'express';
 import { InternalRequest, ServiceConfig } from '../utilities/internal.request';
 import { StaffListModel } from '../persistance/entities/settings/models/staff-list.model';
@@ -19,6 +19,10 @@ import { TimetableUtility } from '../utilities/timetable.utility';
 import { PaginationWhereOperators } from '../persistance/repositories/base.repository';
 import { ArticlePage } from '../rest-service-views/respond-views/pages/article.page';
 import { BadgeView } from '../rest-service-views/respond-views/badge.view';
+import { AUTHORIZATION_MIDDLEWARE } from './middlewares/authorization.middleware';
+import { BadgeCompleteEntity } from '../persistance/entities/habbo/badge-complete.entity';
+import { Logger } from '../logging/log.logger';
+import { LogTypes } from '../logging/log.types';
 
 @Controller('api/page')
 export class PageController {
@@ -51,12 +55,39 @@ export class PageController {
                 .withIsAvailable(article.isAvailable)
                 .withIsPaid(article.isPaid)
                 .build())
-            .withBadges(await this.getBadges(req.serviceConfig))
+            .withBadges(await this.getBadges(req.serviceConfig, req.user.userId))
             .build());
     }
 
+    @Post('article/:articleId/complete')
+    @Middleware([AUTHORIZATION_MIDDLEWARE])
+    private async createBadgeComplete (req: InternalRequest, res: Response): Promise<void> {
+        const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
+        if (!article) {
+            res.status(NOT_FOUND).json();
+            return;
+        }
+
+        const entities: Array<BadgeCompleteEntity> = [];
+        for (const badgeId of article.badges.split(',')) {
+            entities.push(BadgeCompleteEntity.newBuilder()
+                .withBadgeId(badgeId)
+                .withUserId(req.user.userId)
+                .build());
+        }
+
+        await req.serviceConfig.habboRepository.saveBadgeComplete(entities);
+        await Logger.createUserLog(req, {
+            id: LogTypes.MARKED_BADGE_COMPLETE,
+            contentId: article.articleId,
+            userId: req.user.userId,
+            beforeChange: null,
+            afterChange: JSON.stringify(entities)
+        });
+    }
+
     @Get('articles/page/:page')
-    private async getArticles(req: InternalRequest, res: Response): Promise<void> {
+    private async getArticles (req: InternalRequest, res: Response): Promise<void> {
         const data = await req.serviceConfig.articleRepository.paginate({
             take: PaginationHelper.TWENTY_ITEMS,
             page: Number(req.params.page),
@@ -85,7 +116,7 @@ export class PageController {
     @Get('home')
     private async getHomePage (req: InternalRequest, res: Response): Promise<void> {
         res.status(OK).json(HomePage.newBuilder()
-            .withBadges(await this.getBadges(req.serviceConfig))
+            .withBadges(await this.getBadges(req.serviceConfig, req.user.userId))
             .withGuides(await this.getArticlesFor(req, 4, ArticleConstants.TYPES.GUIDE.value))
             .withHabboNews(await this.getArticlesFor(req, 4, ArticleConstants.TYPES.NEWS.value))
             .withSiteNews(await this.getArticlesFor(req, 4, ArticleConstants.TYPES.SITE_NEWS.value))
@@ -93,7 +124,7 @@ export class PageController {
             .build());
     }
 
-    private async getBadges (serviceConfig: ServiceConfig): Promise<Array<BadgeView>> {
+    private async getBadges (serviceConfig: ServiceConfig, userId: number): Promise<Array<BadgeView>> {
         const items = await serviceConfig.habboRepository.paginate({
             take: 12,
             page: 1,
@@ -111,6 +142,8 @@ export class PageController {
                 .withDescription(item.description)
                 .withDescription(item.description)
                 .withArticleId(article ? article.articleId : null)
+                .withIsCompleted(await serviceConfig.habboRepository.isBadgeCompleted(userId, item.badgeId))
+                .withCreatedAt(item.createdAt)
                 .build());
         }
 
@@ -197,7 +230,7 @@ export class PageController {
         res.status(OK).json(StaffListPage.newBuilder().withRows(entries).build());
     }
 
-    private async getConvertedArticle(req: InternalRequest, article: ArticleEntity): Promise<ArticleView> {
+    private async getConvertedArticle (req: InternalRequest, article: ArticleEntity): Promise<ArticleView> {
         const user = await req.serviceConfig.userRepository.getSlimUserById(article.userId);
         return ArticleView.newBuilder()
             .withArticleId(article.articleId)
