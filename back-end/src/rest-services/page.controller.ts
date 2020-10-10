@@ -41,13 +41,14 @@ export class PageController {
             return;
         }
 
+        const badgeIds = (article.badges || '').split(',');
         res.status(OK).json(ArticlePage.newBuilder()
             .withArticle(ArticleView.newBuilder()
                 .withArticleId(article.articleId)
                 .withTitle(article.title)
                 .withParsedContent(await req.serviceConfig.bbcodeRepository.parseContent(article.content))
                 .withContent(article.content)
-                .withBadges((article.badges || '').split(','))
+                .withBadges(badgeIds)
                 .withRoom(article.room)
                 .withDifficulty(article.difficulty)
                 .withType(article.type)
@@ -56,6 +57,7 @@ export class PageController {
                 .withIsPaid(article.isPaid)
                 .build())
             .withBadges(await this.getBadges(req.serviceConfig, req.user.userId))
+            .withIsCompleted(await req.serviceConfig.habboRepository.isBadgesCompleted(badgeIds, req.user.userId))
             .build());
     }
 
@@ -70,6 +72,9 @@ export class PageController {
 
         const entities: Array<BadgeCompleteEntity> = [];
         for (const badgeId of article.badges.split(',')) {
+            if (await req.serviceConfig.habboRepository.isBadgeCompleted(req.user.userId, badgeId)) {
+                continue;
+            }
             entities.push(BadgeCompleteEntity.newBuilder()
                 .withBadgeId(badgeId)
                 .withUserId(req.user.userId)
@@ -84,6 +89,7 @@ export class PageController {
             beforeChange: null,
             afterChange: JSON.stringify(entities)
         });
+        res.status(OK).json();
     }
 
     @Get('articles/page/:page')

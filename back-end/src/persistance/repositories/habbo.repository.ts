@@ -27,6 +27,16 @@ export class HabboRepository extends BaseRepository<HabboBadgeEntity> {
         await this.getBadgeCompleteRepository().save(entities);
     }
 
+
+    async isBadgesCompleted (badgeIds: Array<string>, userId: number): Promise<boolean> {
+        for (const badgeId of badgeIds) {
+            if (!await this.isBadgeCompleted(userId, badgeId)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     protected getRepository (): Repository<HabboBadgeEntity> {
         if (this.habboBadgeRepository) {
             return this.habboBadgeRepository;

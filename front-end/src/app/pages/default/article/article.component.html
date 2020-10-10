@@ -15,8 +15,17 @@
             </div>
         </app-content>
 
-        <app-content header="Mark complete here when it actually works">
-            Big sexy button here with a dancing habbo? o.o
+        <app-content header="Mark complete here when it actually works" *ngIf="isLoggedIn">
+            <div *ngIf="!data.isCompleted">
+                Have you cleared this already and wanna keep track? Mark this article as completed
+                and you can keep track if you got the badge easier. <br/>
+                <div class="text-align-center">
+                    <button class="green" (click)="markComplete()">Complete</button>
+                </div>
+            </div>
+            <div *ngIf="data.isCompleted">
+                You have already completed this guide and got the badges! Hurray!
+            </div>
         </app-content>
 
         <app-content header="Other badges">

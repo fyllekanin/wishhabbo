@@ -35,6 +35,10 @@ export const INITIAL_MIDDLEWARE = async (req: InternalRequest, res: Response, ne
     const entity = await req.serviceConfig.tokenRepository.getTokenFromRequest(req);
 
     if (!entity) {
+        req.user = {
+            userId: 0,
+            tokenEntity: null
+        };
         next();
         return;
     }

@@ -5,6 +5,7 @@ import { Unsubscribable } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ArticlePage } from './article.model';
 import { ArticleService } from './article.service';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
     selector: 'app-default-article',
@@ -18,17 +19,25 @@ export class ArticleComponent implements OnDestroy {
     @CombineSubscriptions()
     subscriber: Unsubscribable;
     sanitizedContent: SafeHtml;
+    isLoggedIn: boolean;
 
     constructor (
         private service: ArticleService,
         private sanitizer: DomSanitizer,
+        authService: AuthService,
         activatedRoute: ActivatedRoute
     ) {
+        this.isLoggedIn = authService.isLoggedIn();
         this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
     ngOnDestroy (): void {
         // Empty
+    }
+
+    async markComplete (): Promise<void> {
+        await this.service.markAsComplete(this.data.article.articleId);
+        this.data.isCompleted = true;
     }
 
     private onData ({ data }: { data: ArticlePage }): void {
