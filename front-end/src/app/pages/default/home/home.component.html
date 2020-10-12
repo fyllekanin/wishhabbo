@@ -1,5 +1,7 @@
-<div class="grid-x">
+<div class="grid-x grid-margin-x">
     <div class="cell medium-9">
+        <app-slide-show></app-slide-show>
+
         <app-content header="Latest Habbo Guides" [actions]="contentActions" (onAction)="onSeeMore(0)">
             <div class="grid-x grid-margin-x">
                 <div class="cell small-3" *ngFor="let article of data.guides">

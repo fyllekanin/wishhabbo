@@ -20,6 +20,7 @@ import { ArticlesComponent } from './articles/articles.component';
 import { ArticlesService } from './articles/articles.service';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from '../../shared/components/pagination/pagination.module';
+import { SlideShowModule } from '../../shared/components/slide-show/slide-show.module';
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import { PaginationModule } from '../../shared/components/pagination/pagination.
         NgxTwitterTimelineModule,
         TimetableModule,
         FormsModule,
-        PaginationModule
+        PaginationModule,
+        SlideShowModule
     ],
     declarations: [
         HomeComponent,
