@@ -16,7 +16,7 @@ export class SlideShowComponent {
 
     previousSlide (): void {
         if (this.currentImage === 0) {
-            this.currentImage == this.images.length - 1;
+            this.currentImage = this.images.length - 1;
         } else {
             this.currentImage--;
         }
