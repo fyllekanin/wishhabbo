@@ -21,6 +21,7 @@ import { InformationController } from './rest-services/information.controller';
 import { BbcodeController } from './rest-services/admin/website-settings/bbcode.controller';
 import { AdminController } from './rest-services/admin/admin.controller';
 import { AccountController } from './rest-services/user/account.controller';
+import { HomePageSettingsController } from './rest-services/admin/website-settings/home-page-settings.controller';
 
 class MainServer extends Server {
     private backgroundTaskHandler: BackgroundTaskHandler;
@@ -64,7 +65,8 @@ class MainServer extends Server {
                 new InformationController(),
                 new BbcodeController(),
                 new AdminController(),
-                new AccountController()
+                new AccountController(),
+                new HomePageSettingsController()
             ],
             null,
             INITIAL_MIDDLEWARE

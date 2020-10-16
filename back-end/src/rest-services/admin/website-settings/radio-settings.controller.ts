@@ -10,6 +10,7 @@ import { ValidationValidators } from '../../../validation/validation.validators'
 import { Logger } from '../../../logging/log.logger';
 import { LogTypes } from '../../../logging/log.types';
 import { RadioSettingsView } from '../../../rest-service-views/two-way/admin/radio-settings.view';
+import { RadioSettingsModel } from '../../../persistance/entities/settings/models/radio-settings.model';
 
 @Controller('api/admin/website-settings/radio-settings')
 export class RadioSettingsController {
@@ -17,17 +18,17 @@ export class RadioSettingsController {
     @Get()
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_MANAGE_RADIO_SETTINGS ])
+        GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_RADIO_SETTINGS])
     ])
     private async getRadioSettings (req: InternalRequest, res: Response): Promise<void> {
-        const radioSettingsModel = await req.serviceConfig.settingRepository.getKeyValue<RadioSettingsView>(SettingKey.RADIO_SETTINGS);
+        const radioSettingsModel = await req.serviceConfig.settingRepository.getKeyValue<RadioSettingsModel>(SettingKey.RADIO_SETTINGS);
         res.status(OK).json(radioSettingsModel);
     }
 
     @Put()
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_MANAGE_RADIO_SETTINGS ])
+        GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_RADIO_SETTINGS])
     ])
     private async updateRadioSettings (req: InternalRequest, res: Response): Promise<void> {
         const payload = RadioSettingsView.of(req);

@@ -5,7 +5,8 @@ import { IEntity } from '../entity.interface';
 export enum SettingKey {
     STAFF_LIST = 'staff-list',
     RADIO_SETTINGS = 'radio-settings',
-    RADIO_STATS = 'radio-stats'
+    RADIO_STATS = 'radio-stats',
+    HOME_PAGE = 'home-page'
 }
 
 interface ISettingEntity extends IEntity {
@@ -19,9 +20,9 @@ export class SettingEntity<T> extends CreatedUpdatedAtEntity implements ISetting
     private parsedValue: T;
     @PrimaryGeneratedColumn()
     settingId: number;
-    @Column({unique: true})
+    @Column({ unique: true })
     key: SettingKey;
-    @Column({type: 'longtext'})
+    @Column({ type: 'longtext' })
     value: string;
 
     constructor (builder?: ISettingEntity) {
