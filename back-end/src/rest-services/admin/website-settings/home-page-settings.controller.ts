@@ -28,12 +28,18 @@ export class HomePageSettingsController {
     private async getHomePageSettings (req: InternalRequest, res: Response): Promise<void> {
         const homePageModel = await req.serviceConfig.settingRepository.getKeyValue<HomePagemodel>(SettingKey.HOME_PAGE);
 
+        if (!homePageModel) {
+            res.status(OK).json(null);
+            return;
+        }
+
         const homePageView = HomePageView.newBuilder()
             .withStarLight(HomePageStarLight.newBuilder()
-                .withText(homePageModel.starLight.text)
-                .withUser(await req.serviceConfig.userRepository.getSlimUserById(homePageModel.starLight.userId))
+                .withText(homePageModel.starLight ? homePageModel.starLight.text : null)
+                .withUser(homePageModel.starLight ?
+                    await req.serviceConfig.userRepository.getSlimUserById(homePageModel.starLight.userId) : null)
                 .build())
-            .withBannerEntries(homePageModel.bannerEntries.map(entry => HomePageBannerEntry.newBuilder()
+            .withBannerEntries((homePageModel.bannerEntries || []).map(entry => HomePageBannerEntry.newBuilder()
                 .withId(entry.id)
                 .withCaption(entry.caption)
                 .build()))

@@ -16,6 +16,7 @@ import { RadioSettingsService } from './radio-settings/radio-settings.service';
 import { BbcodeListComponent } from './bbcodes/list/bbcode-list.component';
 import { HomePageSettingsService } from './home-page-settings/home-page-settings.service';
 import { HomePageSettingsComponent } from './home-page-settings/home-page-settings.component';
+import { SlideShowModule } from '../../../../shared/components/slide-show/slide-show.module';
 
 @NgModule({
     imports: [
@@ -23,7 +24,8 @@ import { HomePageSettingsComponent } from './home-page-settings/home-page-settin
         ContentModule,
         CommonModule,
         TableModule,
-        FormsModule
+        FormsModule,
+        SlideShowModule
     ],
     declarations: [
         WebsiteSettingsComponent,

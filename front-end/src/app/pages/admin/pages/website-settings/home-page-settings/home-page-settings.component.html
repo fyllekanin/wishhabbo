@@ -1,1 +1,19 @@
-Hola
+<app-content header="Home page settings" [actions]="contentActions" (onAction)="onAction($event)">
+    These are the settings for the home page, for the home page you can control the following:
+    <br/>
+    <ul>
+        <li>Banner images and caption</li>
+        <li>Starlight</li>
+    </ul>
+</app-content>
+
+<app-content header="Banner">
+
+</app-content>
+
+<app-content header="Star light">
+
+</app-content>
+
+
+<app-slide-show></app-slide-show>
