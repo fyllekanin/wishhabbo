@@ -31,6 +31,6 @@ export class HomePageSettingsController {
         })
     ])
     private async updateHomePageSettings (req: InternalRequest, res: Response): Promise<void> {
-
+        // Empty..
     }
 }
