@@ -4,10 +4,18 @@ import { GET_ADMIN_PERMISSION_MIDDLEWARE } from '../../middlewares/admin-permiss
 import { Permissions } from '../../../constants/permissions.constant';
 import { InternalRequest } from '../../../utilities/internal.request';
 import { Response } from 'express';
-import { OK } from 'http-status-codes';
+import { BAD_REQUEST, OK } from 'http-status-codes';
 import { SettingKey } from '../../../persistance/entities/settings/setting.entity';
 import { HomePagemodel } from '../../../persistance/entities/settings/models/home-page.model';
 import ExpressFormidable from 'express-formidable';
+import {
+    HomePageBannerEntry,
+    HomePageStarLight,
+    HomePageView
+} from '../../../rest-service-views/two-way/home-page.view';
+import { ValidationValidators } from '../../../validation/validation.validators';
+import { Logger } from '../../../logging/log.logger';
+import { LogTypes } from '../../../logging/log.types';
 
 @Controller('api/admin/website-settings/home-page-settings')
 export class HomePageSettingsController {
@@ -18,8 +26,20 @@ export class HomePageSettingsController {
         GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_HOME_PAGE])
     ])
     private async getHomePageSettings (req: InternalRequest, res: Response): Promise<void> {
-        const homePagemodel = await req.serviceConfig.settingRepository.getKeyValue<HomePagemodel>(SettingKey.HOME_PAGE);
-        res.status(OK).json(homePagemodel);
+        const homePageModel = await req.serviceConfig.settingRepository.getKeyValue<HomePagemodel>(SettingKey.HOME_PAGE);
+
+        const homePageView = HomePageView.newBuilder()
+            .withStarLight(HomePageStarLight.newBuilder()
+                .withText(homePageModel.starLight.text)
+                .withUser(await req.serviceConfig.userRepository.getSlimUserById(homePageModel.starLight.userId))
+                .build())
+            .withBannerEntries(homePageModel.bannerEntries.map(entry => HomePageBannerEntry.newBuilder()
+                .withId(entry.id)
+                .withCaption(entry.caption)
+                .build()))
+            .build();
+
+        res.status(OK).json(homePageView);
     }
 
     @Post()
@@ -31,6 +51,36 @@ export class HomePageSettingsController {
         })
     ])
     private async updateHomePageSettings (req: InternalRequest, res: Response): Promise<void> {
-        // Empty..
+        const payload = HomePageView.of(JSON.parse(req.fields.settings as string), req.files);
+        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
+
+        if (errors.length > 0) {
+            res.status(BAD_REQUEST).json(errors);
+            return;
+        }
+
+        const deletedBannerEntries = payload.getBannerEntries().filter(entry => entry.getIsDeleted());
+        const updatedOrNewBannerEntries = payload.getBannerEntries().filter(entry => entry.getIsUpdated() || entry.getIsNew());
+
+        for (const entry of deletedBannerEntries) {
+            await req.serviceConfig.resourceRepository.removeBannerEntry(entry.getId());
+        }
+
+        for (const entry of updatedOrNewBannerEntries) {
+            await req.serviceConfig.resourceRepository.uploadBannerEntry(entry.getFile(), entry.getId());
+        }
+
+        const setting = await req.serviceConfig.settingRepository.getSetting(SettingKey.HOME_PAGE);
+        const oldValue = setting.value;
+        setting.value = JSON.stringify(payload);
+        await req.serviceConfig.settingRepository.save(setting);
+        await Logger.createAdminLog(req, {
+            id: LogTypes.UPDATED_HOME_PAGE_SETTINGS,
+            contentId: 0,
+            userId: req.user.userId,
+            beforeChange: oldValue,
+            afterChange: setting.value
+        });
+        res.status(OK).json();
     }
 }

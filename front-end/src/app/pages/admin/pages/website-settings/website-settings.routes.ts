@@ -9,6 +9,8 @@ import { BbcodeListComponent } from './bbcodes/list/bbcode-list.component';
 import { GlobalBbcodeService } from 'src/app/core/common-services/global-bbcode.service';
 import { BbcodeComponent } from './bbcodes/bbcode/bbcode.component';
 import { BbcodeService } from './bbcodes/bbcode/bbcode.service';
+import { HomePageSettingsComponent } from './home-page-settings/home-page-settings.component';
+import { HomePageSettingsService } from './home-page-settings/home-page-settings.service';
 
 export const websiteSettingsRoutes: Routes = [
     {
@@ -50,6 +52,13 @@ export const websiteSettingsRoutes: Routes = [
                 component: BbcodeComponent,
                 resolve: {
                     data: BbcodeService
+                }
+            },
+            {
+                path: 'home-page-settings',
+                component: HomePageSettingsComponent,
+                resolve: {
+                    data: HomePageSettingsService
                 }
             }
         ]

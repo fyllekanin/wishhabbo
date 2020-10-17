@@ -47,6 +47,7 @@ export class HomePageBannerEntry {
     private readonly caption: string;
     private readonly isDeleted: boolean;
     private readonly isUpdated: boolean;
+    private readonly isNew: boolean;
     private readonly file: File;
 
     constructor (builder: HomePageBannerEntryBuilder) {
@@ -54,6 +55,7 @@ export class HomePageBannerEntry {
         this.caption = builder.caption;
         this.isDeleted = builder.isDeleted;
         this.isUpdated = builder.isUpdated;
+        this.isNew = builder.isNew;
         this.file = builder.file;
     }
 
@@ -73,6 +75,10 @@ export class HomePageBannerEntry {
         return this.isUpdated;
     }
 
+    getIsNew (): boolean {
+        return this.isNew;
+    }
+
     getFile (): File {
         return this.file;
     }
@@ -87,6 +93,7 @@ class HomePageBannerEntryBuilder {
     caption: string;
     isDeleted: boolean;
     isUpdated: boolean;
+    isNew: boolean;
     file: File;
 
     withId (id: string): HomePageBannerEntryBuilder {
@@ -106,6 +113,11 @@ class HomePageBannerEntryBuilder {
 
     withIsUpdated (isUpdated: boolean): HomePageBannerEntryBuilder {
         this.isUpdated = isUpdated;
+        return this;
+    }
+
+    withIsNew (isNew: boolean): HomePageBannerEntryBuilder {
+        this.isNew = isNew;
         return this;
     }
 
@@ -148,6 +160,7 @@ export class HomePageView {
             .withFile(files[entry.id])
             .withIsDeleted(entry.isDeleted)
             .withIsUpdated(entry.isUpdated)
+            .withIsNew(entry.isNew)
             .build());
 
         return HomePageView.newBuilder()

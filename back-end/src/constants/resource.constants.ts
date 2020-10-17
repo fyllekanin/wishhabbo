@@ -7,4 +7,5 @@ const rootPath = (function () {
 export class ResourceConstants {
 
     static readonly ARTICLE_THUMBNAILS = rootPath + '/resources/article-thumbnails/';
+    static readonly BANNER_ENTRIES = rootPath + '/resources/banner-entries/';
 }

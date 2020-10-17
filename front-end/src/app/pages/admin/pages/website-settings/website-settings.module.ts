@@ -14,6 +14,8 @@ import { StaffListComponent } from './staff-list/staff-list.component';
 import { RadioSettingsComponent } from './radio-settings/radio-settings.component';
 import { RadioSettingsService } from './radio-settings/radio-settings.service';
 import { BbcodeListComponent } from './bbcodes/list/bbcode-list.component';
+import { HomePageSettingsService } from './home-page-settings/home-page-settings.service';
+import { HomePageSettingsComponent } from './home-page-settings/home-page-settings.component';
 
 @NgModule({
     imports: [
@@ -29,12 +31,14 @@ import { BbcodeListComponent } from './bbcodes/list/bbcode-list.component';
         StaffListComponent,
         RadioSettingsComponent,
         BbcodeListComponent,
-        BbcodeComponent
+        BbcodeComponent,
+        HomePageSettingsComponent
     ],
     providers: [
         StaffListService,
         RadioSettingsService,
-        BbcodeService
+        BbcodeService,
+        HomePageSettingsService
     ],
     exports: [
         RouterModule

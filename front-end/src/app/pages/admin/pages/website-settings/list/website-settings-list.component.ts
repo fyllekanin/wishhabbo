@@ -31,7 +31,7 @@ export class WebsiteSettingsListComponent {
             name: 'Home Page',
             description: 'Edit banner, spotlight etc',
             permissions: ['CAN_MANAGE_HOME_PAGE'],
-            url: '/admin/website-settings/home-page'
+            url: '/admin/website-settings/home-page-settings'
         }
     ];
 
