@@ -243,4 +243,10 @@ export class ErrorCodes {
         name: 'To young habbo',
         description: 'Your habbo needs to be at least 1 week old'
     };
+
+    static readonly FILE_MISSING: ErrorCode = {
+        code: 40,
+        name: 'Missing file',
+        description: 'File is missing from payload'
+    };
 }

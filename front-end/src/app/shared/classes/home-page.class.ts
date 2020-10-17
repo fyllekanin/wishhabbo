@@ -3,7 +3,7 @@ import { SlimUser } from './slim-user.class';
 
 export class HomePageStarLight {
     @objectOf(SlimUser)
-    user: SlimUser;
+    user: SlimUser = new SlimUser(null);
     @primitiveOf(String)
     text: string;
 

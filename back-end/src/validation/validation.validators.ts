@@ -19,6 +19,7 @@ import { BbcodeValidator } from './entities/settings/bbcode.validator';
 import { RadioRequestValidator } from './entities/radio-request.validator';
 import { ChangePasswordPayloadValidator } from './payloads/user/change-password-payload.validator';
 import { ChangeHabboPayloadValidator } from './payloads/user/change-habbo-payload.validator';
+import { HomePageSettingsPayloadValidator } from './payloads/admin/home-page-settings-payload.validator';
 
 export class ValidationValidators {
     private static readonly ENTITY_VALIDATORS: Array<EntityValidator<IEntity>> = [
@@ -39,7 +40,8 @@ export class ValidationValidators {
         new StaffListPayloadValidator(),
         new RadioSettingsPayloadValidator(),
         new ChangePasswordPayloadValidator(),
-        new ChangeHabboPayloadValidator()
+        new ChangeHabboPayloadValidator(),
+        new HomePageSettingsPayloadValidator()
     ];
 
     static async validateEntity<T> (entity: T, serviceConfig: ServiceConfig, user: InternalUser): Promise<Array<ValidationError>> {

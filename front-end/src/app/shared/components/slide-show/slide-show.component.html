@@ -2,7 +2,7 @@
 
     <div *ngFor="let slide of images" class="mySlides fade" [ngClass]="slide.isActive ? 'isActive' : ''">
         <img [src]="slide.link">
-        <div class="text">{{slide.caption}}</div>
+        <div class="text" *ngIf="slide.caption">{{slide.caption}}</div>
     </div>
 
     <a class="prev" (click)="previousSlide()">&#10094;</a>
