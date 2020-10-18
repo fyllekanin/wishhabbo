@@ -1,7 +1,9 @@
 <div class="grid-container">
     <div class="grid-x grid-margin-x">
         <div class="cell small-12 medium-12 large-9">
-            <app-slide-show></app-slide-show>
+            <div class="is-desktop">
+                <app-slide-show></app-slide-show>
+            </div>
 
             <app-content header="Latest Habbo Guides" [actions]="contentActions" (onAction)="onSeeMore(0)">
                 <div class="grid-x grid-margin-x">

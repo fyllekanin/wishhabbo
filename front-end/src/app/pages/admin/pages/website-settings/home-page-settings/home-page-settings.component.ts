@@ -19,7 +19,7 @@ export class HomePageSettingsComponent {
     contentActions: Array<UserAction> = [
         { label: 'Save', value: this.ACTIONS.SAVE },
         { label: 'Go back', value: this.ACTIONS.GO_BACK }
-    ]
+    ];
 
     constructor (
         private service: HomePageSettingsService,
@@ -28,7 +28,7 @@ export class HomePageSettingsComponent {
         this.data = activatedRoute.snapshot.data.data;
     }
 
-    async onAction (action: UserAction): Promise<void> {
+    async onAction (_action: UserAction): Promise<void> {
         // empty
     }
 }
