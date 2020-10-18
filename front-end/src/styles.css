@@ -515,3 +515,21 @@ i:focus ~ .action-list {
     display: block;
     font-size: 12px;
 }
+
+.is-desktop {
+    display: block;
+}
+
+.is-mobile {
+    display: none;
+}
+
+@media only screen and (max-width: 1023px) {
+    .is-desktop {
+        display: none;
+    }
+
+    .is-mobile {
+        display: block;
+    }
+}
