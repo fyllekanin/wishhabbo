@@ -166,7 +166,9 @@ export class HomePageView {
         return HomePageView.newBuilder()
             .withStarLight(HomePageStarLight.newBuilder()
                 .withText(body.starLight.text)
-                .withUser(body.starLight.user.userId ? new SlimUserView(body.starLight.user.userId) : null)
+                .withUser(body.starLight.user.username ? SlimUserView.newBuilder()
+                    .withUsername(body.starLight.user.username)
+                    .build() : null)
                 .build())
             .withBannerEntries(bannerEntries)
             .build();

@@ -21,8 +21,8 @@ export class HomePageSettingsService implements Resolve<HomePageSettingsModel> {
             .pipe(map(data => new HomePageSettingsModel(data)));
     }
 
-    async save (data: FormData): Promise<void> {
-        await this.httpClient.post('/api/admin/website-settings/home-page-settings', data)
+    async save (data: FormData): Promise<HomePageSettingsModel> {
+        return await this.httpClient.post('/api/admin/website-settings/home-page-settings', data)
             .toPromise()
             .then(() => {
                 this.siteNotificationService.create({
@@ -30,7 +30,12 @@ export class HomePageSettingsService implements Resolve<HomePageSettingsModel> {
                     message: 'Home page settings updated',
                     type: SiteNotificationType.INFO
                 });
+                return this.httpClient.get('/api/admin/website-settings/home-page-settings')
+                    .toPromise().then(data => new HomePageSettingsModel(data));
             })
-            .catch(error => this.siteNotificationService.onError(error.error));
+            .catch(error => {
+                this.siteNotificationService.onError(error.error)
+                return null;
+            });
     }
 }

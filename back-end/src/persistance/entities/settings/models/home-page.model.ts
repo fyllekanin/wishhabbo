@@ -8,7 +8,7 @@ export interface HomePageBannerEntry {
     caption: string;
 }
 
-export interface HomePagemodel {
+export interface HomePageModel {
     starLight: HomePageStarLight;
     bannerEntries: Array<HomePageBannerEntry>;
 }

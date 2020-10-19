@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChildren } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HomePageSettingsModel } from './home-page-settings.model';
 import { UserAction } from '../../../../../shared/constants/common.interfaces';
 import { HomePageSettingsService } from './home-page-settings.service';
@@ -31,6 +31,7 @@ export class HomePageSettingsComponent {
 
     constructor (
         private service: HomePageSettingsService,
+        private router: Router,
         activatedRoute: ActivatedRoute
     ) {
         this.data = activatedRoute.snapshot.data.data;
@@ -78,8 +79,29 @@ export class HomePageSettingsComponent {
         }
     }
 
-    async onAction (_action: UserAction): Promise<void> {
-        // empty
+    async onAction (action: UserAction): Promise<void> {
+        switch (action.value) {
+            case this.ACTIONS.GO_BACK:
+                await this.router.navigateByUrl('/admin/website-settings/list');
+                break;
+            case  this.ACTIONS.SAVE:
+                const formData = new FormData();
+                formData.append('settings', JSON.stringify(this.data));
+                this.imageElements.forEach((element, index) => {
+                    formData.append(this.data.bannerEntries[index].id, element.nativeElement.files[0]);
+                });
+                const result = await this.service.save(formData);
+                if (result) {
+                    this.data = result;
+                    this.images = this.data.bannerEntries.map(entry => ({
+                        id: entry.id,
+                        link: `/resources/banner-entries/${entry.id}.gif`,
+                        caption: entry.caption,
+                        isActive: false
+                    }));
+                }
+                break;
+        }
     }
 
     private getFile (event: any): Promise<any> {
