@@ -74,6 +74,10 @@ span {
     display: block;
 }
 
+.display-inline-block {
+    display: inline-block;
+}
+
 /** Dropdown menu **/
 .dropdown-menu {
     cursor: pointer;

@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+
+export interface SlideShowImage {
+    id?: string,
+    link: any,
+    caption: string,
+    isActive: boolean
+}
 
 @Component({
     selector: 'app-slide-show',
@@ -10,19 +17,19 @@ export class SlideShowComponent implements OnInit, OnDestroy {
 
     currentImage = 0;
 
-    @Input() images: Array<{ link: string, caption: string, isActive: boolean }> = [
+    @Input() images: Array<SlideShowImage> = [
         { link: 'https://dummyimage.com/1000x250/000/fff', caption: 'Test #1', isActive: true },
         { link: 'https://dummyimage.com/1000x250/000/323', caption: 'Test #2', isActive: false },
         { link: 'https://dummyimage.com/1000x250/000/000', caption: 'Test #3', isActive: false }
     ];
 
-    ngOnInit(): void {
+    ngOnInit (): void {
         this.intervalTimer = setInterval(() => {
             this.nextSlide();
-        }, 3000);
+        }, 5000);
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy (): void {
         clearInterval(this.intervalTimer);
     }
 

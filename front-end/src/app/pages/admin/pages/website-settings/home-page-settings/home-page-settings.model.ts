@@ -3,7 +3,7 @@ import { HomePageBannerEntry, HomePageStarLight } from '../../../../../shared/cl
 
 export class HomePageSettingsModel {
     @objectOf(HomePageStarLight)
-    starLight: HomePageStarLight;
+    starLight: HomePageStarLight = new HomePageStarLight(null);
     @arrayOf(HomePageBannerEntry)
     bannerEntries: Array<HomePageBannerEntry> = [];
 
