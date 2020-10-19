@@ -48,7 +48,7 @@ export class HomePageSettingsComponent {
 
     onCaptionChange (): void {
         this.images.forEach(image => {
-            const entry = this.data.bannerEntries.find(entry => entry.id === image.id);
+            const entry = this.data.bannerEntries.find(item => item.id === image.id);
             if (entry) {
                 image.caption = entry.caption;
             }

@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 export interface SlideShowImage {
-    id?: string,
-    link: any,
-    caption: string,
-    isActive: boolean
+    id?: string;
+    link: any;
+    caption: string;
+    isActive: boolean;
 }
 
 @Component({
