@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Slot } from '../../../shared/components/timetable/timetable.interface';
 import { TimeHelper } from '../../../shared/helpers/time.helper';
 import { UserAction } from '../../../shared/constants/common.interfaces';
+import { SlideShowImage } from '../../../shared/components/slide-show/slide-show.component';
 
 @Component({
     selector: 'app-default-home',
@@ -14,6 +15,7 @@ export class HomeComponent {
     data = new HomeModel();
     slots: Array<Slot> = [];
 
+    images: Array<SlideShowImage> = [];
     contentActions: Array<UserAction> = [
         { label: 'See More', value: 0 }
     ];
@@ -23,6 +25,12 @@ export class HomeComponent {
         activatedRoute: ActivatedRoute
     ) {
         this.data = activatedRoute.snapshot.data.data;
+        this.images = this.data.bannerEntries.map((entry, index) => ({
+            id: entry.id,
+            link: `/resources/banner-entries/${entry.id}.gif`,
+            caption: entry.caption,
+            isActive: index === 0
+        }));
         this.slots = this.getTimeConvertedSlots(this.data.todayEvents);
     }
 

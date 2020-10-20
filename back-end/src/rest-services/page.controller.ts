@@ -1,7 +1,7 @@
-import { ArticleEntity } from './../persistance/entities/staff/media/article.entity';
-import { PaginationView } from './../rest-service-views/respond-views/pagination.view';
-import { PaginationHelper } from './../helpers/pagination.helper';
-import { PaginationValue, RequestUtility } from './../utilities/request.utility';
+import { ArticleEntity } from '../persistance/entities/staff/media/article.entity';
+import { PaginationView } from '../rest-service-views/respond-views/pagination.view';
+import { PaginationHelper } from '../helpers/pagination.helper';
+import { PaginationValue, RequestUtility } from '../utilities/request.utility';
 import { Controller, Get, Middleware, Post } from '@overnightjs/core';
 import { Response } from 'express';
 import { InternalRequest, ServiceConfig } from '../utilities/internal.request';
@@ -23,6 +23,8 @@ import { AUTHORIZATION_MIDDLEWARE } from './middlewares/authorization.middleware
 import { BadgeCompleteEntity } from '../persistance/entities/habbo/badge-complete.entity';
 import { Logger } from '../logging/log.logger';
 import { LogTypes } from '../logging/log.types';
+import { HomePageModel } from '../persistance/entities/settings/models/home-page.model';
+import { HomePageBannerEntry, HomePageStarLight } from '../rest-service-views/two-way/home-page.view';
 
 @Controller('api/page')
 export class PageController {
@@ -121,13 +123,34 @@ export class PageController {
 
     @Get('home')
     private async getHomePage (req: InternalRequest, res: Response): Promise<void> {
+        const homePageModel = await req.serviceConfig.settingRepository.getKeyValue<HomePageModel>(SettingKey.HOME_PAGE);
         res.status(OK).json(HomePage.newBuilder()
             .withBadges(await this.getBadges(req.serviceConfig, req.user.userId))
             .withGuides(await this.getArticlesFor(req, 4, ArticleConstants.TYPES.GUIDE.value))
             .withHabboNews(await this.getArticlesFor(req, 4, ArticleConstants.TYPES.NEWS.value))
             .withSiteNews(await this.getArticlesFor(req, 4, ArticleConstants.TYPES.SITE_NEWS.value))
             .withTodaysEvents(await this.getNextSlots(req))
+            .withStarLight(homePageModel && homePageModel.starLight ? await this.getStarLight(req, homePageModel) : null)
+            .withBannerEntries(homePageModel ? this.getBannerEntries(homePageModel) : [])
             .build());
+    }
+
+    private getBannerEntries (homePageModel: HomePageModel): Array<HomePageBannerEntry> {
+        return (homePageModel.bannerEntries || []).map(entry => HomePageBannerEntry.newBuilder()
+            .withId(entry.id)
+            .withCaption(entry.caption)
+            .build());
+    }
+
+    private async getStarLight (req: InternalRequest, homePageModel: HomePageModel): Promise<HomePageStarLight> {
+        const user = await req.serviceConfig.userRepository.getSlimUserById(homePageModel.starLight.userId);
+        if (!user) {
+            return null;
+        }
+        return HomePageStarLight.newBuilder()
+            .withUser(user)
+            .withText(homePageModel.starLight.text)
+            .build();
     }
 
     private async getBadges (serviceConfig: ServiceConfig, userId: number): Promise<Array<BadgeView>> {

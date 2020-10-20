@@ -25,7 +25,7 @@ export class HomePageSettingsPayloadValidator implements PayloadValidator<HomePa
     }
 
     private async validateBannerEntry (entry: HomePageBannerEntry, errors: Array<ValidationError>): Promise<void> {
-        if (!entry.getFile() && (entry.getIsNew() || entry.getIsUpdated())) {
+        if (!entry.getFile() && ((entry.getIsNew() || entry.getIsUpdated()) && !entry.getIsDeleted())) {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.FILE_MISSING.code)
                 .withField('file')

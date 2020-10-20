@@ -66,7 +66,8 @@ export class HomePageSettingsController {
         }
 
         const deletedBannerEntries = payload.getBannerEntries().filter(entry => entry.getIsDeleted());
-        const updatedOrNewBannerEntries = payload.getBannerEntries().filter(entry => entry.getIsUpdated() || entry.getIsNew());
+        const updatedOrNewBannerEntries = payload.getBannerEntries()
+            .filter(entry => (entry.getIsUpdated() || entry.getIsNew()) && !entry.getIsDeleted());
 
         for (const entry of deletedBannerEntries) {
             await req.serviceConfig.resourceRepository.removeBannerEntry(entry.getId());
