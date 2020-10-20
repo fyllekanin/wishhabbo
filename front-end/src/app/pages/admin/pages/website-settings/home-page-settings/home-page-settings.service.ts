@@ -34,7 +34,7 @@ export class HomePageSettingsService implements Resolve<HomePageSettingsModel> {
                     .toPromise().then(response => new HomePageSettingsModel(response));
             })
             .catch(error => {
-                this.siteNotificationService.onError(error.error)
+                this.siteNotificationService.onError(error.error);
                 return null;
             });
     }
