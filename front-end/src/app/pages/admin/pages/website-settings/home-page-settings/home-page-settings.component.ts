@@ -66,7 +66,7 @@ export class HomePageSettingsComponent {
         if (!result) {
             return;
         }
-        let image = this.images.find(image => image.id === entry.id);
+        const image = this.images.find(item => item.id === entry.id);
         if (!image) {
             this.images.push({
                 id: entry.id,

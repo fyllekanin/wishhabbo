@@ -31,7 +31,7 @@ export class HomePageSettingsService implements Resolve<HomePageSettingsModel> {
                     type: SiteNotificationType.INFO
                 });
                 return this.httpClient.get('/api/admin/website-settings/home-page-settings')
-                    .toPromise().then(data => new HomePageSettingsModel(data));
+                    .toPromise().then(response => new HomePageSettingsModel(response));
             })
             .catch(error => {
                 this.siteNotificationService.onError(error.error)
