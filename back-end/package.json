@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jasmine-ts --config=jasmine.json",
     "clean": "node node_modules/rimraf/bin dist/*",
-    "lint": "node node_modules//tslint/bin/tslint -c tslint.json -p tsconfig.json --fix",
+    "lint": "node node_modules//tslint/bin/tslint -c tslint.json -p tsconfig.json",
     "tsc": "node node_modules/typescript/bin/tsc",
     "build": "node node_modules/npm-run-all/bin/npm-run-all/index clean lint tsc copy-assets",
     "copy-assets": "node scripts/copy-assets.js",
@@ -14,7 +14,8 @@
     "dev": "node node_modules/nodemon/bin/nodemon --watch src -e ts,ejs --exec npm run dev:start",
     "start": "node .",
     "re:migrate": "node node_modules/ts-node/dist/bin scripts/drop-tables.js && node node_modules/typescript/bin/tsc && node node_modules/ts-node/dist/bin node_modules/typeorm/cli migration:run --config ./src/environments/database",
-    "migrate": "node node_modules/typescript/bin/tsc && node node_modules/ts-node/dist/bin node_modules/typeorm/cli migration:run --config ./src/environments/database"
+    "migrate": "node node_modules/typescript/bin/tsc && node node_modules/ts-node/dist/bin node_modules/typeorm/cli migration:run --config ./src/environments/database",
+    "recompile-rules": "node node_modules/typescript/bin/tsc rules/restMethodAccessorRule.ts --lib es6"
   },
   "author": "",
   "license": "ISC",

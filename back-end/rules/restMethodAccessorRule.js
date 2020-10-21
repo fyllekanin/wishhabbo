@@ -16,7 +16,6 @@ exports.__esModule = true;
 exports.Rule = void 0;
 var Lint = require("tslint");
 var ts = require("typescript");
-// Exported class always should be named "Rule" and extends Lint.Rules.AbstractRule
 var Rule = /** @class */ (function (_super) {
     __extends(Rule, _super);
     function Rule() {
@@ -41,24 +40,18 @@ var Walker = /** @class */ (function (_super) {
         if (this.isNonPublic(node) && this.isRestMethod(node)) {
             this.addFailureAtNode(node, 'REST method accessor needs to be public');
         }
+        ts.forEachChild(node, this.visitMethodDeclaration.bind(this));
     };
     Walker.prototype.isRestMethod = function (node) {
-        var restDecorators = ['Get', 'Put', 'Post', 'Delete'];
         var isRestDecorator = function (decorator) {
-            /* if (!ts.isIdentifier(decorator.expression)) {
-                return false;
-            } */
-            console.log(decorator.expression.getFullText());
-            return restDecorators.includes(decorator.expression.getText());
+            return decorator.expression.getText()
+                .match(/(Get\((.*?)\))|(Post\((.*?)\))|(Delete\((.*?)\))|(Put\((.*?)\))/);
         };
-        if (node.getFullText() === 'private async getArticle (req: InternalRequest, res: Response): Promise<void> {') {
-            console.log(node);
-        }
         return (node.decorators || []).some(isRestDecorator);
     };
     Walker.prototype.isNonPublic = function (node) {
         if (!node.modifiers) {
-            return true;
+            return false;
         }
         var kinds = node.modifiers.map(function (modifier) { return modifier.kind; });
         return kinds.includes(ts.SyntaxKind.PrivateKeyword) || kinds.includes(ts.SyntaxKind.ProtectedKeyword);

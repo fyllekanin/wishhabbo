@@ -2,7 +2,6 @@
 import * as Lint from 'tslint';
 import * as ts from 'typescript';
 
-// Exported class always should be named "Rule" and extends Lint.Rules.AbstractRule
 export class Rule extends Lint.Rules.AbstractRule {
     public static FAILURE_STRING = 'Incorrect REST method accessor';
 
@@ -21,28 +20,21 @@ class Walker extends Lint.AbstractWalker<any> {
         if (this.isNonPublic(node) && this.isRestMethod(node)) {
             this.addFailureAtNode(node, 'REST method accessor needs to be public');
         }
+        ts.forEachChild(node, this.visitMethodDeclaration.bind(this));
     }
 
     private isRestMethod(node: ts.MethodDeclaration): boolean {
-        const restDecorators = ['Get', 'Put', 'Post', 'Delete'];
         const isRestDecorator = (decorator: ts.Decorator) => {
-            /* if (!ts.isIdentifier(decorator.expression)) {
-                return false;
-            } */
-            console.log(decorator.expression.getFullText());
-            return restDecorators.includes(decorator.expression.getText());
+            return decorator.expression.getText()
+                .match(/(Get\((.*?)\))|(Post\((.*?)\))|(Delete\((.*?)\))|(Put\((.*?)\))/);
         };
-        if (node.getFullText() === 'private async getArticle (req: InternalRequest, res: Response): Promise<void> {') {
-            console.log(node);
-        }
         return (node.decorators || []).some(isRestDecorator);
     }
 
     private isNonPublic(node: ts.MethodDeclaration): boolean {
         if (!node.modifiers) {
-            return true;
+            return false;
         }
-
         const kinds = node.modifiers.map(modifier => modifier.kind);
         return kinds.includes(ts.SyntaxKind.PrivateKeyword) || kinds.includes(ts.SyntaxKind.ProtectedKeyword);
     }

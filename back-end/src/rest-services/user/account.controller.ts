@@ -15,7 +15,7 @@ import { ChangeHabboPayload } from '../../rest-service-views/payloads/user/chang
 export class AccountController {
 
     @Put('change-habbo')
-    private async updateHabbo (req: InternalRequest, res: Response): Promise<void> {
+    async updateHabbo (req: InternalRequest, res: Response): Promise<void> {
         const payload = ChangeHabboPayload.of(req);
         const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         if (errors.length > 0) {
@@ -40,7 +40,7 @@ export class AccountController {
 
     @Put('change-password')
     @Middleware([AUTHORIZATION_MIDDLEWARE])
-    private async updatePassword (req: InternalRequest, res: Response): Promise<void> {
+    async updatePassword (req: InternalRequest, res: Response): Promise<void> {
         const payload = ChangePasswordPayload.of(req);
         const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         if (errors.length > 0) {
