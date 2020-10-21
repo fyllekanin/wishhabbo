@@ -57,7 +57,7 @@ export class RegisterPayloadValidator implements PayloadValidator<RegisterPayloa
                 .build());
         }
 
-        if (!habbo.getMotto() || habbo.getMotto() !== 'wishhabbo-register') {
+        if (!habbo.getMotto() || habbo.getMotto().trim() !== 'wishhabbo-register') {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.HABBO_MOTTO_INCORRECT.code)
                 .withField('habbo')

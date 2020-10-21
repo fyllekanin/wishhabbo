@@ -34,7 +34,7 @@ export class UserController {
             Permissions.ADMIN.CAN_MANAGE_USER_ADVANCED
         ])
     ])
-    private async getUsers (req: InternalRequest, res: Response): Promise<void> {
+    async getUsers (req: InternalRequest, res: Response): Promise<void> {
         const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
         const skipUserIds = await UserGroupOrchestrator.getUserIdsWithMoreOrEqualImmunity(req.serviceConfig, immunity);
 
@@ -70,7 +70,7 @@ export class UserController {
             Permissions.ADMIN.CAN_MANAGE_USER_ADVANCED
         ])
     ])
-    private async getUserDetails (req: InternalRequest, res: Response): Promise<void> {
+    async getUserDetails (req: InternalRequest, res: Response): Promise<void> {
         const user = await req.serviceConfig.userRepository.getUserById(Number(req.params.userId));
         const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
         const userImmunity = user ? await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, user.userId) : 0;
@@ -95,7 +95,7 @@ export class UserController {
             Permissions.ADMIN.CAN_MANAGE_USER_GROUPS
         ])
     ])
-    private async getUserGroups (req: InternalRequest, res: Response): Promise<void> {
+    async getUserGroups (req: InternalRequest, res: Response): Promise<void> {
         const user = await req.serviceConfig.userRepository.getUserById(Number(req.params.userId));
         const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
         const userImmunity = user ? await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, user.userId) : 0;
@@ -132,7 +132,7 @@ export class UserController {
             Permissions.ADMIN.CAN_MANAGE_USER_GROUPS
         ])
     ])
-    private async updateUserGroups (req: InternalRequest, res: Response): Promise<void> {
+    async updateUserGroups (req: InternalRequest, res: Response): Promise<void> {
         const payload = UserGroupsView.of(req);
         const user = await req.serviceConfig.userRepository.getUserById(payload.getUserId());
         const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
@@ -174,7 +174,7 @@ export class UserController {
             Permissions.ADMIN.CAN_MANAGE_USER_ADVANCED
         ])
     ])
-    private async updateUserDetails (req: InternalRequest, res: Response): Promise<void> {
+    async updateUserDetails (req: InternalRequest, res: Response): Promise<void> {
         const payload = UserDetailsPayload.of(req);
         const user = await req.serviceConfig.userRepository.getUserById(payload.getUserId());
         const userdata = await req.serviceConfig.userRepository.getUserdataByUserId(user.userId);

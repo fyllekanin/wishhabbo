@@ -35,7 +35,7 @@ export class RadioController extends TimetableController {
 
     @Get('connection-information')
     @Middleware([AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_BOOK_RADIO])])
-    private async getConnectionInformation (req: InternalRequest, res: Response): Promise<void> {
+    async getConnectionInformation (req: InternalRequest, res: Response): Promise<void> {
         const canSeeInformation = await UserGroupOrchestrator
                 .doUserHaveStaffPermission(req.serviceConfig, req.user.userId, Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO) ||
             await this.isUserCurrentOrNextDj(req.serviceConfig, req.user.userId);
@@ -65,21 +65,9 @@ export class RadioController extends TimetableController {
             .build());
     }
 
-    private async isUserCurrentOrNextDj (serviceConfig: ServiceConfig, userId: number): Promise<boolean> {
-        const day = TimeUtility.getCurrentDay();
-        const hour = TimeUtility.getCurrentHour();
-        const currentSlot = await serviceConfig.timetableRepository.getSlotForTime(day, hour, TimetableType.RADIO);
-
-        const nextHour = hour + 1 >= 24 ? 0 : hour + 1;
-        const nextDay = nextHour === 0 ? (day + 1 > 7 ? 1 : day + 1) : day;
-        const nextSlot = await serviceConfig.timetableRepository.getSlotForTime(nextDay, nextHour, TimetableType.RADIO);
-
-        return currentSlot.userId === userId || nextSlot.userId === userId;
-    }
-
     @Get('requests')
     @Middleware([AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_BOOK_RADIO])])
-    private async getRadioRequests (req: InternalRequest, res: Response): Promise<void> {
+    async getRadioRequests (req: InternalRequest, res: Response): Promise<void> {
         const requests = await req.serviceConfig.radioRequestRepository.getRequestsWithinTwoHours();
         const items = [];
 
@@ -97,7 +85,7 @@ export class RadioController extends TimetableController {
 
     @Delete('requests/:radioRequestId')
     @Middleware([AUTHORIZATION_MIDDLEWARE, GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_UNBOOK_OTHERS_RADIO])])
-    private async deleteRadioRequests (req: InternalRequest, res: Response): Promise<void> {
+    async deleteRadioRequests (req: InternalRequest, res: Response): Promise<void> {
         const request = await req.serviceConfig.radioRequestRepository.get(Number(req.params.radioRequestId));
         if (!request) {
             res.status(NOT_FOUND).json();
@@ -117,7 +105,7 @@ export class RadioController extends TimetableController {
 
     @Post('like')
     @Middleware([AUTHORIZATION_MIDDLEWARE])
-    private async createRadioLike (req: InternalRequest, res: Response): Promise<void> {
+    async createRadioLike (req: InternalRequest, res: Response): Promise<void> {
         const radioStats = await req.serviceConfig.settingRepository.getKeyValue<RadioStatsModel>(SettingKey.RADIO_STATS);
         if (!radioStats || !radioStats.currentDj) {
             res.status(BAD_REQUEST).json([{
@@ -164,14 +152,14 @@ export class RadioController extends TimetableController {
     }
 
     @Get('slots')
-    private async getSlots (req: InternalRequest, res: Response): Promise<void> {
+    async getSlots (req: InternalRequest, res: Response): Promise<void> {
         const slots = await req.serviceConfig.timetableRepository.getSlots(TimetableType.RADIO);
         res.status(OK).json(await TimetableUtility.getConvertedSlots(req, slots));
     }
 
     @Put(':timetableId')
     @Middleware(middlewares)
-    private async updateBooking (req: InternalRequest, res: Response): Promise<void> {
+    async updateBooking (req: InternalRequest, res: Response): Promise<void> {
         const entity = await req.serviceConfig.timetableRepository.get(Number(req.params.timetableId));
         if (!entity) {
             res.status(NOT_FOUND).json();
@@ -196,7 +184,7 @@ export class RadioController extends TimetableController {
 
     @Post('book')
     @Middleware(middlewares)
-    private async createBooking (req: InternalRequest, res: Response): Promise<void> {
+    async createBooking (req: InternalRequest, res: Response): Promise<void> {
         const slot = TimetableSlot.of(req, true, null);
         const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req.user);
         if (errors.length > 0) {
@@ -226,7 +214,7 @@ export class RadioController extends TimetableController {
 
     @Delete('unbook/:timetableId')
     @Middleware(middlewares)
-    private async deleteBooking (req: InternalRequest, res: Response): Promise<void> {
+    async deleteBooking (req: InternalRequest, res: Response): Promise<void> {
         const entity = await req.serviceConfig.timetableRepository.get(Number(req.params.timetableId));
         if (!entity) {
             res.status(NOT_FOUND).json();
@@ -252,5 +240,17 @@ export class RadioController extends TimetableController {
             afterChange: null
         });
         res.status(OK).json(null);
+    }
+
+    private async isUserCurrentOrNextDj (serviceConfig: ServiceConfig, userId: number): Promise<boolean> {
+        const day = TimeUtility.getCurrentDay();
+        const hour = TimeUtility.getCurrentHour();
+        const currentSlot = await serviceConfig.timetableRepository.getSlotForTime(day, hour, TimetableType.RADIO);
+
+        const nextHour = hour + 1 >= 24 ? 0 : hour + 1;
+        const nextDay = nextHour === 0 ? (day + 1 > 7 ? 1 : day + 1) : day;
+        const nextSlot = await serviceConfig.timetableRepository.getSlotForTime(nextDay, nextHour, TimetableType.RADIO);
+
+        return currentSlot.userId === userId || nextSlot.userId === userId;
     }
 }

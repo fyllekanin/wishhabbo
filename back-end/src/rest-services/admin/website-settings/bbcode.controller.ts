@@ -11,7 +11,7 @@ import { Logger } from '../../../logging/log.logger';
 export class BbcodeController {
 
     @Get(':bbcodeId')
-    private async getBbcode (req: InternalRequest, res: Response): Promise<void> {
+    async getBbcode (req: InternalRequest, res: Response): Promise<void> {
         const bbcode = await req.serviceConfig.bbcodeRepository.get(Number(req.params.bbcodeId));
         if (!bbcode) {
             res.status(NOT_FOUND).json();
@@ -22,7 +22,7 @@ export class BbcodeController {
     }
 
     @Post()
-    private async createBbcode (req: InternalRequest, res: Response): Promise<void> {
+    async createBbcode (req: InternalRequest, res: Response): Promise<void> {
         const entity = BbcodeEntity.of(req);
         const errors = await ValidationValidators.validateEntity(entity, req.serviceConfig, req.user);
         if (errors.length > 0) {
@@ -43,7 +43,7 @@ export class BbcodeController {
     }
 
     @Put(':bbcodeId')
-    private async updateBbcode (req: InternalRequest, res: Response): Promise<void> {
+    async updateBbcode (req: InternalRequest, res: Response): Promise<void> {
         const existing = await req.serviceConfig.bbcodeRepository.get(Number(req.params.bbcodeId));
         if (!existing || existing.isSystem) {
             res.status(NOT_FOUND).json();
@@ -79,7 +79,7 @@ export class BbcodeController {
     }
 
     @Delete(':bbcodeId')
-    private async deleteBbcode (req: InternalRequest, res: Response): Promise<void> {
+    async deleteBbcode (req: InternalRequest, res: Response): Promise<void> {
         const existing = await req.serviceConfig.bbcodeRepository.get(Number(req.params.bbcodeId));
         if (!existing || existing.isSystem) {
             res.status(NOT_FOUND).json();

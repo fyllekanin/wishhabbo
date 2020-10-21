@@ -30,7 +30,7 @@ export class ArticleController {
         Permissions.STAFF.CAN_WRITE_ARTICLES,
         Permissions.STAFF.CAN_MANAGE_ARTICLES
     ])])
-    private async getArticles (req: InternalRequest, res: Response): Promise<void> {
+    async getArticles (req: InternalRequest, res: Response): Promise<void> {
         const data = await req.serviceConfig.articleRepository.paginate({
             take: PaginationHelper.TWENTY_ITEMS,
             page: Number(req.params.page),
@@ -68,7 +68,7 @@ export class ArticleController {
         Permissions.STAFF.CAN_WRITE_ARTICLES,
         Permissions.STAFF.CAN_MANAGE_ARTICLES
     ])])
-    private async getArticle (req: InternalRequest, res: Response): Promise<void> {
+    async getArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         if (!article) {
             res.status(NOT_FOUND).json();
@@ -101,7 +101,7 @@ export class ArticleController {
             multiples: true
         })
     ])
-    private async createArticle (req: InternalRequest, res: Response): Promise<void> {
+    async createArticle (req: InternalRequest, res: Response): Promise<void> {
         const payload = ArticlePayload.of(JSON.parse(req.fields.article as string), req.files.thumbnail, null);
         const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         if (payloadErrors.length > 0) {
@@ -155,7 +155,7 @@ export class ArticleController {
             multiples: true
         })
     ])
-    private async updateArticle (req: InternalRequest, res: Response): Promise<void> {
+    async updateArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         const canManageArticle = await this.canRequesterManageArticles(req);
 
@@ -218,7 +218,7 @@ export class ArticleController {
         AUTHORIZATION_MIDDLEWARE,
         GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES])
     ])
-    private async deleteArticle (req: InternalRequest, res: Response): Promise<void> {
+    async deleteArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         const canManageArticle = await this.canRequesterManageArticles(req);
 
@@ -246,7 +246,7 @@ export class ArticleController {
         AUTHORIZATION_MIDDLEWARE,
         GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES])
     ])
-    private async approveArticle (req: InternalRequest, res: Response): Promise<void> {
+    async approveArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         const canManageArticle = await this.canRequesterManageArticles(req);
 
@@ -274,7 +274,7 @@ export class ArticleController {
         AUTHORIZATION_MIDDLEWARE,
         GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_WRITE_ARTICLES, Permissions.STAFF.CAN_MANAGE_ARTICLES])
     ])
-    private async unapproveArticle (req: InternalRequest, res: Response): Promise<void> {
+    async unapproveArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         const canManageArticle = await this.canRequesterManageArticles(req);
 

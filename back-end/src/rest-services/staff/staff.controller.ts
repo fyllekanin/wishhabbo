@@ -12,7 +12,7 @@ export class StaffController {
 
     @Get('dashboard')
     @Middleware([AUTHORIZATION_MIDDLEWARE])
-    private async getDashboard (req: InternalRequest, res: Response): Promise<void> {
+    async getDashboard (req: InternalRequest, res: Response): Promise<void> {
 
         if (!await UserGroupOrchestrator.doUserHaveAnyStaffPermission(req.serviceConfig, req.user.userId)) {
             res.status(BAD_REQUEST).json();

@@ -249,4 +249,10 @@ export class ErrorCodes {
         name: 'Missing file',
         description: 'File is missing from payload'
     };
+
+    static readonly MOTTO_EXPIRES: ErrorCode = {
+        code: 41,
+        name: 'Forgot password motto expired',
+        description: 'The motto have expired, retry'
+    };
 }

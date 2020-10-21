@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { ContentModule } from '../../shared/components/content/content.module';
 import { FormsModule } from '@angular/forms';
 import { RegisterComponent } from './register/register.component';
+import { ForgotPasswordService } from './forgot-password/forgot-password.service';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @NgModule({
     imports: [
@@ -16,7 +18,11 @@ import { RegisterComponent } from './register/register.component';
     ],
     declarations: [
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        ForgotPasswordComponent
+    ],
+    providers: [
+        ForgotPasswordService
     ],
     exports: [
         RouterModule

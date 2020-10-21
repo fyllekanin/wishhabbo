@@ -25,7 +25,7 @@ export class HomePageSettingsController {
         AUTHORIZATION_MIDDLEWARE,
         GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_HOME_PAGE])
     ])
-    private async getHomePageSettings (req: InternalRequest, res: Response): Promise<void> {
+    async getHomePageSettings (req: InternalRequest, res: Response): Promise<void> {
         const homePageModel = await req.serviceConfig.settingRepository.getKeyValue<HomePageModel>(SettingKey.HOME_PAGE);
 
         if (!homePageModel) {
@@ -56,7 +56,7 @@ export class HomePageSettingsController {
             multiples: true
         })
     ])
-    private async updateHomePageSettings (req: InternalRequest, res: Response): Promise<void> {
+    async updateHomePageSettings (req: InternalRequest, res: Response): Promise<void> {
         const payload = HomePageView.of(JSON.parse(req.fields.settings as string), req.files);
         const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
 

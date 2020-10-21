@@ -16,12 +16,47 @@ import { SettingKey } from '../../persistance/entities/settings/setting.entity';
 import { RadioSettingsView } from '../../rest-service-views/two-way/admin/radio-settings.view';
 import { SettingRepository } from '../../persistance/repositories/setting.repository';
 import { RadioSettingsModel } from '../../persistance/entities/settings/models/radio-settings.model';
+import { TimeUtility } from '../../utilities/time.utility';
+import { ForgotPasswordPayload } from '../../rest-service-views/payloads/auth/forgot-password.payload';
+import { Logger } from '../../logging/log.logger';
+import { LogTypes } from '../../logging/log.types';
 
 @Controller('api/auth')
 export class AuthenticationController {
 
+    @Get('forgotten-password/:username')
+    async getForgottenPasswordMotto (req: InternalRequest, res: Response): Promise<void> {
+        const user = await req.serviceConfig.userRepository.getUserWithUsername(req.params.username);
+        res.status(OK).json(user ? TimeUtility.getCurrentTime() : null);
+    }
+
+    @Post('forgotten-password')
+    async changePassword (req: InternalRequest, res: Response): Promise<void> {
+        const payload = ForgotPasswordPayload.of(req);
+        const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
+        if (errors.length > 0) {
+            res.status(BAD_REQUEST).json(errors);
+            return;
+        }
+
+        const user = await req.serviceConfig.userRepository.getUserWithUsername(payload.getUsername());
+        const updatedUser = user.newBuilderFromCurrent()
+            .withPassword(await HasherUtility.hash(payload.getPassword()))
+            .build();
+
+        await req.serviceConfig.userRepository.save(updatedUser);
+        await Logger.createUserLog(req, {
+            id: LogTypes.FORGOTTEN_PASSWORD,
+            contentId: user.userId,
+            userId: user.userId,
+            beforeChange: null,
+            afterChange: null
+        });
+        res.status(OK).json();
+    }
+
     @Get('initial')
-    private async getInitial (req: InternalRequest, res: Response): Promise<void> {
+    async getInitial (req: InternalRequest, res: Response): Promise<void> {
         const builder = InitialView.newBuilder();
 
         const token = await req.serviceConfig.tokenRepository.getTokenFromRequest(req);
@@ -49,7 +84,7 @@ export class AuthenticationController {
     }
 
     @Post('login')
-    private async doLogin (req: InternalRequest, res: Response): Promise<void> {
+    async doLogin (req: InternalRequest, res: Response): Promise<void> {
         const payload = LoginPayload.of(req);
         const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         if (payloadErrors.length > 0) {
@@ -83,7 +118,7 @@ export class AuthenticationController {
     }
 
     @Post('logout')
-    private async doLogout (req: InternalRequest, res: Response): Promise<void> {
+    async doLogout (req: InternalRequest, res: Response): Promise<void> {
         const token = await req.serviceConfig.tokenRepository.getTokenFromRequest(req);
         if (!token) {
             res.status(OK).json();
@@ -94,7 +129,7 @@ export class AuthenticationController {
     }
 
     @Post('token-refresh')
-    private async doTokenRefresh (req: InternalRequest, res: Response): Promise<void> {
+    async doTokenRefresh (req: InternalRequest, res: Response): Promise<void> {
         const entity = await req.serviceConfig.tokenRepository.getTokenWithAccessAndRefreshToken(req);
         if (!entity) {
             res.status(401).json({ isTokenExisting: false });
@@ -121,7 +156,7 @@ export class AuthenticationController {
     }
 
     @Post('register')
-    private async doRegister (req: InternalRequest, res: Response): Promise<void> {
+    async doRegister (req: InternalRequest, res: Response): Promise<void> {
         const payload = RegisterPayload.of(req);
         const payloadErrors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         if (payloadErrors.length > 0) {

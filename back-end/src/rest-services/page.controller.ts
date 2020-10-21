@@ -36,7 +36,7 @@ export class PageController {
     ];
 
     @Get('article/:articleId')
-    private async getArticle (req: InternalRequest, res: Response): Promise<void> {
+    async getArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         if (!article) {
             res.status(NOT_FOUND).json();
@@ -65,7 +65,7 @@ export class PageController {
 
     @Post('article/:articleId/complete')
     @Middleware([AUTHORIZATION_MIDDLEWARE])
-    private async createBadgeComplete (req: InternalRequest, res: Response): Promise<void> {
+    async createBadgeComplete (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         if (!article) {
             res.status(NOT_FOUND).json();
@@ -95,7 +95,7 @@ export class PageController {
     }
 
     @Get('articles/page/:page')
-    private async getArticles (req: InternalRequest, res: Response): Promise<void> {
+    async getArticles (req: InternalRequest, res: Response): Promise<void> {
         const data = await req.serviceConfig.articleRepository.paginate({
             take: PaginationHelper.TWENTY_ITEMS,
             page: Number(req.params.page),
@@ -122,7 +122,7 @@ export class PageController {
     }
 
     @Get('home')
-    private async getHomePage (req: InternalRequest, res: Response): Promise<void> {
+    async getHomePage (req: InternalRequest, res: Response): Promise<void> {
         const homePageModel = await req.serviceConfig.settingRepository.getKeyValue<HomePageModel>(SettingKey.HOME_PAGE);
         res.status(OK).json(HomePage.newBuilder()
             .withBadges(await this.getBadges(req.serviceConfig, req.user.userId))

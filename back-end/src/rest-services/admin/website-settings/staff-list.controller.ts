@@ -18,9 +18,9 @@ export class StaffListController {
     @Get()
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_EDIT_STAFF_LIST ])
+        GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_EDIT_STAFF_LIST])
     ])
-    private async getStaffList (req: InternalRequest, res: Response): Promise<void> {
+    async getStaffList (req: InternalRequest, res: Response): Promise<void> {
         const staffListModel = await req.serviceConfig.settingRepository.getKeyValue<StaffListModel>(SettingKey.STAFF_LIST);
         const selectedGroups = staffListModel && Array.isArray(staffListModel.entries) ? staffListModel.entries : [];
         const groups: Array<StaffListViewEntry> = await req.serviceConfig.groupRepository.getGroups()
@@ -43,9 +43,9 @@ export class StaffListController {
     @Put()
     @Middleware([
         AUTHORIZATION_MIDDLEWARE,
-        GET_ADMIN_PERMISSION_MIDDLEWARE([ Permissions.ADMIN.CAN_EDIT_STAFF_LIST ])
+        GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_EDIT_STAFF_LIST])
     ])
-    private async updateStaffList (req: InternalRequest, res: Response): Promise<void> {
+    async updateStaffList (req: InternalRequest, res: Response): Promise<void> {
         const payload = StaffListView.of(req);
         const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         const setting = await req.serviceConfig.settingRepository.getSetting(SettingKey.STAFF_LIST);

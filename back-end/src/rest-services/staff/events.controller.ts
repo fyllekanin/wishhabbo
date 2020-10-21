@@ -24,12 +24,12 @@ const middlewares = [
 export class EventsController extends TimetableController {
 
     @Get('list')
-    private async getEventsList (req: InternalRequest, res: Response): Promise<void> {
+    async getEventsList (req: InternalRequest, res: Response): Promise<void> {
         res.status(OK).json(await req.serviceConfig.eventsRepository.all());
     }
 
     @Get('slots')
-    private async getSlots (req: InternalRequest, res: Response): Promise<void> {
+    async getSlots (req: InternalRequest, res: Response): Promise<void> {
         const slots = await req.serviceConfig.timetableRepository.getSlots(TimetableType.EVENTS);
         res.status(OK).json(await TimetableUtility.getConvertedSlots(req, slots));
     }
@@ -39,7 +39,7 @@ export class EventsController extends TimetableController {
         AUTHORIZATION_MIDDLEWARE,
         GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_MANAGE_EVENT_TYPES])
     ])
-    private async createEvent (req: InternalRequest, res: Response): Promise<void> {
+    async createEvent (req: InternalRequest, res: Response): Promise<void> {
         const entity = EventEntity.of(req);
         const errors = await ValidationValidators.validateEntity(entity, req.serviceConfig, req.user);
         if (errors.length > 0) {
@@ -63,7 +63,7 @@ export class EventsController extends TimetableController {
         AUTHORIZATION_MIDDLEWARE,
         GET_STAFF_PERMISSION_MIDDLEWARE([Permissions.STAFF.CAN_MANAGE_EVENT_TYPES])
     ])
-    private async deleteEvent (req: InternalRequest, res: Response): Promise<void> {
+    async deleteEvent (req: InternalRequest, res: Response): Promise<void> {
         const entity = await req.serviceConfig.eventsRepository.get(Number(req.params.eventId));
         if (!entity) {
             res.status(NOT_FOUND).json();
@@ -83,7 +83,7 @@ export class EventsController extends TimetableController {
 
     @Put(':timetableId')
     @Middleware(middlewares)
-    private async updateBooking (req: InternalRequest, res: Response): Promise<void> {
+    async updateBooking (req: InternalRequest, res: Response): Promise<void> {
         const entity = await req.serviceConfig.timetableRepository.get(Number(req.params.timetableId));
         if (!entity) {
             res.status(NOT_FOUND).json();
@@ -107,7 +107,7 @@ export class EventsController extends TimetableController {
 
     @Post('book')
     @Middleware(middlewares)
-    private async createBooking (req: InternalRequest, res: Response): Promise<void> {
+    async createBooking (req: InternalRequest, res: Response): Promise<void> {
         const slot = TimetableSlot.of(req, false, null);
         const errors = await ValidationValidators.validatePayload(slot, req.serviceConfig, req.user);
         if (errors.length > 0) {
@@ -138,7 +138,7 @@ export class EventsController extends TimetableController {
 
     @Delete('unbook/:timetableId')
     @Middleware(middlewares)
-    private async deleteBooking (req: InternalRequest, res: Response): Promise<void> {
+    async deleteBooking (req: InternalRequest, res: Response): Promise<void> {
         const entity = await req.serviceConfig.timetableRepository.get(Number(req.params.timetableId));
         if (!entity) {
             res.status(NOT_FOUND).json();

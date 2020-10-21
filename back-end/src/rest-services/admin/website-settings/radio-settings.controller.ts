@@ -20,7 +20,7 @@ export class RadioSettingsController {
         AUTHORIZATION_MIDDLEWARE,
         GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_RADIO_SETTINGS])
     ])
-    private async getRadioSettings (req: InternalRequest, res: Response): Promise<void> {
+    async getRadioSettings (req: InternalRequest, res: Response): Promise<void> {
         const radioSettingsModel = await req.serviceConfig.settingRepository.getKeyValue<RadioSettingsModel>(SettingKey.RADIO_SETTINGS);
         res.status(OK).json(radioSettingsModel);
     }
@@ -30,7 +30,7 @@ export class RadioSettingsController {
         AUTHORIZATION_MIDDLEWARE,
         GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_RADIO_SETTINGS])
     ])
-    private async updateRadioSettings (req: InternalRequest, res: Response): Promise<void> {
+    async updateRadioSettings (req: InternalRequest, res: Response): Promise<void> {
         const payload = RadioSettingsView.of(req);
         const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         const setting = await req.serviceConfig.settingRepository.getSetting<RadioSettingsView>(SettingKey.RADIO_SETTINGS);

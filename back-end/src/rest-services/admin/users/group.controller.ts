@@ -28,7 +28,7 @@ export class GroupController {
         AUTHORIZATION_MIDDLEWARE,
         GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_GROUPS])
     ])
-    private async getGroups (req: InternalRequest, res: Response): Promise<void> {
+    async getGroups (req: InternalRequest, res: Response): Promise<void> {
         const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
         const data = await req.serviceConfig.groupRepository.paginate({
             take: PaginationHelper.TWENTY_ITEMS,
@@ -63,7 +63,7 @@ export class GroupController {
         AUTHORIZATION_MIDDLEWARE,
         GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_GROUPS])
     ])
-    private async getGroup (req: InternalRequest, res: Response): Promise<void> {
+    async getGroup (req: InternalRequest, res: Response): Promise<void> {
         const immunity = await UserGroupOrchestrator.getImmunityByUserId(req.serviceConfig, req.user.userId);
         const group = await req.serviceConfig.groupRepository.getGroupById(Number(req.params.groupId));
         if (!group || group.immunity >= immunity) {
@@ -90,7 +90,7 @@ export class GroupController {
         AUTHORIZATION_MIDDLEWARE,
         GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_GROUPS])
     ])
-    private async createGroup (req: InternalRequest, res: Response): Promise<void> {
+    async createGroup (req: InternalRequest, res: Response): Promise<void> {
         const payload = GroupView.of(req);
         const errors = await ValidationValidators.validatePayload(payload, req.serviceConfig, req.user);
         if (errors.length > 0) {
@@ -130,7 +130,7 @@ export class GroupController {
         AUTHORIZATION_MIDDLEWARE,
         GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_GROUPS])
     ])
-    private async updateGroup (req: InternalRequest, res: Response): Promise<void> {
+    async updateGroup (req: InternalRequest, res: Response): Promise<void> {
         const group = await req.serviceConfig.groupRepository.getGroupById(Number(req.params.groupId));
         if (!group) {
             res.status(NOT_FOUND).json();
@@ -176,7 +176,7 @@ export class GroupController {
         AUTHORIZATION_MIDDLEWARE,
         GET_ADMIN_PERMISSION_MIDDLEWARE([Permissions.ADMIN.CAN_MANAGE_GROUPS])
     ])
-    private async deleteGroup (req: InternalRequest, res: Response): Promise<void> {
+    async deleteGroup (req: InternalRequest, res: Response): Promise<void> {
         const group = await req.serviceConfig.groupRepository.getGroupById(Number(req.params.groupId));
         if (!group) {
             res.status(NOT_FOUND).json();
