@@ -25,7 +25,8 @@ export class ForgotPasswordPayloadValidator implements PayloadValidator<ForgotPa
         return payload instanceof ForgotPasswordPayload;
     }
 
-    private async validateThatUserExists (payload: ForgotPasswordPayload, serviceConfig: ServiceConfig, errors: Array<ValidationError>): Promise<void> {
+    private async validateThatUserExists (payload: ForgotPasswordPayload, serviceConfig: ServiceConfig,
+                                          errors: Array<ValidationError>): Promise<void> {
         const user = await serviceConfig.userRepository.getUserWithUsername(payload.getUsername());
         if (!user) {
             errors.push(ValidationError.newBuilder()
