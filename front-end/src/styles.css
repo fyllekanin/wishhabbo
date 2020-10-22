@@ -4,13 +4,17 @@
     src: url('./assets/fonts/Roboto-Regular.ttf');
 }
 
+@font-face {
+    font-family: Lobster;
+    src: url('./assets/fonts/Lobster-Regular.ttf');
+}
+
 html, body {
     margin: 0;
     padding: 0;
     font-family: Roboto, serif;
     overflow-x: hidden;
     color: #656565;
-    background-image: url('assets/images/background.png');
 }
 
 main {
@@ -27,7 +31,7 @@ table, th {
 }
 
 body {
-    background-color: #eaeae6;
+    background-color: #ffffff;
 }
 
 .grid-container {

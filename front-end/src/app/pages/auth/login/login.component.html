@@ -1,28 +1,21 @@
 <div class="grid-container">
     <div class="grid-x grid-margin-x">
         <div class="cell small-12">
-            <app-content header="Login">
+            <app-content header="Login" [actions]="contentActions" (onAction)="onAction($event)">
                 <form (ngSubmit)="onLogin()">
-                    <div class="grid-container">
-                        <div class="grid-x grid-margin-x">
-
-                            <div class="cell small-6">
-                                <label for="username" class="display-block">Username</label>
-                                <input [(ngModel)]="username" name="username" type="text" id="username"
-                                       placeholder="Username"/>
-                            </div>
-                            <div class="cell small-6">
-                                <label for="password" class="display-block">Password</label>
-                                <input [(ngModel)]="password" name="password" type="password" id="password"
-                                       placeholder="Password"/>
-                            </div>
-                            <div class="cell small-12 text-align-right">
-                                <em *ngIf="wasLoginFailed">You failed...</em>
-                                <br/>
-                                <button id="login" class="green" type="submit">Login</button>
-                                <button routerLink="/auth/register" class="blue">Register</button>
-                                <button routerLink="/auth/register" class="blue">Forgot Password</button>
-                            </div>
+                    <div class="grid-x grid-margin-x">
+                        <div class="cell small-6">
+                            <label for="username" class="display-block">Username</label>
+                            <input [(ngModel)]="username" name="username" type="text" id="username"
+                                   placeholder="Username"/>
+                        </div>
+                        <div class="cell small-6">
+                            <label for="password" class="display-block">Password</label>
+                            <input [(ngModel)]="password" name="password" type="password" id="password"
+                                   placeholder="Password"/>
+                        </div>
+                        <div class="cell small-12 text-align-right">
+                            <button type="submit"></button>
                         </div>
                     </div>
                 </form>

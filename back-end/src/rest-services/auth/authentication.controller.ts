@@ -27,7 +27,10 @@ export class AuthenticationController {
     @Get('forgotten-password/:username')
     async getForgottenPasswordMotto (req: InternalRequest, res: Response): Promise<void> {
         const user = await req.serviceConfig.userRepository.getUserWithUsername(req.params.username);
-        res.status(OK).json(user ? TimeUtility.getCurrentTime() : null);
+        res.status(OK).json(user ? {
+            timestamp: TimeUtility.getCurrentTime(),
+            habbo: user.habbo
+        } : null);
     }
 
     @Post('forgotten-password')

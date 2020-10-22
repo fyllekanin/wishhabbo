@@ -1,5 +1,4 @@
 :host {
-    background-color: #ffffff;
     display: block;
     padding: 5px;
     border-radius: 2px;
@@ -7,14 +6,21 @@
 }
 
 .title {
-    padding: 7px 10px;
-    border: 1px solid #737373;
+    padding: 7px;
     -moz-box-shadow: inset 0 0 1px #ffffff;
     -webkit-box-shadow: inset 0 0 1px #ffffff;
     box-shadow: inset 0 0 1px #ffffff;
-    color: #ffffff;
+    color: gray;
 
     position: relative;
+    border-top: 1px solid #c7c7c7;
+    border-bottom: 1px solid #c7c7c7;
+}
+
+.title > span {
+    font-size: 13px;
+    font-weight: bold;
+    color: #636363;
 }
 
 .content {
@@ -33,10 +39,9 @@
     cursor: pointer;
     padding: 11px;
     display: inline-block;
-    background-color: #9a7993;
-    box-shadow: inset 0 0 1px #ffffff;
+    font-weight: normal;
 }
 
 .action:hover, .active {
-    background-color: #a27f9b;
+    font-weight: bold;
 }

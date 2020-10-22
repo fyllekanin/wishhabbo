@@ -5,7 +5,8 @@ import { SiteNotificationType } from '../../../shared/app-views/site-notificatio
 
 @Component({
     selector: 'app-auth-forgotten-password',
-    templateUrl: 'forgot-password.component.html'
+    templateUrl: 'forgot-password.component.html',
+    styleUrls: ['forgot-password.component.css']
 })
 export class ForgotPasswordComponent {
     data = {
