@@ -135,6 +135,33 @@ export class PageController {
             .build());
     }
 
+    @Get('staff-list')
+    async getStaffList (req: InternalRequest, res: Response): Promise<void> {
+        const staffListModel = await req.serviceConfig.settingRepository.getKeyValue<StaffListModel>(SettingKey.STAFF_LIST);
+        const entries: Array<StaffListRow> = [];
+        for (const entry of (staffListModel ? staffListModel.entries : [])) {
+            const group = await req.serviceConfig.groupRepository.getGroupById(entry.groupId);
+            const userIds = await req.serviceConfig.userGroupRepository.getUserIdsWithGroup(group.groupId);
+            if (userIds.length === 0) {
+                continue;
+            }
+            const users = [];
+            for (const userId of userIds) {
+                users.push(await req.serviceConfig.userRepository.getSlimUserById(userId));
+            }
+
+            entries.push(StaffListRow.newBuilder()
+                .withGroupId(entry.groupId)
+                .withDisplayOrder(entry.displayOrder)
+                .withName(group.name)
+                .withNameColor(group.nameColor)
+                .withUsers(users)
+                .build());
+        }
+
+        res.status(OK).json(StaffListPage.newBuilder().withRows(entries).build());
+    }
+
     private getBannerEntries (homePageModel: HomePageModel): Array<HomePageBannerEntry> {
         return (homePageModel.bannerEntries || []).map(entry => HomePageBannerEntry.newBuilder()
             .withId(entry.id)
@@ -212,33 +239,6 @@ export class PageController {
         }
 
         return slots;
-    }
-
-    @Get('staff-list')
-    async getStaffList (req: InternalRequest, res: Response): Promise<void> {
-        const staffListModel = await req.serviceConfig.settingRepository.getKeyValue<StaffListModel>(SettingKey.STAFF_LIST);
-        const entries: Array<StaffListRow> = [];
-        for (const entry of (staffListModel ? staffListModel.entries : [])) {
-            const group = await req.serviceConfig.groupRepository.getGroupById(entry.groupId);
-            const userIds = await req.serviceConfig.userGroupRepository.getUserIdsWithGroup(group.groupId);
-            if (userIds.length === 0) {
-                continue;
-            }
-            const users = [];
-            for (const userId of userIds) {
-                users.push(await req.serviceConfig.userRepository.getSlimUserById(userId));
-            }
-
-            entries.push(StaffListRow.newBuilder()
-                .withGroupId(entry.groupId)
-                .withDisplayOrder(entry.displayOrder)
-                .withName(group.name)
-                .withNameColor(group.nameColor)
-                .withUsers(users)
-                .build());
-        }
-
-        res.status(OK).json(StaffListPage.newBuilder().withRows(entries).build());
     }
 
     private async getArticlesFor (req: InternalRequest, amount: number, type: number): Promise<Array<ArticleView>> {
