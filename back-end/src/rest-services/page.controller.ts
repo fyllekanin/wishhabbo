@@ -214,24 +214,6 @@ export class PageController {
         return slots;
     }
 
-    private async getArticlesFor (req: InternalRequest, amount: number, type: number): Promise<Array<ArticleView>> {
-        const paginate = await req.serviceConfig.articleRepository.paginate({
-            take: amount,
-            page: 1,
-            orderBy: { sort: 'createdAt', order: 'DESC' },
-            where: [
-                { key: 'type', operator: PaginationWhereOperators.EQUALS, value: String(type) },
-                { key: 'isApproved', operator: PaginationWhereOperators.EQUALS, value: true }
-            ]
-        });
-
-        const articles = [];
-        for (const article of paginate.getItems()) {
-            articles.push(await this.getConvertedArticle(req, article));
-        }
-        return articles;
-    }
-
     @Get('staff-list')
     async getStaffList (req: InternalRequest, res: Response): Promise<void> {
         const staffListModel = await req.serviceConfig.settingRepository.getKeyValue<StaffListModel>(SettingKey.STAFF_LIST);
@@ -257,6 +239,24 @@ export class PageController {
         }
 
         res.status(OK).json(StaffListPage.newBuilder().withRows(entries).build());
+    }
+
+    private async getArticlesFor (req: InternalRequest, amount: number, type: number): Promise<Array<ArticleView>> {
+        const paginate = await req.serviceConfig.articleRepository.paginate({
+            take: amount,
+            page: 1,
+            orderBy: { sort: 'createdAt', order: 'DESC' },
+            where: [
+                { key: 'type', operator: PaginationWhereOperators.EQUALS, value: String(type) },
+                { key: 'isApproved', operator: PaginationWhereOperators.EQUALS, value: true }
+            ]
+        });
+
+        const articles = [];
+        for (const article of paginate.getItems()) {
+            articles.push(await this.getConvertedArticle(req, article));
+        }
+        return articles;
     }
 
     private async getConvertedArticle (req: InternalRequest, article: ArticleEntity): Promise<ArticleView> {
