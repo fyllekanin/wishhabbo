@@ -62,7 +62,8 @@ export class ForgotPasswordPayloadValidator implements PayloadValidator<ForgotPa
         }
     }
 
-    private async validateHabboMotto (payload: ForgotPasswordPayload, serviceConfig: ServiceConfig, errors: Array<ValidationError>): Promise<void> {
+    private async validateHabboMotto (payload: ForgotPasswordPayload, serviceConfig: ServiceConfig,
+                                      errors: Array<ValidationError>): Promise<void> {
         const habboService = new HabboService();
         const user = await serviceConfig.userRepository.getUserWithUsername(payload.getUsername());
         if (!user) {

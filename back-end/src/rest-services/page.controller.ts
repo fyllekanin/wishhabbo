@@ -233,7 +233,7 @@ export class PageController {
     }
 
     @Get('staff-list')
-    private async getStaffList (req: InternalRequest, res: Response): Promise<void> {
+    async getStaffList (req: InternalRequest, res: Response): Promise<void> {
         const staffListModel = await req.serviceConfig.settingRepository.getKeyValue<StaffListModel>(SettingKey.STAFF_LIST);
         const entries: Array<StaffListRow> = [];
         for (const entry of (staffListModel ? staffListModel.entries : [])) {
