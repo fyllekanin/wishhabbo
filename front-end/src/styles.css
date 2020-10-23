@@ -52,7 +52,7 @@ body {
 
 
 a {
-    color: #9a7993;
+    color: #70748b;
     font-weight: bold;
     font-size: 11px;
     text-decoration: none;
@@ -72,14 +72,6 @@ span {
 
 .text-align-right {
     text-align: right;
-}
-
-.display-block {
-    display: block;
-}
-
-.display-inline-block {
-    display: inline-block;
 }
 
 /** Dropdown menu **/
@@ -540,4 +532,16 @@ i:focus ~ .action-list {
     .is-mobile {
         display: block;
     }
+}
+
+.display-block {
+    display: block !important;;
+}
+
+.display-none {
+    display: none !important;
+}
+
+.display-inline-block {
+    display: inline-block !important;;
 }

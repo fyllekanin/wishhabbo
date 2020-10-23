@@ -80,7 +80,7 @@ export class ForgotPasswordPayloadValidator implements PayloadValidator<ForgotPa
             return;
         }
         const timestamp = Number(habbo.getMotto().split('-')[1]);
-        if (!timestamp || !Number.isInteger(timestamp) || TimeUtility.getCurrentTime() > (timestamp + 3600)) {
+        if (!timestamp || !Number.isInteger(timestamp) || TimeUtility.getCurrentTime() > (timestamp + 900)) {
             errors.push(ValidationError.newBuilder()
                 .withCode(ErrorCodes.MOTTO_EXPIRES.code)
                 .withField('motto')

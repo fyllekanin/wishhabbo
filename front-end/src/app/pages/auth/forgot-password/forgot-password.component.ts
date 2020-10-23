@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ForgotPasswordService } from './forgot-password.service';
 import { SiteNotificationService } from '../../../core/common-services/site-notification.service';
 import { SiteNotificationType } from '../../../shared/app-views/site-notification/site-notification.interface';
+import { UserAction } from '../../../shared/constants/common.interfaces';
 
 @Component({
     selector: 'app-auth-forgotten-password',
@@ -17,6 +18,12 @@ export class ForgotPasswordComponent {
 
     timestamp: { habbo: string, timestamp: number };
     username: string;
+    nextAction: Array<UserAction> = [
+        { label: 'Next', value: 'next' }
+    ];
+    performAction: Array<UserAction> = [
+        { label: 'Perform', value: 'perform' }
+    ];
 
     constructor (
         private service: ForgotPasswordService,
