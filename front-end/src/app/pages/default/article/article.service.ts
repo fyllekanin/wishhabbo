@@ -77,7 +77,7 @@ export class ArticleService implements Resolve<ArticlePage> {
             .catch(error => {
                 this.siteNotificationService.onError(error.error);
                 return false;
-            })
+            });
     }
 
     markAsComplete (articleId: number): Promise<void> {
