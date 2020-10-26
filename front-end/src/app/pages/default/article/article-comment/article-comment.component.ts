@@ -27,6 +27,14 @@ export class ArticleCommentComponent {
     ) {
     }
 
+    async onUpdate (): Promise<void> {
+        const result = await this.service.updateComment(this.data.articleCommentId, this.data.content);
+        if (result) {
+            this.content = this.sanitizer.bypassSecurityTrustHtml(this.data.content);
+            this.isEditing = false;
+        }
+    }
+
     @Input()
     set comment (comment: ArticleComment) {
         this.data = comment;

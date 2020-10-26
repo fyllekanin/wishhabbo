@@ -59,7 +59,7 @@ export class PageController {
                 mapped.push(ArticleCommentView.newBuilder()
                     .withArticleCommentId(item.articleCommentId)
                     .withUser(await req.serviceConfig.userRepository.getSlimUserById(item.userId))
-                    .withContent(await req.serviceConfig.bbcodeRepository.parseContent(item.content))
+                    .withContent(item.content)
                     .build());
             }
             return mapped;

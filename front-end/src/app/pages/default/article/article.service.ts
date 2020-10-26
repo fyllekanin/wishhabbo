@@ -46,7 +46,7 @@ export class ArticleService implements Resolve<ArticlePage> {
             });
     }
 
-    updateComment (articleCommentId: number, content: string): Promise<void> {
+    updateComment (articleCommentId: number, content: string): Promise<boolean> {
         return this.httpService.put(`/article-comment/${articleCommentId}`, { content: content })
             .toPromise()
             .then(() => {
@@ -55,10 +55,29 @@ export class ArticleService implements Resolve<ArticlePage> {
                     message: 'Comment updated!',
                     type: SiteNotificationType.INFO
                 });
+                return true;
             })
             .catch(error => {
                 this.siteNotificationService.onError(error.error);
+                return false;
             });
+    }
+
+    deleteComment (articleCommentId: number): Promise<boolean> {
+        return this.httpService.delete(`/article-comment/${articleCommentId}`)
+            .toPromise()
+            .then(() => {
+                this.siteNotificationService.create({
+                    title: 'Success',
+                    message: 'Comment deleted!',
+                    type: SiteNotificationType.INFO
+                });
+                return true;
+            })
+            .catch(error => {
+                this.siteNotificationService.onError(error.error);
+                return false;
+            })
     }
 
     markAsComplete (articleId: number): Promise<void> {

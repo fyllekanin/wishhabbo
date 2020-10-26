@@ -69,7 +69,7 @@ export class ArticleCommentController {
         });
         res.status(OK).json(ArticleCommentView.newBuilder()
             .withArticleCommentId(createdEntity.articleCommentId)
-            .withContent(await req.serviceConfig.bbcodeRepository.parseContent(createdEntity.content))
+            .withContent(createdEntity.content)
             .withUser(await req.serviceConfig.userRepository.getSlimUserById(req.user.userId))
             .build());
     }

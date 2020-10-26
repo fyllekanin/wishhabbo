@@ -7,6 +7,7 @@ import { ArticlePage } from './article.model';
 import { ArticleService } from './article.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserAction } from '../../../shared/constants/common.interfaces';
+import { DialogService } from '../../../core/common-services/dialog.service';
 
 @Component({
     selector: 'app-default-article',
@@ -30,6 +31,7 @@ export class ArticleComponent implements OnDestroy {
     constructor (
         private service: ArticleService,
         private sanitizer: DomSanitizer,
+        private dialogService: DialogService,
         authService: AuthService,
         activatedRoute: ActivatedRoute
     ) {
@@ -39,6 +41,16 @@ export class ArticleComponent implements OnDestroy {
 
     ngOnDestroy (): void {
         // Empty
+    }
+
+    async onDeleteComment (articleCommentId: number): Promise<void> {
+        const result = await this.dialogService.confirm('Do you really wanna delete this comment?');
+        if (result) {
+            const isDeleted = await this.service.deleteComment(articleCommentId);
+            if (isDeleted) {
+                this.data.comments = this.data.comments.filter(comment => comment.articleCommentId !== articleCommentId);
+            }
+        }
     }
 
     async onCreateComment (): Promise<void> {

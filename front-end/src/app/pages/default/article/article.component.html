@@ -11,7 +11,8 @@
 
             <app-content header="Comments" *ngIf="data.comments.length > 0">
                 <app-default-article-comment *ngFor="let comment of data.comments"
-                                             [comment]="comment"></app-default-article-comment>
+                                             [comment]="comment"
+                                             (onDelete)="onDeleteComment($event)"></app-default-article-comment>
             </app-content>
 
 
