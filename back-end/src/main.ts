@@ -10,7 +10,6 @@ import { ArticleController } from './rest-services/staff/media/article.controlle
 import { RadioController } from './rest-services/staff/radio.controller';
 import { EventsController } from './rest-services/staff/events.controller';
 import * as express from 'express';
-import * as bodyParser from 'body-parser';
 import { GroupController } from './rest-services/admin/users/group.controller';
 import { UserController } from './rest-services/admin/users/user.controller';
 import compression from 'compression';
@@ -30,8 +29,7 @@ class MainServer extends Server {
     constructor () {
         super();
         this.backgroundTaskHandler = new BackgroundTaskHandler();
-        this.app.use(bodyParser.urlencoded({ extended: true }));
-        this.app.use(bodyParser.json());
+        this.app.use(express.json());
         this.app.use(compression());
         this.app.use('/', express.static(__dirname + '/public'));
         this.app.use('/resources', express.static(__dirname + '/resources'));
