@@ -19,9 +19,13 @@ export class SiteNotificationService {
     }
 
     onError (errors: Array<ValidationError>): void {
-        errors.forEach(error => {
+        (errors || []).forEach(error => {
             const fieldMessage = error.field ? `<br /> - ${error.field}` : '';
-            this.create({ title: 'Validation error', message: `${error.message} ${fieldMessage}`, type: SiteNotificationType.ERROR });
+            this.create({
+                title: 'Validation error',
+                message: `${error.message} ${fieldMessage}`,
+                type: SiteNotificationType.ERROR
+            });
         });
     }
 }

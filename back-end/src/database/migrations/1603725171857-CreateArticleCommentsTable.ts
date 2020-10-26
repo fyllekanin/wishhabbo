@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateBadgeCompleteTable1602099268767 implements MigrationInterface {
+export class CreateArticleCommentsTable1603725171857 implements MigrationInterface {
 
     async up (queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
-            name: 'badge_complete',
+            name: 'article_comments',
             indices: [
                 {
                     columnNames: ['createdAt']
@@ -16,23 +16,32 @@ export class CreateBadgeCompleteTable1602099268767 implements MigrationInterface
                     columnNames: ['userId']
                 },
                 {
-                    columnNames: ['badgeId']
+                    columnNames: ['content'],
+                    isFulltext: true
+                },
+                {
+                    columnNames: ['articleId']
                 }
             ],
             columns: [
                 {
-                    name: 'badgeCompleteId',
-                    type: 'varchar',
+                    name: 'articleCommentId',
+                    type: 'int',
+                    isGenerated: true,
+                    generationStrategy: 'increment',
                     isPrimary: true,
-                    generationStrategy: 'uuid'
                 },
                 {
                     name: 'userId',
                     type: 'int'
                 },
                 {
-                    name: 'badgeId',
-                    type: 'varchar'
+                    name: 'articleId',
+                    type: 'int'
+                },
+                {
+                    name: 'content',
+                    type: 'longtext',
                 },
                 {
                     name: 'createdAt',
@@ -40,13 +49,13 @@ export class CreateBadgeCompleteTable1602099268767 implements MigrationInterface
                 },
                 {
                     name: 'updatedAt',
-                    type: 'int',
+                    type: 'int'
                 }
             ]
         }), true);
     }
 
     async down (queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('badge_complete');
+        await queryRunner.dropTable('article_comments');
     }
 }

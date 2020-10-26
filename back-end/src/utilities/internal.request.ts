@@ -12,6 +12,7 @@ import { SettingRepository } from '../persistance/repositories/setting.repositor
 import { BbcodeRepository } from '../persistance/repositories/bbcode.repository';
 import { RadioRequestRepository } from '../persistance/repositories/radio-request.repository';
 import { UserGroupRepository } from '../persistance/repositories/group/user-group.repository';
+import { ArticleCommentRepository } from '../persistance/repositories/staff/media/article-comment.repository';
 
 export interface ServiceConfig {
     resourceRepository: ResourceRepository;
@@ -26,6 +27,7 @@ export interface ServiceConfig {
     bbcodeRepository: BbcodeRepository;
     radioRequestRepository: RadioRequestRepository;
     userGroupRepository: UserGroupRepository;
+    articleCommentRepository: ArticleCommentRepository;
 }
 
 export interface InternalUser {

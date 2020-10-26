@@ -1,11 +1,11 @@
 import { Router } from '@angular/router';
 import { Component, HostBinding, HostListener, Input, OnInit } from '@angular/core';
-import { ArticleClass, ARTICLE_DIFFICULTIES } from '../../classes/media/article.class';
+import { ARTICLE_DIFFICULTIES, ArticleClass } from '../../classes/media/article.class';
 
 @Component({
     selector: 'app-slim-article',
     templateUrl: 'slim-article.component.html',
-    styleUrls: [ 'slim-article.component.css' ]
+    styleUrls: ['slim-article.component.css']
 })
 export class SlimArticleComponent implements OnInit {
     @HostBinding('class.gray-bottom-shadow') lightDarkBottomShadow = true;
@@ -15,9 +15,10 @@ export class SlimArticleComponent implements OnInit {
     firstBadge: string = null;
     difficulty: { name: string, color: string } = null;
 
-    constructor(private router: Router) {}
+    constructor (private router: Router) {
+    }
 
-    ngOnInit(): void {
+    ngOnInit (): void {
         this.difficulty = ARTICLE_DIFFICULTIES[this.article.difficulty];
         this.badgeCount = this.article.badges.length;
 
@@ -26,8 +27,8 @@ export class SlimArticleComponent implements OnInit {
     }
 
     @HostListener('click', ['$event.target'])
-    onClick(): void {
-        this.router.navigateByUrl(`/default/article/${this.article.articleId}`);
+    onClick (): void {
+        this.router.navigateByUrl(`/default/article/${this.article.articleId}/page/1`);
     }
 }
 

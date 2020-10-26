@@ -12,6 +12,7 @@ import { EventsRepository } from '../../persistance/repositories/staff/events.re
 import { SettingRepository } from '../../persistance/repositories/setting.repository';
 import { BbcodeRepository } from '../../persistance/repositories/bbcode.repository';
 import { UserGroupRepository } from '../../persistance/repositories/group/user-group.repository';
+import { ArticleCommentRepository } from '../../persistance/repositories/staff/media/article-comment.repository';
 
 function getServiceConfig (): ServiceConfig {
     return {
@@ -26,7 +27,8 @@ function getServiceConfig (): ServiceConfig {
         settingRepository: new SettingRepository(),
         bbcodeRepository: new BbcodeRepository(),
         radioRequestRepository: new RadioRequestRepository(),
-        userGroupRepository: new UserGroupRepository()
+        userGroupRepository: new UserGroupRepository(),
+        articleCommentRepository: new ArticleCommentRepository()
     };
 }
 

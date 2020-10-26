@@ -255,4 +255,10 @@ export class ErrorCodes {
         name: 'Forgot password motto expired',
         description: 'The motto have expired, retry'
     };
+
+    static readonly SPAM: ErrorCode = {
+        code: 42,
+        name: 'You are to quick',
+        description: 'Chill a little big and try again soon'
+    };
 }

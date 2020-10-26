@@ -21,6 +21,8 @@ import { ArticlesService } from './articles/articles.service';
 import { FormsModule } from '@angular/forms';
 import { PaginationModule } from '../../shared/components/pagination/pagination.module';
 import { SlideShowModule } from '../../shared/components/slide-show/slide-show.module';
+import { ArticleCommentComponent } from './article/article-comment/article-comment.component';
+import { EditorModule } from '../../shared/components/editor/editor.module';
 
 @NgModule({
     imports: [
@@ -33,7 +35,8 @@ import { SlideShowModule } from '../../shared/components/slide-show/slide-show.m
         TimetableModule,
         FormsModule,
         PaginationModule,
-        SlideShowModule
+        SlideShowModule,
+        EditorModule
     ],
     declarations: [
         HomeComponent,
@@ -42,7 +45,8 @@ import { SlideShowModule } from '../../shared/components/slide-show/slide-show.m
         StaffListComponent,
         ArticleComponent,
         NotAuthorizedComponent,
-        ArticlesComponent
+        ArticlesComponent,
+        ArticleCommentComponent
     ],
     providers: [
         StaffListResolver,

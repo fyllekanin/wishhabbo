@@ -8,6 +8,18 @@
             <app-content header="Content">
                 <div [innerHTML]="sanitizedContent"></div>
             </app-content>
+
+            <app-content header="Comments" *ngIf="data.comments.length > 0">
+                <app-default-article-comment *ngFor="let comment of data.comments"
+                                             [comment]="comment"></app-default-article-comment>
+            </app-content>
+
+
+            <app-content header="New comment" *ngIf="isLoggedIn" [actions]="postCommentAction"
+                         (onAction)="onCreateComment()">
+                <label>Write new comment</label>
+                <textarea [(ngModel)]="newCommentContent"></textarea>
+            </app-content>
         </div>
         <div class="cell medium-3">
             <app-content header="Badges">

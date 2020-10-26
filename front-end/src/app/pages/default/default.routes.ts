@@ -41,11 +41,12 @@ export const defaultRoutes: Routes = [
                 }
             },
             {
-                path: 'article/:articleId',
+                path: 'article/:articleId/page/:page',
                 component: ArticleComponent,
                 resolve: {
                     data: ArticleService
-                }
+                },
+                runGuardsAndResolvers: 'pathParamsChange'
             },
             {
                 path: 'timetable/radio/:day',

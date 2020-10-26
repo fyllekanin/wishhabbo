@@ -183,12 +183,6 @@ export class ArticleController {
             .withIsPaid(payload.getIsPaid())
             .build();
 
-        const entityErrors = await ValidationValidators.validateEntity(updatedArticle, req.serviceConfig, req.user);
-        if (entityErrors.length > 0) {
-            res.status(BAD_REQUEST).json(entityErrors);
-            return;
-        }
-
         await req.serviceConfig.articleRepository.update(updatedArticle).catch(err => {
             res.status(BAD_REQUEST).json();
             throw err;

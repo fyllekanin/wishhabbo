@@ -6,6 +6,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ArticlePage } from './article.model';
 import { ArticleService } from './article.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { UserAction } from '../../../shared/constants/common.interfaces';
 
 @Component({
     selector: 'app-default-article',
@@ -20,6 +21,11 @@ export class ArticleComponent implements OnDestroy {
     subscriber: Unsubscribable;
     sanitizedContent: SafeHtml;
     isLoggedIn: boolean;
+    newCommentContent = '';
+
+    postCommentAction: Array<UserAction> = [
+        { label: 'Create', value: 'create' }
+    ];
 
     constructor (
         private service: ArticleService,
@@ -33,6 +39,15 @@ export class ArticleComponent implements OnDestroy {
 
     ngOnDestroy (): void {
         // Empty
+    }
+
+    async onCreateComment (): Promise<void> {
+        const result = await this.service.createComment(this.data.article.articleId, this.newCommentContent);
+        if (!result) {
+            return;
+        }
+        this.data.comments = [result].concat(this.data.comments);
+        this.newCommentContent = '';
     }
 
     async markComplete (): Promise<void> {

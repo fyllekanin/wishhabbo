@@ -25,6 +25,7 @@ import { Logger } from '../logging/log.logger';
 import { LogTypes } from '../logging/log.types';
 import { HomePageModel } from '../persistance/entities/settings/models/home-page.model';
 import { HomePageBannerEntry, HomePageStarLight } from '../rest-service-views/two-way/home-page.view';
+import { ArticleCommentView } from '../rest-service-views/respond-views/staff/media/article-comment.view';
 
 @Controller('api/page')
 export class PageController {
@@ -35,7 +36,7 @@ export class PageController {
         { key: 'isPaid', operator: PaginationWhereOperators.EQUALS }
     ];
 
-    @Get('article/:articleId')
+    @Get('article/:articleId/page/:page')
     async getArticle (req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         if (!article) {
@@ -44,6 +45,26 @@ export class PageController {
         }
 
         const badgeIds = (article.badges || '').split(',');
+        const comments = await req.serviceConfig.articleCommentRepository.paginate({
+            page: Number(req.params.page),
+            take: PaginationHelper.TWENTY_ITEMS,
+            orderBy: {
+                sort: 'articleCommentId',
+                order: 'ASC'
+            },
+            where: [{ key: 'articleId', operator: PaginationWhereOperators.EQUALS, value: article.articleId }]
+        }).then(async result => {
+            const mapped = [];
+            for (const item of result.getItems()) {
+                mapped.push(ArticleCommentView.newBuilder()
+                    .withArticleCommentId(item.articleCommentId)
+                    .withUser(await req.serviceConfig.userRepository.getSlimUserById(item.userId))
+                    .withContent(await req.serviceConfig.bbcodeRepository.parseContent(item.content))
+                    .build());
+            }
+            return mapped;
+        });
+
         res.status(OK).json(ArticlePage.newBuilder()
             .withArticle(ArticleView.newBuilder()
                 .withArticleId(article.articleId)
@@ -60,6 +81,7 @@ export class PageController {
                 .build())
             .withBadges(await this.getBadges(req.serviceConfig, req.user.userId))
             .withIsCompleted(await req.serviceConfig.habboRepository.isBadgesCompleted(badgeIds, req.user.userId))
+            .withComments(comments)
             .build());
     }
 

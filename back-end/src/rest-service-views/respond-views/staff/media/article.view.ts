@@ -57,7 +57,7 @@ class ArticleViewBuilder {
         return this;
     }
 
-    withParsedContent(parsedContent: string): ArticleViewBuilder {
+    withParsedContent (parsedContent: string): ArticleViewBuilder {
         this.parsedContent = parsedContent;
         return this;
     }
@@ -92,17 +92,17 @@ class ArticleViewBuilder {
         return this;
     }
 
-    withIsAvailable(isAvailable: boolean): ArticleViewBuilder {
+    withIsAvailable (isAvailable: boolean): ArticleViewBuilder {
         this.isAvailable = isAvailable;
         return this;
     }
 
-    withIsPaid(isPaid: boolean): ArticleViewBuilder {
+    withIsPaid (isPaid: boolean): ArticleViewBuilder {
         this.isPaid = isPaid;
         return this;
     }
 
-    withUpdatedAt(updatedAt: number): ArticleViewBuilder {
+    withUpdatedAt (updatedAt: number): ArticleViewBuilder {
         this.updatedAt = updatedAt;
         return this;
     }
