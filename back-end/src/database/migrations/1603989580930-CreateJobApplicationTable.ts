@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateArticleCommentsTable1603725171857 implements MigrationInterface {
+export class CreateJobApplicationTable1603989580930 implements MigrationInterface {
 
     async up (queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
-            name: 'article_comments',
+            name: 'job_applications',
             indices: [
                 {
                     columnNames: ['createdAt']
@@ -16,16 +16,15 @@ export class CreateArticleCommentsTable1603725171857 implements MigrationInterfa
                     columnNames: ['userId']
                 },
                 {
-                    columnNames: ['content'],
-                    isFulltext: true
+                    columnNames: ['content']
                 },
                 {
-                    columnNames: ['articleId']
+                    columnNames: ['resolved']
                 }
             ],
             columns: [
                 {
-                    name: 'articleCommentId',
+                    name: 'jobApplicationId',
                     type: 'int',
                     isGenerated: true,
                     generationStrategy: 'increment',
@@ -36,12 +35,21 @@ export class CreateArticleCommentsTable1603725171857 implements MigrationInterfa
                     type: 'int'
                 },
                 {
-                    name: 'articleId',
-                    type: 'int'
+                    name: 'discord',
+                    type: 'varchar'
+                },
+                {
+                    name: 'roles',
+                    type: 'varchar'
                 },
                 {
                     name: 'content',
                     type: 'longtext'
+                },
+                {
+                    name: 'resolved',
+                    type: 'int',
+                    default: 0
                 },
                 {
                     name: 'createdAt',
@@ -49,13 +57,13 @@ export class CreateArticleCommentsTable1603725171857 implements MigrationInterfa
                 },
                 {
                     name: 'updatedAt',
-                    type: 'int'
+                    type: 'int',
                 }
             ]
         }), true);
     }
 
     async down (queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('article_comments');
+        await queryRunner.dropTable('badge_complete');
     }
 }
