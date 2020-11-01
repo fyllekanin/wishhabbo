@@ -12,6 +12,8 @@ import { TimetableComponent } from '../../shared/components/timetable/timetable.
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 import { ArticlesComponent } from './articles/articles.component';
 import { ArticlesService } from './articles/articles.service';
+import { JobApplicationService } from './job-application/job-application.service';
+import { JobApplicationComponent } from './job-application/job-application.component';
 
 export const defaultRoutes: Routes = [
     {
@@ -71,6 +73,13 @@ export const defaultRoutes: Routes = [
                     data: ArticlesService
                 },
                 runGuardsAndResolvers: 'paramsOrQueryParamsChange'
+            },
+            {
+                path: 'job-application',
+                component: JobApplicationComponent,
+                resolve: {
+                    data: JobApplicationService
+                }
             }
         ]
     }

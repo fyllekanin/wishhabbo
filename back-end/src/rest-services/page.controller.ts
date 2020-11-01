@@ -26,6 +26,7 @@ import { LogTypes } from '../logging/log.types';
 import { HomePageModel } from '../persistance/entities/settings/models/home-page.model';
 import { HomePageBannerEntry, HomePageStarLight } from '../rest-service-views/two-way/home-page.view';
 import { ArticleCommentView } from '../rest-service-views/respond-views/staff/media/article-comment.view';
+import { JobApplicationConstants } from '../constants/job-application.constants';
 
 @Controller('api/page')
 export class PageController {
@@ -35,6 +36,11 @@ export class PageController {
         { key: 'isAvailable', operator: PaginationWhereOperators.EQUALS },
         { key: 'isPaid', operator: PaginationWhereOperators.EQUALS }
     ];
+    
+    @Get('job-application')
+    async getJobApplicationRoles (req: InternalRequest, res: Response): Promise<void> {
+        res.status(OK).json(JobApplicationConstants.ROLES);
+    }
 
     @Get('article/:articleId/page/:page')
     async getArticle (req: InternalRequest, res: Response): Promise<void> {

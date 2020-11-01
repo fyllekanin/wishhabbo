@@ -23,6 +23,8 @@ import { PaginationModule } from '../../shared/components/pagination/pagination.
 import { SlideShowModule } from '../../shared/components/slide-show/slide-show.module';
 import { ArticleCommentComponent } from './article/article-comment/article-comment.component';
 import { EditorModule } from '../../shared/components/editor/editor.module';
+import { JobApplicationComponent } from './job-application/job-application.component';
+import { JobApplicationService } from './job-application/job-application.service';
 
 @NgModule({
     imports: [
@@ -46,13 +48,15 @@ import { EditorModule } from '../../shared/components/editor/editor.module';
         ArticleComponent,
         NotAuthorizedComponent,
         ArticlesComponent,
-        ArticleCommentComponent
+        ArticleCommentComponent,
+        JobApplicationComponent
     ],
     providers: [
         StaffListResolver,
         HomeResolver,
         ArticleService,
-        ArticlesService
+        ArticlesService,
+        JobApplicationService
     ],
     exports: [
         RouterModule
