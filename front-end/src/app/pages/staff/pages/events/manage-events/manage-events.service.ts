@@ -8,23 +8,23 @@ import { SiteNotificationType } from '../../../../../shared/app-views/site-notif
 import { DialogService } from '../../../../../core/common-services/dialog.service';
 import { take } from 'rxjs/operators';
 import { CreateEventComponent } from './create-event/create-event.component';
-import { ButtonTypes, DialogButton } from '../../../../../shared/app-views/dialog/dialog.model';
+import { ButtonTypes } from '../../../../../shared/app-views/dialog/dialog.model';
 
 @Injectable()
 export class ManageEventsService implements Resolve<Array<TimetableEvent>> {
 
-    constructor (
+    constructor(
         private httpService: HttpService,
         private siteNotificationService: SiteNotificationService,
         private dialogService: DialogService
     ) {
     }
 
-    resolve (): Observable<Array<TimetableEvent>> {
+    resolve(): Observable<Array<TimetableEvent>> {
         return this.httpService.get<Array<TimetableEvent>>('/staff/events/list');
     }
 
-    async createEvent (): Promise<string> {
+    async createEvent(): Promise<string> {
         return new Promise(async res => {
             this.dialogService.onComponentInstance.pipe(take(1)).subscribe(async ref => {
                 this.dialogService.onAction.pipe(take(1)).subscribe(action => {
@@ -36,24 +36,24 @@ export class ManageEventsService implements Resolve<Array<TimetableEvent>> {
                 title: 'Creating event',
                 component: CreateEventComponent,
                 buttons: [
-                    new DialogButton({
+                    {
                         label: 'Cancel',
                         action: 'cancel',
                         type: ButtonTypes.GRAY,
                         isClosing: true
-                    }),
-                    new DialogButton({
+                    },
+                    {
                         label: 'Create',
                         action: 'create',
                         type: ButtonTypes.GREEN
-                    })
+                    }
                 ]
             });
         });
     }
 
-    create (name: string): Promise<void> {
-        return this.httpService.post('/staff/events/event', { name: name }).toPromise()
+    create(name: string): Promise<void> {
+        return this.httpService.post('/staff/events/event', {name: name}).toPromise()
             .then(() => {
                 this.siteNotificationService.create({
                     title: 'Success',
@@ -65,7 +65,7 @@ export class ManageEventsService implements Resolve<Array<TimetableEvent>> {
 
     }
 
-    delete (eventId: number): Promise<void> {
+    delete(eventId: number): Promise<void> {
         return this.httpService.delete(`/staff/events/event/${eventId}`).toPromise()
             .then(() => {
                 this.siteNotificationService.create({

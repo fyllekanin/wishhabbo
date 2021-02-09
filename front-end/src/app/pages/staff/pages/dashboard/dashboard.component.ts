@@ -7,9 +7,9 @@ import { DashboardPage } from './dashboard.model';
     templateUrl: 'dashboard.component.html'
 })
 export class DashboardComponent {
-    data = new DashboardPage(null);
+    data = {} as DashboardPage;
 
-    constructor (activatedRoute: ActivatedRoute) {
+    constructor(activatedRoute: ActivatedRoute) {
         this.data = activatedRoute.snapshot.data.data;
     }
 

@@ -1,10 +1,10 @@
-import { take, catchError } from 'rxjs/operators';
+import { catchError, take } from 'rxjs/operators';
 import { AuthUser } from './auth-user.model';
 import { SiteNotificationService } from './../common-services/site-notification.service';
 import { HttpService } from '../http/http.service';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
-import { Observable, of, pipe, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 describe('AuthService', () => {
 
@@ -23,7 +23,7 @@ describe('AuthService', () => {
         service = new AuthService(
             httpService,
             siteNotificationService,
-            <Router><unknown>{ navigateByUrl: () => null }
+            <Router><unknown>{navigateByUrl: () => null}
         );
     });
 
@@ -40,7 +40,7 @@ describe('AuthService', () => {
         });
         it('should return true if logged in', () => {
             // Given
-            service.setAuthUser(new AuthUser(null));
+            service.setAuthUser({} as AuthUser);
 
             // When
             const result = service.isLoggedIn();
@@ -56,19 +56,19 @@ describe('AuthService', () => {
             spyOn(service, 'getRefreshToken').and.returnValue('refresh');
             spyOn(httpService, 'post')
                 .and.callFake((_url: string, _body: any, options?: { headers: { [key: string]: string } }) => {
-                    // Then
-                    expect(options.headers['RefreshAuthorization']).toEqual('refresh');
-                    done();
-                    return of(null);
-                });
+                // Then
+                expect(options.headers['RefreshAuthorization']).toEqual('refresh');
+                done();
+                return of(null);
+            });
 
             // When
             service.refreshToken();
         });
         it('should update the auth user if refresh is successfull', done => {
             // Given
-            service.setAuthUser(new AuthUser({ username: 'something' }));
-            spyOn(httpService, 'post').and.returnValue(of(new AuthUser({ username: 'test' })));
+            service.setAuthUser({username: 'something'} as AuthUser);
+            spyOn(httpService, 'post').and.returnValue(of({username: 'test'} as AuthUser));
 
             // When
             service.refreshToken().pipe(take(1)).subscribe(() => {
@@ -79,7 +79,7 @@ describe('AuthService', () => {
         });
         it('should set auth user to null if failure', done => {
             // Given
-            service.setAuthUser(new AuthUser({ username: 'something' }));
+            service.setAuthUser({username: 'something'} as AuthUser);
             spyOn(httpService, 'post').and.returnValue(throwError('gg'));
 
             // When
@@ -95,7 +95,7 @@ describe('AuthService', () => {
     describe('getAccessToken', () => {
         it('should return the accessToken if logged in', () => {
             // Given
-            service.setAuthUser(new AuthUser({ accessToken: 'access' }));
+            service.setAuthUser({accessToken: 'access'} as AuthUser);
 
             // When
             const result = service.getAccessToken();
@@ -118,7 +118,7 @@ describe('AuthService', () => {
     describe('getRefreshToken', () => {
         it('should return the refreshToken if logged in', () => {
             // Given
-            service.setAuthUser(new AuthUser({ refreshToken: 'refresh' }));
+            service.setAuthUser({refreshToken: 'refresh'} as AuthUser);
 
             // When
             const result = service.getRefreshToken();
@@ -140,7 +140,7 @@ describe('AuthService', () => {
 
     it('getAuthUser should return the auth user', () => {
         // Given
-        service.setAuthUser(new AuthUser(null));
+        service.setAuthUser({} as AuthUser);
 
         // When
         const result = service.getAuthUser();

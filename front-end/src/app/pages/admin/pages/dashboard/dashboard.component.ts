@@ -8,9 +8,9 @@ import { ActivatedRoute } from '@angular/router';
     styleUrls: ['dashboard.component.css']
 })
 export class DashboardComponent {
-    data = new DashboardPage(null);
+    data = {} as DashboardPage;
 
-    constructor (activatedRoute: ActivatedRoute) {
+    constructor(activatedRoute: ActivatedRoute) {
         this.data = activatedRoute.snapshot.data.data;
     }
 }

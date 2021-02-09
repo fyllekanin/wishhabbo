@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CombineSubscriptions, UnSub } from '../../../../../../shared/decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
 import { IPagination, IPaginationResolver } from '../../../../../../shared/components/pagination/pagination.model';
-import { ArticleClass } from '../../../../../../shared/classes/media/article.class';
+import { ARTICLE_TYPES, ArticleClass } from '../../../../../../shared/classes/media/article.class';
 import { ArticleService } from '../article/article.service';
 import { DialogService } from '../../../../../../core/common-services/dialog.service';
 import { SearchablePage } from '../../../../../../shared/classes/searchable-page.class';
@@ -22,17 +22,17 @@ export class ArticleListComponent extends SearchablePage implements OnDestroy {
         DELETE: 'delete'
     };
 
-    contentActions = [{ label: 'Create new', value: 'createNew' }];
+    contentActions = [{label: 'Create new', value: 'createNew'}];
     data: IPagination<ArticleClass>;
     @CombineSubscriptions()
     subscriber: Unsubscribable;
 
     rows: Array<TableRow> = [];
     headers: Array<TableHeader> = [
-        { label: 'Title' },
-        { label: 'Type' },
-        { label: 'Author' },
-        { label: 'Is Approved' }
+        {label: 'Title'},
+        {label: 'Type'},
+        {label: 'Author'},
+        {label: 'Is Approved'}
     ];
 
     params = {
@@ -42,7 +42,7 @@ export class ArticleListComponent extends SearchablePage implements OnDestroy {
         isExactSearch: false
     };
 
-    constructor (
+    constructor(
         private articleService: ArticleService,
         private dialogService: DialogService,
         protected router: Router,
@@ -56,7 +56,7 @@ export class ArticleListComponent extends SearchablePage implements OnDestroy {
         this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
-    onAction (response: TableActionResponse): void {
+    onAction(response: TableActionResponse): void {
         switch (response.action.value) {
             case this.ACTIONS.EDIT:
                 this.router.navigateByUrl(`/staff/media/articles/${response.row.rowId}`);
@@ -73,29 +73,29 @@ export class ArticleListComponent extends SearchablePage implements OnDestroy {
         }
     }
 
-    onCreateNew (): void {
+    onCreateNew(): void {
         this.router.navigateByUrl(`/staff/media/articles/new`);
     }
 
-    ngOnDestroy (): void {
+    ngOnDestroy(): void {
         // Empty
     }
 
-    private async onApprove (articleId: number): Promise<void> {
+    private async onApprove(articleId: number): Promise<void> {
         await this.articleService.approve(articleId);
         const article = this.data.items.find(item => item.articleId === articleId);
         article.isApproved = true;
         this.rows = this.getRows();
     }
 
-    private async onUnapprove (articleId: number): Promise<void> {
+    private async onUnapprove(articleId: number): Promise<void> {
         await this.articleService.unapprove(articleId);
         const article = this.data.items.find(item => item.articleId === articleId);
         article.isApproved = false;
         this.rows = this.getRows();
     }
 
-    private async onDelete (articleId: number): Promise<void> {
+    private async onDelete(articleId: number): Promise<void> {
         const confirmed = await this.dialogService.confirm('Do you really wanna delete this article?');
         if (confirmed) {
             await this.articleService.delete(articleId);
@@ -103,12 +103,12 @@ export class ArticleListComponent extends SearchablePage implements OnDestroy {
         }
     }
 
-    private onData ({ pagination }: IPaginationResolver<ArticleClass>): void {
+    private onData({pagination}: IPaginationResolver<ArticleClass>): void {
         this.data = pagination;
         this.rows = this.getRows();
     }
 
-    private getRows (): Array<TableRow> {
+    private getRows(): Array<TableRow> {
         return this.data.items.map(item => ({
             rowId: item.articleId,
             actions: [
@@ -126,10 +126,10 @@ export class ArticleListComponent extends SearchablePage implements OnDestroy {
                 }
             ],
             cells: [
-                { label: item.title },
-                { label: item.getType().name },
-                { label: item.user.username },
-                { label: item.isApproved ? 'Yes' : 'No' }
+                {label: item.title},
+                {label: ARTICLE_TYPES[item.type]?.name || 'Unknown'},
+                {label: item.user.username},
+                {label: item.isApproved ? 'Yes' : 'No'}
             ]
         }));
     }

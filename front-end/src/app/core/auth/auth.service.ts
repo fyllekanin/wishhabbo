@@ -19,14 +19,14 @@ export class AuthService implements Resolve<void> {
     private onAuthChangeSubject: Subject<void> = new Subject<void>();
     onAuthChange = this.onAuthChangeSubject.asObservable();
 
-    constructor (
+    constructor(
         private httpService: HttpService,
         private siteNotificationService: SiteNotificationService,
         private router: Router) {
         this.authUser = this.getStoredAuthUser();
     }
 
-    async resolve (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<void> {
+    async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<void> {
         const path = this.router.getCurrentNavigation().extractedUrl.root.children.primary.segments.reduce((prev, curr) => {
             return `${prev}/${curr}`;
         }, '');
@@ -52,17 +52,17 @@ export class AuthService implements Resolve<void> {
         }
     }
 
-    isLoggedIn (): boolean {
+    isLoggedIn(): boolean {
         return Boolean(this.authUser);
     }
 
-    refreshToken (): Observable<string> {
+    refreshToken(): Observable<string> {
         return this.httpService.post('/auth/token-refresh', null, {
             headers: {
                 'RefreshAuthorization': this.getRefreshToken()
             }
         }).pipe(map((res: AuthUser) => {
-            this.authUser = new AuthUser(res);
+            this.authUser = res;
             this.updateStoredAuthUser(this.authUser);
             return this.getAccessToken();
         }), catchError(error => {
@@ -72,9 +72,9 @@ export class AuthService implements Resolve<void> {
         }));
     }
 
-    doLogin (username: string, password: string): Promise<boolean> {
+    doLogin(username: string, password: string): Promise<boolean> {
         return new Promise(res => {
-            this.httpService.post('/auth/login', { username: username, password: password })
+            this.httpService.post('/auth/login', {username: username, password: password})
                 .subscribe(user => {
                     this.setAuthUser(<AuthUser>user);
                     this.siteNotificationService.create({
@@ -89,7 +89,7 @@ export class AuthService implements Resolve<void> {
         });
     }
 
-    doRegister (data: { username: string, habbo: string, password: string, repassword: string }): Promise<boolean> {
+    doRegister(data: { username: string, habbo: string, password: string, repassword: string }): Promise<boolean> {
         return new Promise(res => {
             this.httpService.post('/auth/register', data)
                 .subscribe(user => {
@@ -108,7 +108,7 @@ export class AuthService implements Resolve<void> {
         });
     }
 
-    logout (): void {
+    logout(): void {
         this.httpService.post('/auth/logout', null)
             .subscribe(() => {
                 this.authUser = null;
@@ -123,33 +123,33 @@ export class AuthService implements Resolve<void> {
             });
     }
 
-    getAccessToken (): string {
+    getAccessToken(): string {
         return this.isLoggedIn() ? this.authUser.accessToken : null;
     }
 
-    getRefreshToken (): string {
+    getRefreshToken(): string {
         return this.isLoggedIn() ? this.authUser.refreshToken : null;
     }
 
-    getAuthUser (): AuthUser {
+    getAuthUser(): AuthUser {
         return this.authUser;
     }
 
-    setAuthUser (authUser: AuthUser): void {
-        this.authUser = authUser ? new AuthUser(authUser) : null;
+    setAuthUser(authUser: AuthUser): void {
+        this.authUser = authUser ? authUser : null;
         this.updateStoredAuthUser(this.authUser);
         this.onAuthChangeSubject.next();
     }
 
-    private updateStoredAuthUser (authUser: AuthUser): void {
+    private updateStoredAuthUser(authUser: AuthUser): void {
         localStorage.setItem(LocalStorageKeys.AUTH_USER, JSON.stringify(authUser));
     }
 
-    private getStoredAuthUser (): AuthUser {
+    private getStoredAuthUser(): AuthUser {
         const json = localStorage.getItem(LocalStorageKeys.AUTH_USER);
         try {
             const parsed = JSON.parse(json);
-            return parsed ? new AuthUser(JSON.parse(json)) : null;
+            return parsed ? parsed as AuthUser : null;
         } catch (e) {
             return null;
         }

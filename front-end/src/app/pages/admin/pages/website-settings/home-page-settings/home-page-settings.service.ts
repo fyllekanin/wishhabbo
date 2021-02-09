@@ -3,25 +3,23 @@ import { Resolve } from '@angular/router';
 import { HomePageSettingsModel } from './home-page-settings.model';
 import { SiteNotificationService } from '../../../../../core/common-services/site-notification.service';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { SiteNotificationType } from '../../../../../shared/app-views/site-notification/site-notification.interface';
 
 @Injectable()
 export class HomePageSettingsService implements Resolve<HomePageSettingsModel> {
 
-    constructor (
+    constructor(
         private httpClient: HttpClient,
         private siteNotificationService: SiteNotificationService
     ) {
     }
 
-    resolve (): Observable<HomePageSettingsModel> {
-        return this.httpClient.get('/api/admin/website-settings/home-page-settings')
-            .pipe(map(data => new HomePageSettingsModel(data)));
+    resolve(): Observable<HomePageSettingsModel> {
+        return this.httpClient.get<HomePageSettingsModel>('/api/admin/website-settings/home-page-settings');
     }
 
-    async save (data: FormData): Promise<HomePageSettingsModel> {
+    async save(data: FormData): Promise<HomePageSettingsModel> {
         return await this.httpClient.post('/api/admin/website-settings/home-page-settings', data)
             .toPromise()
             .then(() => {
@@ -31,7 +29,7 @@ export class HomePageSettingsService implements Resolve<HomePageSettingsModel> {
                     type: SiteNotificationType.INFO
                 });
                 return this.httpClient.get('/api/admin/website-settings/home-page-settings')
-                    .toPromise().then(response => new HomePageSettingsModel(response));
+                    .toPromise();
             })
             .catch(error => {
                 this.siteNotificationService.onError(error.error);

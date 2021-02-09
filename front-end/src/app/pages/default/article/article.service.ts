@@ -1,6 +1,5 @@
 import { HttpService } from './../../../core/http/http.service';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { ArticleComment, ArticlePage } from './article.model';
@@ -10,18 +9,17 @@ import { SiteNotificationType } from '../../../shared/app-views/site-notificatio
 @Injectable()
 export class ArticleService implements Resolve<ArticlePage> {
 
-    constructor (
+    constructor(
         private siteNotificationService: SiteNotificationService,
         private httpService: HttpService
     ) {
     }
 
-    resolve (activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<ArticlePage> {
-        return this.httpService.get(`/page/article/${activatedRouteSnapshot.params.articleId}/page/${activatedRouteSnapshot.params.page}`)
-            .pipe(map(data => new ArticlePage(data)));
+    resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<ArticlePage> {
+        return this.httpService.get(`/page/article/${activatedRouteSnapshot.params.articleId}/page/${activatedRouteSnapshot.params.page}`);
     }
 
-    createComment (articleId: number, content: string): Promise<ArticleComment> {
+    createComment(articleId: number, content: string): Promise<ArticleComment> {
         if (!content) {
             this.siteNotificationService.create({
                 title: 'Error',
@@ -30,7 +28,7 @@ export class ArticleService implements Resolve<ArticlePage> {
             });
             return;
         }
-        return this.httpService.post(`/article-comment/${articleId}`, { content: content })
+        return this.httpService.post(`/article-comment/${articleId}`, {content: content})
             .toPromise()
             .then(res => {
                 this.siteNotificationService.create({
@@ -38,7 +36,7 @@ export class ArticleService implements Resolve<ArticlePage> {
                     message: 'New comment made!',
                     type: SiteNotificationType.INFO
                 });
-                return new ArticleComment(res);
+                return res as ArticleComment;
             })
             .catch(error => {
                 this.siteNotificationService.onError(error.error);
@@ -46,8 +44,8 @@ export class ArticleService implements Resolve<ArticlePage> {
             });
     }
 
-    updateComment (articleCommentId: number, content: string): Promise<boolean> {
-        return this.httpService.put(`/article-comment/${articleCommentId}`, { content: content })
+    updateComment(articleCommentId: number, content: string): Promise<boolean> {
+        return this.httpService.put(`/article-comment/${articleCommentId}`, {content: content})
             .toPromise()
             .then(() => {
                 this.siteNotificationService.create({
@@ -63,7 +61,7 @@ export class ArticleService implements Resolve<ArticlePage> {
             });
     }
 
-    deleteComment (articleCommentId: number): Promise<boolean> {
+    deleteComment(articleCommentId: number): Promise<boolean> {
         return this.httpService.delete(`/article-comment/${articleCommentId}`)
             .toPromise()
             .then(() => {
@@ -80,7 +78,7 @@ export class ArticleService implements Resolve<ArticlePage> {
             });
     }
 
-    markAsComplete (articleId: number): Promise<void> {
+    markAsComplete(articleId: number): Promise<void> {
         return this.httpService.post(`/page/article/${articleId}/complete`, null).toPromise()
             .then(() => {
                 this.siteNotificationService.create({

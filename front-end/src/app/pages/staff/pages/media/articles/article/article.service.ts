@@ -3,28 +3,26 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { ArticleClass } from '../../../../../../shared/classes/media/article.class';
 import { Observable, of } from 'rxjs';
 import { HttpService } from '../../../../../../core/http/http.service';
-import { map } from 'rxjs/operators';
 import { SiteNotificationService } from '../../../../../../core/common-services/site-notification.service';
 import { SiteNotificationType } from '../../../../../../shared/app-views/site-notification/site-notification.interface';
 
 @Injectable()
 export class ArticleService implements Resolve<ArticleClass> {
 
-    constructor (
+    constructor(
         private httpService: HttpService,
         private siteNotificationService: SiteNotificationService
     ) {
     }
 
-    resolve (route: ActivatedRouteSnapshot): Observable<ArticleClass> {
+    resolve(route: ActivatedRouteSnapshot): Observable<ArticleClass> {
         if (route.params.articleId === 'new') {
-            return of(new ArticleClass(null));
+            return of({} as ArticleClass);
         }
-        return this.httpService.get(`/staff/articles/${route.params.articleId}`)
-            .pipe(map((data: ArticleClass) => new ArticleClass(data)));
+        return this.httpService.get(`/staff/articles/${route.params.articleId}`);
     }
 
-    approve (articleId: number): Promise<void> {
+    approve(articleId: number): Promise<void> {
         return this.httpService.put(`/staff/articles/${articleId}/approve`, null).toPromise()
             .then(() => {
                 this.siteNotificationService.create({
@@ -43,7 +41,7 @@ export class ArticleService implements Resolve<ArticleClass> {
             });
     }
 
-    unapprove (articleId: number): Promise<void> {
+    unapprove(articleId: number): Promise<void> {
         return this.httpService.put(`/staff/articles/${articleId}/unapprove`, null).toPromise()
             .then(() => {
                 this.siteNotificationService.create({
@@ -62,7 +60,7 @@ export class ArticleService implements Resolve<ArticleClass> {
             });
     }
 
-    delete (articleId: number): Promise<void> {
+    delete(articleId: number): Promise<void> {
         return this.httpService.delete(`/staff/articles/${articleId}`).toPromise()
             .then(() => {
                 this.siteNotificationService.create({
@@ -81,7 +79,7 @@ export class ArticleService implements Resolve<ArticleClass> {
             });
     }
 
-    save (article: ArticleClass, fileElement: HTMLInputElement): Promise<number | unknown> {
+    save(article: ArticleClass, fileElement: HTMLInputElement): Promise<number | unknown> {
         const data = new FormData();
         data.append('article', JSON.stringify(article));
         data.append('thumbnail', fileElement.files[0]);

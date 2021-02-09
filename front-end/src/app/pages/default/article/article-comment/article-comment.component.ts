@@ -10,7 +10,7 @@ import { ArticleService } from '../article.service';
     styleUrls: ['article-comment.component.css']
 })
 export class ArticleCommentComponent {
-    data = new ArticleComment(null);
+    data = {} as ArticleComment;
     content: SafeHtml;
 
     canDelete = false;
@@ -20,14 +20,14 @@ export class ArticleCommentComponent {
 
     @Output() onDelete: EventEmitter<number> = new EventEmitter();
 
-    constructor (
+    constructor(
         private authService: AuthService,
         private sanitizer: DomSanitizer,
         private service: ArticleService
     ) {
     }
 
-    async onUpdate (): Promise<void> {
+    async onUpdate(): Promise<void> {
         const result = await this.service.updateComment(this.data.articleCommentId, this.data.content);
         if (result) {
             this.content = this.sanitizer.bypassSecurityTrustHtml(this.data.content);
@@ -36,7 +36,7 @@ export class ArticleCommentComponent {
     }
 
     @Input()
-    set comment (comment: ArticleComment) {
+    set comment(comment: ArticleComment) {
         this.data = comment;
         this.content = this.sanitizer.bypassSecurityTrustHtml(comment.content);
 

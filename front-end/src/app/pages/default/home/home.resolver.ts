@@ -3,17 +3,15 @@ import { Resolve } from '@angular/router';
 import { HomeModel } from './home.model';
 import { HttpService } from '../../../core/http/http.service';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Injectable()
 export class HomeResolver implements Resolve<HomeModel> {
 
-    constructor (private httpService: HttpService) {
+    constructor(private httpService: HttpService) {
     }
 
-    resolve (): Observable<HomeModel> {
-        return this.httpService.get('/page/home')
-            .pipe(map(data => new HomeModel(data)));
+    resolve(): Observable<HomeModel> {
+        return this.httpService.get('/page/home');
     }
 
 }

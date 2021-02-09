@@ -12,23 +12,23 @@ import { SiteNotificationType } from '../../app-views/site-notification/site-not
 @Injectable()
 export class TimetableService {
     private bookingActions: Array<DialogButton> = [
-        new DialogButton({ label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true }),
-        new DialogButton({ label: 'Book', action: 'book', type: ButtonTypes.GREEN })
+        {label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true},
+        {label: 'Book', action: 'book', type: ButtonTypes.GREEN}
     ];
     private editingActions: Array<DialogButton> = [
-        new DialogButton({ label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true }),
-        new DialogButton({ label: 'Unbook', action: 'unbook', type: ButtonTypes.BLUE }),
-        new DialogButton({ label: 'Save', action: 'book', type: ButtonTypes.GREEN })
+        {label: 'Cancel', action: 'cancel', type: ButtonTypes.GRAY, isClosing: true},
+        {label: 'Unbook', action: 'unbook', type: ButtonTypes.BLUE},
+        {label: 'Save', action: 'book', type: ButtonTypes.GREEN}
     ];
 
-    constructor (
+    constructor(
         private httpService: HttpService,
         private siteNotificationService: SiteNotificationService,
         private dialogService: DialogService
     ) {
     }
 
-    async doOpenDetails (slot: Slot, isEditing: boolean, isRadio: boolean): Promise<BookingResult> {
+    async doOpenDetails(slot: Slot, isEditing: boolean, isRadio: boolean): Promise<BookingResult> {
         return new Promise(async res => {
             const presentedHour = TimeHelper.getHours().find(hour => hour.number === slot.hour);
 
@@ -53,7 +53,7 @@ export class TimetableService {
         });
     }
 
-    async edit (slot: Slot, isRadio: boolean): Promise<unknown> {
+    async edit(slot: Slot, isRadio: boolean): Promise<unknown> {
         return this.httpService.put(`/staff/${isRadio ? 'radio' : 'events'}/${slot.timetableId}`, slot).toPromise()
             .then(() => {
                 this.siteNotificationService.create({
@@ -65,8 +65,8 @@ export class TimetableService {
             .catch(error => this.siteNotificationService.onError(error.error));
     }
 
-    async book (slot: Slot, isRadio: boolean): Promise<unknown> {
-        const copy = { ...slot };
+    async book(slot: Slot, isRadio: boolean): Promise<unknown> {
+        const copy = {...slot};
         const offsetInHours = copy.hour + TimeHelper.getHourOffsetRounded();
         const convertedHour = TimeHelper.getConvertedHour(offsetInHours);
         const convertedDay = TimeHelper.getConvertedDay(offsetInHours, slot.day);
@@ -84,7 +84,7 @@ export class TimetableService {
             .catch(error => this.siteNotificationService.onError(error.error));
     }
 
-    async unbook (slot: Slot, isRadio: boolean): Promise<unknown> {
+    async unbook(slot: Slot, isRadio: boolean): Promise<void> {
         return new Promise(async res => {
             const presentedHour = TimeHelper.getHours().find(hour => hour.number === slot.hour);
             const result = await this.dialogService
@@ -104,16 +104,16 @@ export class TimetableService {
         });
     }
 
-    fetchSlots (type: string): Promise<Timetable> {
+    fetchSlots(type: string): Promise<Timetable> {
         return this.httpService.get(`/staff/${type === TimeTableTypes.RADIO ? 'radio' : 'events'}/slots`).toPromise()
-            .then((slots: Array<Slot>) => new Timetable({
+            .then((slots: Array<Slot>) => ({
                 all: slots,
                 current: [],
                 type: type
-            }));
+            } as Timetable));
     }
 
-    private async getEvents (): Promise<Array<TimetableEvent>> {
+    private async getEvents(): Promise<Array<TimetableEvent>> {
         return await this.httpService.get<Array<TimetableEvent>>('/staff/events/list').toPromise();
     }
 

@@ -16,7 +16,7 @@ import { DialogService } from '../../../core/common-services/dialog.service';
 })
 @UnSub()
 export class ArticleComponent implements OnDestroy {
-    data = new ArticlePage(null);
+    data = {} as ArticlePage;
 
     @CombineSubscriptions()
     subscriber: Unsubscribable;
@@ -25,10 +25,10 @@ export class ArticleComponent implements OnDestroy {
     newCommentContent = '';
 
     postCommentAction: Array<UserAction> = [
-        { label: 'Create', value: 'create' }
+        {label: 'Create', value: 'create'}
     ];
 
-    constructor (
+    constructor(
         private service: ArticleService,
         private sanitizer: DomSanitizer,
         private dialogService: DialogService,
@@ -39,11 +39,11 @@ export class ArticleComponent implements OnDestroy {
         this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
-    ngOnDestroy (): void {
+    ngOnDestroy(): void {
         // Empty
     }
 
-    async onDeleteComment (articleCommentId: number): Promise<void> {
+    async onDeleteComment(articleCommentId: number): Promise<void> {
         const result = await this.dialogService.confirm('Do you really wanna delete this comment?');
         if (result) {
             const isDeleted = await this.service.deleteComment(articleCommentId);
@@ -53,7 +53,7 @@ export class ArticleComponent implements OnDestroy {
         }
     }
 
-    async onCreateComment (): Promise<void> {
+    async onCreateComment(): Promise<void> {
         const result = await this.service.createComment(this.data.article.articleId, this.newCommentContent);
         if (!result) {
             return;
@@ -62,12 +62,12 @@ export class ArticleComponent implements OnDestroy {
         this.newCommentContent = '';
     }
 
-    async markComplete (): Promise<void> {
+    async markComplete(): Promise<void> {
         await this.service.markAsComplete(this.data.article.articleId);
         this.data.isCompleted = true;
     }
 
-    private onData ({ data }: { data: ArticlePage }): void {
+    private onData({data}: { data: ArticlePage }): void {
         this.data = data;
         this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(this.data.article.parsedContent);
     }

@@ -22,12 +22,12 @@ export class GroupComponent implements OnDestroy {
         BACK: 'back'
     };
     actions: Array<UserAction> = [];
-    data = new GroupClass(null);
+    data = {} as GroupClass;
 
     @CombineSubscriptions()
     subscriber: Unsubscribable;
 
-    constructor (
+    constructor(
         private service: GroupService,
         private router: Router,
         private dialogService: DialogService,
@@ -37,11 +37,11 @@ export class GroupComponent implements OnDestroy {
         this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
-    ngOnDestroy (): void {
+    ngOnDestroy(): void {
         // Empty
     }
 
-    async onAction (action: UserAction): Promise<void> {
+    async onAction(action: UserAction): Promise<void> {
         switch (action.value) {
             case this.ACTIONS.BACK:
                 await this.router.navigateByUrl('/admin/users/groups/page/1');
@@ -55,17 +55,17 @@ export class GroupComponent implements OnDestroy {
         }
     }
 
-    get authUser (): AuthUser {
+    get authUser(): AuthUser {
         return this.authService.getAuthUser();
     }
 
-    private async onSave (): Promise<void> {
+    private async onSave(): Promise<void> {
         const groupId = await this.service.save(this.data);
         this.data.groupId = groupId as number;
         this.actions = this.getActions();
     }
 
-    private async onDelete (): Promise<void> {
+    private async onDelete(): Promise<void> {
         const confirmed = await this.dialogService.confirm('Do you really wanna delete this group?');
         if (confirmed) {
             await this.service.delete(this.data.groupId);
@@ -73,16 +73,16 @@ export class GroupComponent implements OnDestroy {
         }
     }
 
-    private onData ({ data }: { data: GroupClass }): void {
+    private onData({data}: { data: GroupClass }): void {
         this.data = data;
         this.actions = this.getActions();
     }
 
-    private getActions (): Array<UserAction> {
+    private getActions(): Array<UserAction> {
         return [
-            { label: 'Save', value: this.ACTIONS.SAVE, isAvailable: true },
-            { label: 'Delete', value: this.ACTIONS.DELETE, isAvailable: Boolean(this.data.groupId) },
-            { label: 'Go back', value: this.ACTIONS.BACK, isAvailable: true }
+            {label: 'Save', value: this.ACTIONS.SAVE, isAvailable: true},
+            {label: 'Delete', value: this.ACTIONS.DELETE, isAvailable: Boolean(this.data.groupId)},
+            {label: 'Go back', value: this.ACTIONS.BACK, isAvailable: true}
         ].filter(action => action.isAvailable).map(action => {
             delete action.isAvailable;
             return action;

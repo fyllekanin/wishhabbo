@@ -3,16 +3,14 @@ import { Resolve } from '@angular/router';
 import { StaffListModel } from './staff-list.model';
 import { HttpService } from '../../../core/http/http.service';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Injectable()
 export class StaffListResolver implements Resolve<StaffListModel> {
 
-    constructor (private httpService: HttpService) {
+    constructor(private httpService: HttpService) {
     }
 
-    resolve (): Observable<StaffListModel> {
-        return this.httpService.get('/page/staff-list')
-            .pipe(map(data => new StaffListModel(data)));
+    resolve(): Observable<StaffListModel> {
+        return this.httpService.get('/page/staff-list');
     }
 }

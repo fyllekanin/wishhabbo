@@ -9,20 +9,19 @@ export class GlobalBbcodeService implements Resolve<Array<BbcodeClass>> {
     private cacheTime: number;
     private bbcodes: Array<BbcodeClass> = null;
 
-    constructor (private httpService: HttpService) {
+    constructor(private httpService: HttpService) {
     }
 
-    async resolve (): Promise<Array<BbcodeClass>> {
+    async resolve(): Promise<Array<BbcodeClass>> {
         return await this.getBbcodes();
     }
 
-    async getBbcodes (): Promise<Array<BbcodeClass>> {
+    async getBbcodes(): Promise<Array<BbcodeClass>> {
         if (this.bbcodes && this.cacheTime > (new Date().getTime() / 1000)) {
             return [...this.bbcodes];
         }
-        this.bbcodes = await this.httpService.get('/information/bbcodes')
-            .toPromise()
-            .then((bbcodes: Array<BbcodeClass>) => bbcodes.map(bbcode => new BbcodeClass(bbcode)));
+        this.bbcodes = await this.httpService.get<Array<BbcodeClass>>('/information/bbcodes')
+            .toPromise();
         this.cacheTime = (new Date().getTime() / 1000) + GlobalBbcodeService.CACHE_LIFETIME;
         return [...this.bbcodes];
     }

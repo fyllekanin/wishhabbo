@@ -30,8 +30,10 @@ export class AuthUserView {
     private readonly refreshToken: string;
     private readonly staffPermissions: StaffPermissions;
     private readonly adminPermissions: AdminPermissions;
+    private readonly doHaveAdminPermissions: boolean;
+    private readonly doHaveStaffPermissions: boolean;
 
-    constructor (builder: AuthUserViewBuilder) {
+    constructor(builder: AuthUserViewBuilder) {
         this.userId = builder.userId;
         this.username = builder.username;
         this.habbo = builder.habbo;
@@ -39,37 +41,39 @@ export class AuthUserView {
         this.refreshToken = builder.refreshToken;
         this.staffPermissions = builder.staffPermissions;
         this.adminPermissions = builder.adminPermissions;
+        this.doHaveAdminPermissions = Object.keys(this.adminPermissions).some(key => this.adminPermissions[key as keyof AdminPermissions]);
+        this.doHaveStaffPermissions = Object.keys(this.staffPermissions).some(key => this.staffPermissions[key as keyof StaffPermissions]);
     }
 
-    getUserId (): number {
+    getUserId(): number {
         return this.userId;
     }
 
-    getUsername (): string {
+    getUsername(): string {
         return this.username;
     }
 
-    getHabbo (): string {
+    getHabbo(): string {
         return this.habbo;
     }
 
-    getAccessToken (): string {
+    getAccessToken(): string {
         return this.accessToken;
     }
 
-    getRefreshToken (): string {
+    getRefreshToken(): string {
         return this.refreshToken;
     }
 
-    getStaffPermissions (): StaffPermissions {
-        return { ...this.staffPermissions };
+    getStaffPermissions(): StaffPermissions {
+        return {...this.staffPermissions};
     }
 
-    getAdminPermissions (): AdminPermissions {
-        return { ...this.adminPermissions };
+    getAdminPermissions(): AdminPermissions {
+        return {...this.adminPermissions};
     }
 
-    static newBuilder (): AuthUserViewBuilder {
+    static newBuilder(): AuthUserViewBuilder {
         return new AuthUserViewBuilder();
     }
 }
@@ -83,42 +87,42 @@ class AuthUserViewBuilder {
     staffPermissions: StaffPermissions;
     adminPermissions: AdminPermissions;
 
-    withUserId (userId: number): AuthUserViewBuilder {
+    withUserId(userId: number): AuthUserViewBuilder {
         this.userId = userId;
         return this;
     }
 
-    withUsername (username: string): AuthUserViewBuilder {
+    withUsername(username: string): AuthUserViewBuilder {
         this.username = username;
         return this;
     }
 
-    withHabbo (habbo: string): AuthUserViewBuilder {
+    withHabbo(habbo: string): AuthUserViewBuilder {
         this.habbo = habbo;
         return this;
     }
 
-    withAccessToken (accessToken: string): AuthUserViewBuilder {
+    withAccessToken(accessToken: string): AuthUserViewBuilder {
         this.accessToken = accessToken;
         return this;
     }
 
-    withRefreshToken (refreshToken: string): AuthUserViewBuilder {
+    withRefreshToken(refreshToken: string): AuthUserViewBuilder {
         this.refreshToken = refreshToken;
         return this;
     }
 
-    withStaffPermissions (staffPermissions: StaffPermissions): AuthUserViewBuilder {
+    withStaffPermissions(staffPermissions: StaffPermissions): AuthUserViewBuilder {
         this.staffPermissions = staffPermissions;
         return this;
     }
 
-    withAdminPermissions (adminPermissions: AdminPermissions): AuthUserViewBuilder {
+    withAdminPermissions(adminPermissions: AdminPermissions): AuthUserViewBuilder {
         this.adminPermissions = adminPermissions;
         return this;
     }
 
-    build (): AuthUserView {
+    build(): AuthUserView {
         return new AuthUserView(this);
     }
 }

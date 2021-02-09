@@ -14,21 +14,22 @@ export class SlimArticleComponent implements OnInit {
     badgeCount = 0;
     firstBadge: string = null;
     difficulty: { name: string, color: string } = null;
+    thumbnail: string;
 
-    constructor (private router: Router) {
+    constructor(private router: Router) {
     }
 
-    ngOnInit (): void {
+    ngOnInit(): void {
         this.difficulty = ARTICLE_DIFFICULTIES[this.article.difficulty];
         this.badgeCount = this.article.badges.length;
+        this.thumbnail = `/resources/article-thumbnails/${this.article.articleId}.gif?updatedAt=${this.article.updatedAt}`;
 
         const randomNumber = Math.floor((Math.random() * this.badgeCount));
         this.firstBadge = this.badgeCount > 0 ? this.article.badges[randomNumber] : null;
     }
 
     @HostListener('click', ['$event.target'])
-    onClick (): void {
+    onClick(): void {
         this.router.navigateByUrl(`/default/article/${this.article.articleId}/page/1`);
     }
 }
-

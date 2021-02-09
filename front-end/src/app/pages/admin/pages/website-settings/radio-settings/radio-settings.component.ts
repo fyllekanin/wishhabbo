@@ -9,24 +9,24 @@ import { CombineSubscriptions } from 'src/app/shared/decorators/unsub.decorator'
 @Component({
     selector: 'app-admin-website-settings-radio-settings',
     templateUrl: 'radio-settings.component.html',
-    styleUrls: [ 'radio-settings.component.css' ]
+    styleUrls: ['radio-settings.component.css']
 })
 export class RadioSettingsComponent implements OnDestroy {
     private readonly ACTIONS = {
         SAVE: 'save',
         GO_BACK: 'go_back'
     };
-    data = new RadioSettingsClass();
+    data = {} as RadioSettingsClass;
 
     serverType = ServerType;
     @CombineSubscriptions()
     subscriber: Unsubscribable;
     contentActions: Array<UserAction> = [
-        { label: 'Save', value: this.ACTIONS.SAVE },
-        { label: 'Go back', value: this.ACTIONS.GO_BACK }
+        {label: 'Save', value: this.ACTIONS.SAVE},
+        {label: 'Go back', value: this.ACTIONS.GO_BACK}
     ];
 
-    constructor (
+    constructor(
         private service: RadioSettingsService,
         private router: Router,
         activatedRoute: ActivatedRoute
@@ -34,7 +34,7 @@ export class RadioSettingsComponent implements OnDestroy {
         this.subscriber = activatedRoute.data.subscribe(data => this.data = data.data);
     }
 
-    async onAction (action: UserAction): Promise<void> {
+    async onAction(action: UserAction): Promise<void> {
         switch (action.value) {
             case this.ACTIONS.SAVE:
                 await this.service.save(this.data);
@@ -45,7 +45,7 @@ export class RadioSettingsComponent implements OnDestroy {
         }
     }
 
-    ngOnDestroy (): void {
+    ngOnDestroy(): void {
         // Empty
     }
 }

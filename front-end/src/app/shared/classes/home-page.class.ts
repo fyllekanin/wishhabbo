@@ -1,30 +1,14 @@
-import { ClassHelper, objectOf, primitiveOf } from '../helpers/class.helper';
 import { SlimUser } from './slim-user.class';
 
-export class HomePageStarLight {
-    @objectOf(SlimUser)
-    user: SlimUser = new SlimUser(null);
-    @primitiveOf(String)
+export interface HomePageStarLight {
+    user: SlimUser;
     text: string;
-
-    constructor (source: Partial<HomePageStarLight>) {
-        ClassHelper.assign(this, source);
-    }
 }
 
-export class HomePageBannerEntry {
-    @primitiveOf(String)
+export interface HomePageBannerEntry {
     id: string;
-    @primitiveOf(String)
     caption: string;
-    @primitiveOf(Boolean)
     isDeleted: boolean;
-    @primitiveOf(Boolean)
     isUpdated: boolean;
-    @primitiveOf(Boolean)
     isNew: boolean;
-
-    constructor (source: Partial<HomePageBannerEntry>) {
-        ClassHelper.assign(this, source);
-    }
 }

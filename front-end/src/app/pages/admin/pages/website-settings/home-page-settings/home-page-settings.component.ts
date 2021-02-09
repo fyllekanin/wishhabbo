@@ -18,18 +18,18 @@ export class HomePageSettingsComponent {
         GO_BACK: 'GO_BACK'
     };
     @ViewChildren('image') imageElements: Array<ElementRef> = [];
-    data = new HomePageSettingsModel(null);
+    data = {} as HomePageSettingsModel;
 
     images: Array<SlideShowImage> = [];
     addNewEntryAction: Array<UserAction> = [
-        { label: 'Add entry', value: null }
+        {label: 'Add entry', value: null}
     ];
     contentActions: Array<UserAction> = [
-        { label: 'Save', value: this.ACTIONS.SAVE },
-        { label: 'Go back', value: this.ACTIONS.GO_BACK }
+        {label: 'Save', value: this.ACTIONS.SAVE},
+        {label: 'Go back', value: this.ACTIONS.GO_BACK}
     ];
 
-    constructor (
+    constructor(
         private service: HomePageSettingsService,
         private router: Router,
         activatedRoute: ActivatedRoute
@@ -43,11 +43,11 @@ export class HomePageSettingsComponent {
         }));
     }
 
-    addNewEntry (): void {
-        this.data.bannerEntries.push(new HomePageBannerEntry({ id: IdHelper.newUuid(), isNew: true }));
+    addNewEntry(): void {
+        this.data.bannerEntries.push({id: IdHelper.newUuid(), isNew: true} as HomePageBannerEntry);
     }
 
-    onCaptionChange (): void {
+    onCaptionChange(): void {
         this.images.forEach(image => {
             const entry = this.data.bannerEntries.find(item => item.id === image.id);
             if (entry) {
@@ -56,11 +56,11 @@ export class HomePageSettingsComponent {
         });
     }
 
-    deleteEntry (entry: HomePageBannerEntry): void {
+    deleteEntry(entry: HomePageBannerEntry): void {
         entry.isDeleted = true;
     }
 
-    async onFileChange (event: any, entry: HomePageBannerEntry): Promise<void> {
+    async onFileChange(event: any, entry: HomePageBannerEntry): Promise<void> {
         const result = await this.getFile(event);
         entry.isUpdated = true;
         if (!result) {
@@ -79,7 +79,7 @@ export class HomePageSettingsComponent {
         }
     }
 
-    async onAction (action: UserAction): Promise<void> {
+    async onAction(action: UserAction): Promise<void> {
         switch (action.value) {
             case this.ACTIONS.GO_BACK:
                 await this.router.navigateByUrl('/admin/website-settings/list');
@@ -104,7 +104,7 @@ export class HomePageSettingsComponent {
         }
     }
 
-    private getFile (event: any): Promise<any> {
+    private getFile(event: any): Promise<any> {
         return new Promise(res => {
             if (!event.target.files[0]) {
                 res(null);

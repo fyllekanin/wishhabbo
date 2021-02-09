@@ -3,13 +3,13 @@
         <div class="grid-x">
             <div class="cell small-8">
                 <div class="main-navigation-item" *ngFor="let mainItem of items"
-                     [ngClass]="mainItem.children.length > 0 ? 'dropdown-menu' : ''">
+                     [ngClass]="mainItem.children?.length > 0 ? 'dropdown-menu' : ''">
                     <a [routerLink]="mainItem.path">
                         <i *ngIf="mainItem.icon" class="fa" aria-hidden="true" [ngClass]="mainItem.icon"></i>
                         {{mainItem.title}}
                     </a>
                     <div class="dropdown-content">
-                        <a *ngFor="let child of mainItem.children" [routerLink]="child.path">
+                        <a *ngFor="let child of mainItem?.children" [routerLink]="child.path">
                             <i *ngIf="child.icon" class="fa" aria-hidden="true" [ngClass]="child.icon"></i>
                             {{child.title}}
                         </a>

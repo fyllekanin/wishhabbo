@@ -20,11 +20,11 @@ export class BbcodeComponent implements OnDestroy {
         BACK: 'back'
     };
     contentActions: Array<UserAction> = [];
-    data = new BbcodeClass();
+    data = {} as BbcodeClass;
     @CombineSubscriptions()
     subscriber: Unsubscribable;
 
-    constructor (
+    constructor(
         private globalBbcodeService: GlobalBbcodeService,
         private bbcodeService: BbcodeService,
         private router: Router,
@@ -34,11 +34,11 @@ export class BbcodeComponent implements OnDestroy {
         this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
-    ngOnDestroy (): void {
+    ngOnDestroy(): void {
         // Empty
     }
 
-    async onAction (action: UserAction): Promise<void> {
+    async onAction(action: UserAction): Promise<void> {
         switch (action.value) {
             case this.ACTIONS.SAVE:
                 this.data.bbcodeId = await this.bbcodeService.create(this.data) as number;
@@ -58,12 +58,12 @@ export class BbcodeComponent implements OnDestroy {
         }
     }
 
-    private onData ({data}: { data: BbcodeClass }): void {
+    private onData({data}: { data: BbcodeClass }): void {
         this.data = data;
         this.contentActions = this.getActions();
     }
 
-    private getActions (): Array<UserAction> {
+    private getActions(): Array<UserAction> {
         return [
             {label: 'Save', value: this.ACTIONS.SAVE, isHidden: false},
             {label: 'Delete', value: this.ACTIONS.DELETE, isHidden: !this.data.bbcodeId},

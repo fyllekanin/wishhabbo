@@ -15,7 +15,7 @@ export class UserGroupsComponent {
         SAVE: 'save',
         GO_BACK: 'go_back'
     };
-    data = new UserGroupsModel();
+    data = {} as UserGroupsModel;
     @CombineSubscriptions()
     subscriber: Unsubscribable;
     possibleDisplayGroups: Array<SlimUserGroup> = [];
@@ -30,7 +30,7 @@ export class UserGroupsComponent {
         }
     ];
 
-    constructor (
+    constructor(
         private router: Router,
         private service: UserGroupsService,
         activatedRoute: ActivatedRoute
@@ -38,7 +38,7 @@ export class UserGroupsComponent {
         this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
-    async onAction (action: UserAction): Promise<void> {
+    async onAction(action: UserAction): Promise<void> {
         switch (action.value) {
             case this.ACTIONS.SAVE:
                 await this.service.save(this.data);
@@ -49,19 +49,19 @@ export class UserGroupsComponent {
         }
     }
 
-    onChange (): void {
+    onChange(): void {
         this.possibleDisplayGroups = this.getPossibleDisplayGroups();
         this.data.displayGroupId = this.possibleDisplayGroups
             .some(group => group.groupId === this.data.displayGroupId) ?
             this.data.displayGroupId : null;
     }
 
-    private onData ({ data }: { data: UserGroupsModel }): void {
+    private onData({data}: { data: UserGroupsModel }): void {
         this.data = data;
         this.possibleDisplayGroups = this.getPossibleDisplayGroups();
     }
 
-    private getPossibleDisplayGroups (): Array<SlimUserGroup> {
+    private getPossibleDisplayGroups(): Array<SlimUserGroup> {
         return this.data.groups.filter(group => group.isSelected);
     }
 }

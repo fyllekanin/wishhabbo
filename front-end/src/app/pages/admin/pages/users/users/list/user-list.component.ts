@@ -7,6 +7,7 @@ import { IPagination, IPaginationResolver } from '../../../../../../shared/compo
 import { AuthService } from '../../../../../../core/auth/auth.service';
 import { SlimUser } from '../../../../../../shared/classes/slim-user.class';
 import { SearchablePage } from '../../../../../../shared/classes/searchable-page.class';
+import { TimeHelper } from "../../../../../../shared/helpers/time.helper";
 
 @Component({
     selector: 'app-admin-users-users-list',
@@ -30,12 +31,12 @@ export class UserListComponent extends SearchablePage implements OnDestroy {
     };
     rows: Array<TableRow> = [];
     headers: Array<TableHeader> = [
-        { label: 'Username' },
-        { label: 'Habbo' },
-        { label: 'Last Modified' }
+        {label: 'Username'},
+        {label: 'Habbo'},
+        {label: 'Last Modified'}
     ];
 
-    constructor (
+    constructor(
         private authService: AuthService,
         protected router: Router,
         protected activatedRoute: ActivatedRoute
@@ -47,7 +48,7 @@ export class UserListComponent extends SearchablePage implements OnDestroy {
         this.params.isExactSearch = activatedRoute.snapshot.queryParams.isExactSearch === 'true';
     }
 
-    onAction (response: TableActionResponse): void {
+    onAction(response: TableActionResponse): void {
         switch (response.action.value) {
             case this.ACTIONS.EDIT_DETAILS:
                 this.router.navigateByUrl(`/admin/users/users/${response.row.rowId}/details`);
@@ -58,16 +59,16 @@ export class UserListComponent extends SearchablePage implements OnDestroy {
         }
     }
 
-    ngOnDestroy (): void {
+    ngOnDestroy(): void {
         // Empty
     }
 
-    private onData ({ pagination }: IPaginationResolver<SlimUser>): void {
+    private onData({pagination}: IPaginationResolver<SlimUser>): void {
         this.data = pagination;
         this.rows = this.getRows();
     }
 
-    private getRows (): Array<TableRow> {
+    private getRows(): Array<TableRow> {
         const adminPermissions = this.authService.getAuthUser().adminPermissions;
         return this.data.items.map(item => ({
             rowId: item.userId,
@@ -85,9 +86,9 @@ export class UserListComponent extends SearchablePage implements OnDestroy {
                 }
             ],
             cells: [
-                { label: item.username },
-                { label: item.habbo },
-                { label: item.updatedAt }
+                {label: item.username},
+                {label: item.habbo},
+                {label: TimeHelper.getTime(item.updatedAt)}
             ]
         }));
     }

@@ -2,7 +2,6 @@ import { Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ContinuesInformationModel } from '../../shared/classes/continues-information.model';
 import { HttpService } from '../http/http.service';
-import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ContinuesInformationService {
@@ -10,7 +9,7 @@ export class ContinuesInformationService {
     private onContinuesInformationSubject: Subject<ContinuesInformationModel> = new Subject();
     onContinuesInformation = this.onContinuesInformationSubject.asObservable();
 
-    constructor (
+    constructor(
         private ngZone: NgZone,
         private httpService: HttpService
     ) {
@@ -18,15 +17,15 @@ export class ContinuesInformationService {
         this.updateTimer(true);
     }
 
-    setUserState (isActive: boolean): void {
+    setUserState(isActive: boolean): void {
         this.updateTimer(isActive);
     }
 
-    private getExecutionTime (isActive: boolean): number {
+    private getExecutionTime(isActive: boolean): number {
         return isActive ? 10000 : 300000;
     }
 
-    private updateTimer (isActive: boolean): void {
+    private updateTimer(isActive: boolean): void {
         clearInterval(this.setIntervalTimer);
         if (isActive) {
             this.doFetch();
@@ -36,9 +35,8 @@ export class ContinuesInformationService {
         });
     }
 
-    private doFetch (): void {
-        this.httpService.get('/information/continues')
-            .pipe(map(data => new ContinuesInformationModel(data)))
+    private doFetch(): void {
+        this.httpService.get<ContinuesInformationModel>('/information/continues')
             .subscribe(data => this.ngZone.run(() => this.onContinuesInformationSubject.next(data)));
     }
 }

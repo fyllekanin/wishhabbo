@@ -1,5 +1,4 @@
 import { Type } from '@angular/core';
-import { primitiveOf } from '../../helpers/class.helper';
 
 export enum ButtonTypes {
     GREEN = 'green',
@@ -8,19 +7,11 @@ export enum ButtonTypes {
     GRAY = 'gray'
 }
 
-export class DialogButton {
-    @primitiveOf(String)
+export interface DialogButton {
     label: string;
-    @primitiveOf(String)
     action: string;
-    @primitiveOf(String)
     type: string;
-    @primitiveOf(Boolean)
-    isClosing = false;
-
-    constructor (source: Partial<DialogButton>) {
-        Object.assign(this, source);
-    }
+    isClosing?: boolean;
 }
 
 export interface DialogConfiguration<T> {

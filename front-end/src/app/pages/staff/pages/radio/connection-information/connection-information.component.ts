@@ -8,10 +8,10 @@ import { AuthService } from '../../../../../core/auth/auth.service';
     templateUrl: 'connection-information.component.html'
 })
 export class ConnectionInformationComponent {
-    data = new ConnectionInformationPage(null);
+    data = {} as ConnectionInformationPage;
     username: string;
 
-    constructor (
+    constructor(
         authService: AuthService,
         activatedRoute: ActivatedRoute
     ) {

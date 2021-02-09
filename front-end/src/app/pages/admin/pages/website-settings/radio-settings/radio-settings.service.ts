@@ -4,24 +4,22 @@ import { HttpService } from '../../../../../core/http/http.service';
 import { SiteNotificationService } from '../../../../../core/common-services/site-notification.service';
 import { RadioSettingsClass } from '../../../../../shared/classes/radio-settings.class';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { SiteNotificationType } from '../../../../../shared/app-views/site-notification/site-notification.interface';
 
 @Injectable()
 export class RadioSettingsService implements Resolve<RadioSettingsClass> {
 
-    constructor (
+    constructor(
         private httpService: HttpService,
         private siteNotificationService: SiteNotificationService
     ) {
     }
 
-    resolve (): Observable<RadioSettingsClass> {
-        return this.httpService.get('/admin/website-settings/radio-settings')
-            .pipe(map(data => new RadioSettingsClass(data)));
+    resolve(): Observable<RadioSettingsClass> {
+        return this.httpService.get<RadioSettingsClass>('/admin/website-settings/radio-settings');
     }
 
-    async save (data: RadioSettingsClass): Promise<void> {
+    async save(data: RadioSettingsClass): Promise<void> {
         return this.httpService.put('/admin/website-settings/radio-settings', data).toPromise()
             .then(() => {
                 this.siteNotificationService.create({

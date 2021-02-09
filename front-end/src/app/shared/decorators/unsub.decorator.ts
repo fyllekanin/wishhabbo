@@ -1,8 +1,9 @@
+import 'reflect-metadata';
 import { Unsubscribable } from 'rxjs';
 
 const triggerMethod = 'ngOnDestroy';
 
-export function UnSub () {
+export function UnSub() {
 
     return function (target) {
         const unsubscribableLike: { subscriptions: Array<Unsubscribable>, unsubscribe: () => void } = {
@@ -23,14 +24,14 @@ export function UnSub () {
 
         target.prototype[triggerMethod] = ngOnDestroyDecorator(target.prototype[triggerMethod]);
 
-        function ngOnDestroyDecorator (f) {
+        function ngOnDestroyDecorator(f) {
             return function () {
                 unsubscribe();
                 return f.apply(this, arguments);
             };
         }
 
-        function unsubscribe () {
+        function unsubscribe() {
             do {
                 const sub: Unsubscribable = unsubscribableLike.subscriptions.shift();
                 if (sub && typeof sub.unsubscribe === 'function') {
@@ -44,7 +45,7 @@ export function UnSub () {
 
 }
 
-export function CombineSubscriptions (params?) {
+export function CombineSubscriptions(params?) {
     return function (target, propertyKey: string | symbol) {
         Reflect.defineMetadata('subscription:name', propertyKey, target, 'subscriber');
     };

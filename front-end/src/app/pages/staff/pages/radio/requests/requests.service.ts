@@ -1,5 +1,4 @@
 import { SiteNotificationService } from './../../../../../core/common-services/site-notification.service';
-import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { HttpService } from './../../../../../core/http/http.service';
 import { Resolve } from '@angular/router';
@@ -10,19 +9,18 @@ import { SiteNotificationType } from 'src/app/shared/app-views/site-notification
 @Injectable()
 export class RequestsService implements Resolve<Array<RadioRequest>> {
 
-    constructor (
+    constructor(
         private httpService: HttpService,
         private siteNotificationService: SiteNotificationService
     ) {
     }
 
 
-    resolve (): Observable<Array<RadioRequest>> {
-        return this.httpService.get('/staff/radio/requests')
-            .pipe(map((data: Array<RadioRequest>) => data.map(item => new RadioRequest(item))));
+    resolve(): Observable<Array<RadioRequest>> {
+        return this.httpService.get('/staff/radio/requests');
     }
 
-    async delete (radioRequestId: number): Promise<void> {
+    async delete(radioRequestId: number): Promise<void> {
         return this.httpService.delete(`/staff/radio/requests/${radioRequestId}`).toPromise()
             .then(() => {
                 this.siteNotificationService.create({

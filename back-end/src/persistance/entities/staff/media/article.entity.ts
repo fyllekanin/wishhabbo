@@ -23,10 +23,9 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
     articleId: number;
     @Column()
     userId: number;
-    @Column({ unique: true })
+    @Column({unique: true})
     title: string;
-    @Column({ type: 'longtext' })
-    @Index({ fulltext: true })
+    @Column({type: 'longtext'})
     content: string;
     @Column()
     @Index()
@@ -51,7 +50,7 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
     @Index()
     isPaid: boolean;
 
-    constructor (builder: IArticleEntity) {
+    constructor(builder: IArticleEntity) {
         super();
         if (!builder) {
             return;
@@ -71,11 +70,11 @@ export class ArticleEntity extends CreatedUpdatedAtEntity implements IArticleEnt
         this.isPaid = builder.isPaid;
     }
 
-    newBuilderFromCurrent (): Builder {
+    newBuilderFromCurrent(): Builder {
         return new Builder(this);
     }
 
-    static newBuilder (): Builder {
+    static newBuilder(): Builder {
         return new Builder();
     }
 }
@@ -97,76 +96,76 @@ class Builder {
         updatedAt: undefined
     };
 
-    constructor (entity?: ArticleEntity) {
+    constructor(entity?: ArticleEntity) {
         Object.assign(this.myData, entity);
     }
 
-    withArticleId (articleId: number): Builder {
+    withArticleId(articleId: number): Builder {
         this.myData.articleId = articleId;
         return this;
     }
 
-    withUserId (userId: number): Builder {
+    withUserId(userId: number): Builder {
         this.myData.userId = userId;
         return this;
     }
 
-    withTitle (title: string): Builder {
+    withTitle(title: string): Builder {
         this.myData.title = title;
         return this;
     }
 
-    withContent (content: string): Builder {
+    withContent(content: string): Builder {
         this.myData.content = content;
         return this;
     }
 
-    withBadges (badges: Array<string>): Builder {
+    withBadges(badges: Array<string>): Builder {
         this.myData.badges = (badges || []).join(',');
         return this;
     }
 
-    withRoom (room: string): Builder {
+    withRoom(room: string): Builder {
         this.myData.room = room;
         return this;
     }
 
-    withRoomOwner (roomOwner: string): Builder {
+    withRoomOwner(roomOwner: string): Builder {
         this.myData.roomOwner = roomOwner;
         return this;
     }
 
-    withDifficulty (difficulty: number): Builder {
+    withDifficulty(difficulty: number): Builder {
         this.myData.difficulty = difficulty;
         return this;
     }
 
-    withType (type: number): Builder {
+    withType(type: number): Builder {
         this.myData.type = type;
         return this;
     }
 
-    withIsApproved (isApproved: boolean): Builder {
+    withIsApproved(isApproved: boolean): Builder {
         this.myData.isApproved = isApproved;
         return this;
     }
 
-    withIsAvailable (isAvailable: boolean): Builder {
+    withIsAvailable(isAvailable: boolean): Builder {
         this.myData.isAvailable = isAvailable;
         return this;
     }
 
-    withIsPaid (isPaid: boolean): Builder {
+    withIsPaid(isPaid: boolean): Builder {
         this.myData.isPaid = isPaid;
         return this;
     }
 
-    withUpdatedAt (updatedAt: number): Builder {
+    withUpdatedAt(updatedAt: number): Builder {
         this.myData.updatedAt = updatedAt;
         return this;
     }
 
-    build (): ArticleEntity {
+    build(): ArticleEntity {
         return new ArticleEntity(this.myData);
     }
 }

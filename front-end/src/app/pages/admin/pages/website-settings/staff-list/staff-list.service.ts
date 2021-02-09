@@ -3,25 +3,23 @@ import { Resolve } from '@angular/router';
 import { StaffListModel } from './staff-list.model';
 import { HttpService } from '../../../../../core/http/http.service';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { SiteNotificationService } from '../../../../../core/common-services/site-notification.service';
 import { SiteNotificationType } from '../../../../../shared/app-views/site-notification/site-notification.interface';
 
 @Injectable()
 export class StaffListService implements Resolve<StaffListModel> {
 
-    constructor (
+    constructor(
         private httpService: HttpService,
         private siteNotificationService: SiteNotificationService
     ) {
     }
 
-    resolve (): Observable<StaffListModel> {
-        return this.httpService.get('/admin/website-settings/staff-list')
-            .pipe(map(data => new StaffListModel(data)));
+    resolve(): Observable<StaffListModel> {
+        return this.httpService.get('/admin/website-settings/staff-list');
     }
 
-    async save (data: StaffListModel): Promise<void> {
+    async save(data: StaffListModel): Promise<void> {
         return this.httpService.put('/admin/website-settings/staff-list', data).toPromise()
             .then(() => {
                 this.siteNotificationService.create({

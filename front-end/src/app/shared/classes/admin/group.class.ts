@@ -1,29 +1,14 @@
-import { ClassHelper, objectOf, primitiveOf } from '../../helpers/class.helper';
 import { AdminPermissions, StaffPermissions } from '../../../core/auth/auth-user.model';
 
 export class GroupClass {
-    @primitiveOf(Number)
     groupId: number;
-    @primitiveOf(String)
     name: string;
-    @primitiveOf(Number)
-    immunity = 0;
-    @primitiveOf(String)
+    immunity: number;
     displayName: string;
-    @primitiveOf(String)
     barStyle: string;
-    @primitiveOf(String)
     nameColor: string;
-    @objectOf(StaffPermissions)
-    staffPermissions = new StaffPermissions(null);
-    @objectOf(AdminPermissions)
-    adminPermissions = new AdminPermissions(null);
-    @primitiveOf(Number)
+    staffPermissions: StaffPermissions;
+    adminPermissions: AdminPermissions;
     createdAt: number;
-    @primitiveOf(Number)
     updatedAt: number;
-
-    constructor (source: Partial<GroupClass>) {
-        ClassHelper.assign(this, source);
-    }
 }

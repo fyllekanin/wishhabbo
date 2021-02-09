@@ -12,15 +12,15 @@ import { SlideShowImage } from '../../../shared/components/slide-show/slide-show
     styleUrls: ['home.component.css']
 })
 export class HomeComponent {
-    data = new HomeModel();
+    data = {} as HomeModel;
     slots: Array<Slot> = [];
 
     images: Array<SlideShowImage> = [];
     contentActions: Array<UserAction> = [
-        { label: 'See More', value: 0 }
+        {label: 'See More', value: 0}
     ];
 
-    constructor (
+    constructor(
         private router: Router,
         activatedRoute: ActivatedRoute
     ) {
@@ -34,7 +34,7 @@ export class HomeComponent {
         this.slots = this.getTimeConvertedSlots(this.data.todayEvents);
     }
 
-    async onSeeMore (type: number): Promise<void> {
+    async onSeeMore(type: number): Promise<void> {
         await this.router.navigate(
             ['default', 'articles', 'page', 1],
             {
@@ -45,10 +45,10 @@ export class HomeComponent {
         );
     }
 
-    private getTimeConvertedSlots (slots: Array<Slot>): Array<Slot> {
+    private getTimeConvertedSlots(slots: Array<Slot>): Array<Slot> {
         const hours = TimeHelper.getHours();
         return slots.map(slot => {
-            const copy = { ...slot };
+            const copy = {...slot};
 
             const offsetInHours = copy.hour + TimeHelper.getTimeOffsetInHours();
             copy.hour = TimeHelper.getConvertedHour(offsetInHours);

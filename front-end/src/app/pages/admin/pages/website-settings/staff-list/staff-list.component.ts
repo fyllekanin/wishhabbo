@@ -12,7 +12,7 @@ import { CombineSubscriptions } from 'src/app/shared/decorators/unsub.decorator'
 @Component({
     selector: 'app-admin-website-settings-staff-list',
     templateUrl: 'staff-list.component.html',
-    styleUrls: [ 'staff-list.component.css' ]
+    styleUrls: ['staff-list.component.css']
 })
 export class StaffListComponent implements OnDestroy {
     private readonly ACTIONS = {
@@ -22,11 +22,11 @@ export class StaffListComponent implements OnDestroy {
         MOVE_DOWN: 'move_down',
         REMOVE: 'remove'
     };
-    data = new StaffListModel();
+    data = {} as StaffListModel;
 
     contentActions: Array<UserAction> = [
-        { label: 'Save', value: this.ACTIONS.SAVE },
-        { label: 'Go back', value: this.ACTIONS.GO_BACK }
+        {label: 'Save', value: this.ACTIONS.SAVE},
+        {label: 'Go back', value: this.ACTIONS.GO_BACK}
     ];
     selectedGroup: StaffListGroup = null;
     selectableGroups: Array<StaffListGroup> = [];
@@ -35,11 +35,11 @@ export class StaffListComponent implements OnDestroy {
     subscriber: Unsubscribable;
     rows: Array<TableRow> = [];
     headers: Array<TableHeader> = [
-        { label: 'Name' },
-        { label: 'Display order' }
+        {label: 'Name'},
+        {label: 'Display order'}
     ];
 
-    constructor (
+    constructor(
         private router: Router,
         private service: StaffListService,
         private siteNotificationService: SiteNotificationService,
@@ -48,11 +48,11 @@ export class StaffListComponent implements OnDestroy {
         this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
-    ngOnDestroy (): void {
+    ngOnDestroy(): void {
         // Empty
     }
 
-    async onContentAction (action: UserAction): Promise<void> {
+    async onContentAction(action: UserAction): Promise<void> {
         switch (action.value) {
             case this.ACTIONS.GO_BACK:
                 this.router.navigateByUrl('/admin/website-settings/list');
@@ -63,7 +63,7 @@ export class StaffListComponent implements OnDestroy {
         }
     }
 
-    onAction (action: TableActionResponse): void {
+    onAction(action: TableActionResponse): void {
         switch (action.action.value) {
             case this.ACTIONS.MOVE_UP:
                 this.onMoveUp(Number(action.row.rowId));
@@ -77,7 +77,7 @@ export class StaffListComponent implements OnDestroy {
         }
     }
 
-    addGroup (): void {
+    addGroup(): void {
         if (!this.selectedGroup) {
             this.siteNotificationService.create({
                 title: 'No group',
@@ -96,7 +96,7 @@ export class StaffListComponent implements OnDestroy {
         this.rows = this.getRows(this.selectedGroups);
     }
 
-    private onMoveUp (groupId: number): void {
+    private onMoveUp(groupId: number): void {
         const currentIndex = this.selectedGroups.findIndex(item => item.groupId === groupId);
         if (currentIndex === 0) {
             return;
@@ -111,7 +111,7 @@ export class StaffListComponent implements OnDestroy {
         this.rows = this.getRows(this.selectedGroups);
     }
 
-    private onMoveDown (groupId: number): void {
+    private onMoveDown(groupId: number): void {
         const currentIndex = this.selectedGroups.findIndex(item => item.groupId === groupId);
         if (currentIndex === (this.selectedGroups.length - 1)) {
             return;
@@ -126,7 +126,7 @@ export class StaffListComponent implements OnDestroy {
         this.rows = this.getRows(this.selectedGroups);
     }
 
-    private onRemoveGroup (groupId: number): void {
+    private onRemoveGroup(groupId: number): void {
         const group = this.selectedGroups.find(item => item.groupId === groupId);
         group.isSelected = false;
 
@@ -135,38 +135,38 @@ export class StaffListComponent implements OnDestroy {
         this.rows = this.getRows(this.selectedGroups);
     }
 
-    private onData ({ data }: { data: StaffListModel }): void {
+    private onData({data}: { data: StaffListModel }): void {
         this.data = data;
         this.selectableGroups = this.getSelectableGroups();
         this.selectedGroups = this.getSelectedGroups();
         this.rows = this.getRows(this.selectedGroups);
     }
 
-    private getRows (groups: Array<StaffListGroup>): Array<TableRow> {
+    private getRows(groups: Array<StaffListGroup>): Array<TableRow> {
         return groups.filter(group => group.isSelected)
             .sort((a, b) => a.displayOrder > b.displayOrder ? 1 : -1)
             .map(group => ({
                 rowId: group.groupId,
                 cells: [
-                    { label: group.name },
-                    { label: group.displayOrder }
+                    {label: group.name},
+                    {label: group.displayOrder}
                 ],
                 actions: [
-                    { label: 'Move up', value: this.ACTIONS.MOVE_UP },
-                    { label: 'Move down', value: this.ACTIONS.MOVE_DOWN },
-                    { label: 'Remove', value: this.ACTIONS.REMOVE }
+                    {label: 'Move up', value: this.ACTIONS.MOVE_UP},
+                    {label: 'Move down', value: this.ACTIONS.MOVE_DOWN},
+                    {label: 'Remove', value: this.ACTIONS.REMOVE}
                 ]
             }));
     }
 
-    private getSelectedGroups (): Array<StaffListGroup> {
+    private getSelectedGroups(): Array<StaffListGroup> {
         const groups = this.data.groups.filter(group => group.isSelected)
             .sort((a, b) => a.displayOrder > b.displayOrder ? 1 : -1);
         groups.forEach((group, index) => group.displayOrder = index + 1);
         return groups;
     }
 
-    private getSelectableGroups (): Array<StaffListGroup> {
+    private getSelectableGroups(): Array<StaffListGroup> {
         return this.data.groups.filter(group => !group.isSelected)
             .sort((a, b) => a.name > b.name ? 1 : -1);
     }

@@ -31,19 +31,19 @@ import { JobApplicationConstants } from '../constants/job-application.constants'
 @Controller('api/page')
 export class PageController {
     private static readonly SUPPORTED_ARTICLE_SEARCH_VALUES: Array<PaginationValue> = [
-        { key: 'difficulty', operator: PaginationWhereOperators.EQUALS },
-        { key: 'type', operator: PaginationWhereOperators.EQUALS },
-        { key: 'isAvailable', operator: PaginationWhereOperators.EQUALS },
-        { key: 'isPaid', operator: PaginationWhereOperators.EQUALS }
+        {key: 'difficulty', operator: PaginationWhereOperators.EQUALS},
+        {key: 'type', operator: PaginationWhereOperators.EQUALS},
+        {key: 'isAvailable', operator: PaginationWhereOperators.EQUALS},
+        {key: 'isPaid', operator: PaginationWhereOperators.EQUALS}
     ];
-    
+
     @Get('job-application')
-    async getJobApplicationRoles (req: InternalRequest, res: Response): Promise<void> {
+    async getJobApplicationRoles(req: InternalRequest, res: Response): Promise<void> {
         res.status(OK).json(JobApplicationConstants.ROLES);
     }
 
     @Get('article/:articleId/page/:page')
-    async getArticle (req: InternalRequest, res: Response): Promise<void> {
+    async getArticle(req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         if (!article) {
             res.status(NOT_FOUND).json();
@@ -58,7 +58,7 @@ export class PageController {
                 sort: 'articleCommentId',
                 order: 'ASC'
             },
-            where: [{ key: 'articleId', operator: PaginationWhereOperators.EQUALS, value: article.articleId }]
+            where: [{key: 'articleId', operator: PaginationWhereOperators.EQUALS, value: article.articleId}]
         }).then(async result => {
             const mapped = [];
             for (const item of result.getItems()) {
@@ -93,7 +93,7 @@ export class PageController {
 
     @Post('article/:articleId/complete')
     @Middleware([AUTHORIZATION_MIDDLEWARE])
-    async createBadgeComplete (req: InternalRequest, res: Response): Promise<void> {
+    async createBadgeComplete(req: InternalRequest, res: Response): Promise<void> {
         const article = await req.serviceConfig.articleRepository.getByArticleId(Number(req.params.articleId));
         if (!article) {
             res.status(NOT_FOUND).json();
@@ -123,13 +123,13 @@ export class PageController {
     }
 
     @Get('articles/page/:page')
-    async getArticles (req: InternalRequest, res: Response): Promise<void> {
+    async getArticles(req: InternalRequest, res: Response): Promise<void> {
         const data = await req.serviceConfig.articleRepository.paginate({
             take: PaginationHelper.TWENTY_ITEMS,
             page: Number(req.params.page),
             where: RequestUtility.getPaginationWheresFromQuery(req, PageController.SUPPORTED_ARTICLE_SEARCH_VALUES)
                 .concat([
-                    { key: 'isApproved', operator: PaginationWhereOperators.EQUALS, value: true }
+                    {key: 'isApproved', operator: PaginationWhereOperators.EQUALS, value: true}
                 ]),
             orderBy: {
                 sort: 'createdAt',
@@ -150,7 +150,7 @@ export class PageController {
     }
 
     @Get('home')
-    async getHomePage (req: InternalRequest, res: Response): Promise<void> {
+    async getHomePage(req: InternalRequest, res: Response): Promise<void> {
         const homePageModel = await req.serviceConfig.settingRepository.getKeyValue<HomePageModel>(SettingKey.HOME_PAGE);
         res.status(OK).json(HomePage.newBuilder()
             .withBadges(await this.getBadges(req.serviceConfig, req.user.userId))
@@ -164,7 +164,7 @@ export class PageController {
     }
 
     @Get('staff-list')
-    async getStaffList (req: InternalRequest, res: Response): Promise<void> {
+    async getStaffList(req: InternalRequest, res: Response): Promise<void> {
         const staffListModel = await req.serviceConfig.settingRepository.getKeyValue<StaffListModel>(SettingKey.STAFF_LIST);
         const entries: Array<StaffListRow> = [];
         for (const entry of (staffListModel ? staffListModel.entries : [])) {
@@ -190,14 +190,14 @@ export class PageController {
         res.status(OK).json(StaffListPage.newBuilder().withRows(entries).build());
     }
 
-    private getBannerEntries (homePageModel: HomePageModel): Array<HomePageBannerEntry> {
+    private getBannerEntries(homePageModel: HomePageModel): Array<HomePageBannerEntry> {
         return (homePageModel.bannerEntries || []).map(entry => HomePageBannerEntry.newBuilder()
             .withId(entry.id)
             .withCaption(entry.caption)
             .build());
     }
 
-    private async getStarLight (req: InternalRequest, homePageModel: HomePageModel): Promise<HomePageStarLight> {
+    private async getStarLight(req: InternalRequest, homePageModel: HomePageModel): Promise<HomePageStarLight> {
         const user = await req.serviceConfig.userRepository.getSlimUserById(homePageModel.starLight.userId);
         if (!user) {
             return null;
@@ -208,11 +208,11 @@ export class PageController {
             .build();
     }
 
-    private async getBadges (serviceConfig: ServiceConfig, userId: number): Promise<Array<BadgeView>> {
+    private async getBadges(serviceConfig: ServiceConfig, userId: number): Promise<Array<BadgeView>> {
         const items = await serviceConfig.habboRepository.paginate({
             take: 12,
             page: 1,
-            orderBy: { sort: 'createdAt', order: 'DESC' }
+            orderBy: {sort: 'createdAt', order: 'DESC'}
         });
 
         const badges: Array<BadgeView> = [];
@@ -234,7 +234,7 @@ export class PageController {
         return badges;
     }
 
-    private async getNextSlots (req: InternalRequest): Promise<Array<TimetableSlot>> {
+    private async getNextSlots(req: InternalRequest): Promise<Array<TimetableSlot>> {
         let day = TimeUtility.getCurrentDay();
         let hour = TimeUtility.getCurrentHour();
 
@@ -269,14 +269,14 @@ export class PageController {
         return slots;
     }
 
-    private async getArticlesFor (req: InternalRequest, amount: number, type: number): Promise<Array<ArticleView>> {
+    private async getArticlesFor(req: InternalRequest, amount: number, type: number): Promise<Array<ArticleView>> {
         const paginate = await req.serviceConfig.articleRepository.paginate({
             take: amount,
             page: 1,
-            orderBy: { sort: 'createdAt', order: 'DESC' },
+            orderBy: {sort: 'createdAt', order: 'DESC'},
             where: [
-                { key: 'type', operator: PaginationWhereOperators.EQUALS, value: String(type) },
-                { key: 'isApproved', operator: PaginationWhereOperators.EQUALS, value: true }
+                {key: 'type', operator: PaginationWhereOperators.EQUALS, value: String(type)},
+                {key: 'isApproved', operator: PaginationWhereOperators.EQUALS, value: true}
             ]
         });
 
@@ -287,7 +287,7 @@ export class PageController {
         return articles;
     }
 
-    private async getConvertedArticle (req: InternalRequest, article: ArticleEntity): Promise<ArticleView> {
+    private async getConvertedArticle(req: InternalRequest, article: ArticleEntity): Promise<ArticleView> {
         const user = await req.serviceConfig.userRepository.getSlimUserById(article.userId);
         return ArticleView.newBuilder()
             .withArticleId(article.articleId)

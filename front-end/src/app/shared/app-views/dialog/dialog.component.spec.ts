@@ -11,7 +11,7 @@ describe('DialogComponent', () => {
         dialogService = {
             onOpenCallback: null,
             onCloseCallback: null,
-            onActionSubject: { next: () => null },
+            onActionSubject: {next: () => null},
             onOpen: {
                 subscribe: callback => dialogService.opOpenCallback = callback
             },
@@ -38,7 +38,7 @@ describe('DialogComponent', () => {
             // Given
             component.isVisible = true;
             const event = {
-                composedPath: () => [ { classList: { contains: () => true } } ]
+                composedPath: () => [{classList: {contains: () => true}}]
             };
 
             // When
@@ -51,7 +51,7 @@ describe('DialogComponent', () => {
             // Given
             component.isVisible = true;
             const event = {
-                composedPath: () => [ { classList: { contains: () => false } } ]
+                composedPath: () => [{classList: {contains: () => false}}]
             };
 
             // When
@@ -64,7 +64,7 @@ describe('DialogComponent', () => {
 
     it('onAction should send the button to dialog service', () => {
         // Given
-        const button = new DialogButton(null);
+        const button = {} as DialogButton;
         spyOn(dialogService.onActionSubject, 'next');
 
         // When

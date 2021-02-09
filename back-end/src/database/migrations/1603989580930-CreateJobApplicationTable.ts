@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class CreateJobApplicationTable1603989580930 implements MigrationInterface {
 
-    async up (queryRunner: QueryRunner): Promise<void> {
+    async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
             name: 'job_applications',
             indices: [
@@ -14,9 +14,6 @@ export class CreateJobApplicationTable1603989580930 implements MigrationInterfac
                 },
                 {
                     columnNames: ['userId']
-                },
-                {
-                    columnNames: ['content']
                 },
                 {
                     columnNames: ['resolved']
@@ -63,7 +60,7 @@ export class CreateJobApplicationTable1603989580930 implements MigrationInterfac
         }), true);
     }
 
-    async down (queryRunner: QueryRunner): Promise<void> {
+    async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropTable('badge_complete');
     }
 }

@@ -12,12 +12,12 @@ import { SiteNotificationType } from '../../../shared/app-views/site-notificatio
 })
 export class JobApplicationComponent {
     roles: Array<{ label: string, id: number, isChecked: boolean }> = [];
-    data = new JobApplicationModel(null);
+    data = {} as JobApplicationModel;
     aboutYou: string;
     previousExperience: string;
     additionalInformation: string;
 
-    constructor (
+    constructor(
         private siteNotificationService: SiteNotificationService,
         private service: JobApplicationService,
         activatedRoute: ActivatedRoute
@@ -25,7 +25,7 @@ export class JobApplicationComponent {
         this.roles = activatedRoute.snapshot.data.data;
     }
 
-    async onPost (): Promise<void> {
+    async onPost(): Promise<void> {
         this.data.roles = this.roles.filter(role => role.isChecked).map(role => role.id);
         if (!this.aboutYou) {
             this.siteNotificationService.create({
@@ -53,7 +53,7 @@ export class JobApplicationComponent {
         }
 
         if (await this.service.post(this.data)) {
-            this.data = new JobApplicationModel(null);
+            this.data = {} as JobApplicationModel;
             this.aboutYou = '';
             this.previousExperience = '';
             this.additionalInformation = '';

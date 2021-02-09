@@ -23,31 +23,31 @@ export class DialogService {
      *
      * @param configuration
      */
-    open<T> (configuration: DialogConfiguration<T>): void {
+    open<T>(configuration: DialogConfiguration<T>): void {
         this.onOpenSubject.next(configuration);
     }
 
-    setComponentInstance (componentInstance: ComponentRef<any>): void {
+    setComponentInstance(componentInstance: ComponentRef<any>): void {
         this.onComponentInstanceSubject.next(componentInstance);
     }
 
-    confirm (message: string): Promise<boolean> {
+    confirm(message: string): Promise<boolean> {
         return new Promise(res => {
             this.open({
                 title: 'Confirmation',
                 content: message,
                 buttons: [
-                    new DialogButton({
+                    {
                         label: 'Cancel',
                         action: 'cancel',
                         type: ButtonTypes.GRAY,
                         isClosing: true
-                    }),
-                    new DialogButton({
+                    },
+                    {
                         label: 'Yes',
                         action: 'yes',
                         type: ButtonTypes.GREEN
-                    })
+                    }
                 ]
             });
             this.onAction.pipe(take(1)).subscribe(button => {
@@ -60,7 +60,7 @@ export class DialogService {
     /**
      * Closes the dialog if open
      */
-    close (): void {
+    close(): void {
         this.onCloseSubject.next();
     }
 }

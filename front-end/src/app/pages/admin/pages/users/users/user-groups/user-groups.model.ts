@@ -1,29 +1,12 @@
-import { arrayOf, ClassHelper, primitiveOf } from '../../../../../../shared/helpers/class.helper';
-
-export class SlimUserGroup {
-    @primitiveOf(String)
+export interface SlimUserGroup {
     name: string;
-    @primitiveOf(Number)
     groupId: number;
-    @primitiveOf(Boolean)
     isSelected: boolean;
-
-    constructor (source?: Partial<SlimUserGroup>) {
-        ClassHelper.assign(this, source);
-    }
 }
 
-export class UserGroupsModel {
-    @primitiveOf(String)
+export interface UserGroupsModel {
     username: string;
-    @primitiveOf(Number)
     userId: number;
-    @arrayOf(SlimUserGroup)
-    groups: Array<SlimUserGroup> = [];
-    @primitiveOf(Number)
+    groups: Array<SlimUserGroup>;
     displayGroupId: number;
-
-    constructor (source?: Partial<UserGroupsModel>) {
-        ClassHelper.assign(this, source);
-    }
 }

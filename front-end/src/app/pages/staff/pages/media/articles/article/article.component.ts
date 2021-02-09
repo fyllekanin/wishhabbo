@@ -25,7 +25,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         BACK: 'back'
     };
     actions: Array<UserAction> = [];
-    data = new ArticleClass(null);
+    data = {} as ArticleClass;
     @CombineSubscriptions()
     subscriber: Unsubscribable;
 
@@ -36,7 +36,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
     @ViewChild(EditorComponent, {static: true}) editorComponent: EditorComponent;
     @ViewChild('fileElement', {static: true}) fileElementRef: ElementRef<HTMLInputElement>;
 
-    constructor (
+    constructor(
         private service: ArticleService,
         private router: Router,
         private dialogService: DialogService,
@@ -53,21 +53,21 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         });
     }
 
-    onBadgesChange (): void {
+    onBadgesChange(): void {
         this.data.badges = this.badges.split(',')
             .map(badge => badge.trim())
             .filter(badge => Boolean(badge));
     }
 
-    ngOnDestroy (): void {
+    ngOnDestroy(): void {
         // Empty
     }
 
-    onTypeChange (): void {
-        this.showBadges = this.data.getType().isBadgeIncluded;
+    onTypeChange(): void {
+        return ARTICLE_TYPES[this.data.type]?.isBadgeIncluded || false;
     }
 
-    async onAction (action: UserAction): Promise<void> {
+    async onAction(action: UserAction): Promise<void> {
         switch (action.value) {
             case this.ACTIONS.BACK:
                 await this.router.navigateByUrl('/staff/media/articles/page/1');
@@ -81,11 +81,11 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    ngAfterViewInit (): void {
+    ngAfterViewInit(): void {
         this.editorComponent.setContent(this.data.content);
     }
 
-    private async onSave (): Promise<void> {
+    private async onSave(): Promise<void> {
         if (!this.showBadges) {
             this.data.badges = [];
             this.data.room = null;
@@ -101,7 +101,7 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         this.actions = this.getActions();
     }
 
-    private async onDelete (): Promise<void> {
+    private async onDelete(): Promise<void> {
         const confirmed = await this.dialogService.confirm('Do you really wanna delete this article?');
         if (confirmed) {
             await this.service.delete(this.data.articleId);
@@ -109,14 +109,14 @@ export class ArticleComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    private onData ({data}: { data: ArticleClass }): void {
+    private onData({data}: { data: ArticleClass }): void {
         this.data = data;
         this.badges = this.data.badges.join(',');
         this.actions = this.getActions();
-        this.showBadges = this.data.getType().isBadgeIncluded;
+        this.showBadges = ARTICLE_TYPES[this.data.type]?.isBadgeIncluded || false;
     }
 
-    private getActions (): Array<UserAction> {
+    private getActions(): Array<UserAction> {
         return [
             {label: 'Save', value: this.ACTIONS.SAVE, isAvailable: true},
             {label: 'Delete', value: this.ACTIONS.DELETE, isAvailable: Boolean(this.data.articleId)},

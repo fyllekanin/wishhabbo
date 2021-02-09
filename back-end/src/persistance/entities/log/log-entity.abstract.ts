@@ -24,17 +24,15 @@ export abstract class LogEntityAbstract extends CreatedUpdatedAtEntity implement
     @Column()
     @Index()
     userId: number;
-    @Column({ nullable: true, type: 'longtext' })
-    @Index({ fulltext: true })
+    @Column({nullable: true, type: 'longtext'})
     beforeChange: string;
-    @Column({ nullable: true, type: 'longtext' })
-    @Index({ fulltext: true })
+    @Column({nullable: true, type: 'longtext'})
     afterChange: string;
     @Column()
     @Index()
     ip: string;
 
-    constructor (builder: ILogEntityAbstract) {
+    constructor(builder: ILogEntityAbstract) {
         super();
         if (!builder) {
             return;
@@ -61,44 +59,44 @@ export abstract class LogBuilder<T> {
         ip: undefined
     };
 
-    constructor (entity?: LogEntityAbstract) {
+    constructor(entity?: LogEntityAbstract) {
         Object.assign(this.myData, entity);
     }
 
-    withLogId (logId: number): LogBuilder<T> {
+    withLogId(logId: number): LogBuilder<T> {
         this.myData.logId = logId;
         return this;
     }
 
-    withId (id: number): LogBuilder<T> {
+    withId(id: number): LogBuilder<T> {
         this.myData.id = id;
         return this;
     }
 
-    withContentId (contentId: number): LogBuilder<T> {
+    withContentId(contentId: number): LogBuilder<T> {
         this.myData.contentId = contentId;
         return this;
     }
 
-    withUserId (userId: number): LogBuilder<T> {
+    withUserId(userId: number): LogBuilder<T> {
         this.myData.userId = userId;
         return this;
     }
 
-    withBeforeChange (beforeChange: string): LogBuilder<T> {
+    withBeforeChange(beforeChange: string): LogBuilder<T> {
         this.myData.beforeChange = beforeChange;
         return this;
     }
 
-    withAfterChange (afterChange: string): LogBuilder<T> {
+    withAfterChange(afterChange: string): LogBuilder<T> {
         this.myData.afterChange = afterChange;
         return this;
     }
 
-    withIp (ip: string): LogBuilder<T> {
+    withIp(ip: string): LogBuilder<T> {
         this.myData.ip = ip;
         return this;
     }
 
-    abstract build (): T;
+    abstract build(): T;
 }

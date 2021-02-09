@@ -3,14 +3,14 @@ import { take } from 'rxjs/operators';
 import { Component } from '@angular/core';
 import { DialogService } from '../../../../core/common-services/dialog.service';
 import { RadioService } from '../../../../core/common-services/radio.service';
-import { ButtonTypes, DialogButton } from '../../dialog/dialog.model';
+import { ButtonTypes } from '../../dialog/dialog.model';
 import { ContinuesInformationService } from '../../../../core/common-services/continues-information.service';
 import { RadioContentComponent } from './radio-content/radio-content.component';
 
 @Component({
     selector: 'app-header-radio',
     templateUrl: 'header-radio.component.html',
-    styleUrls: [ 'header-radio.component.css' ]
+    styleUrls: ['header-radio.component.css']
 })
 export class HeaderRadioComponent {
     private static readonly UNKNOWN = 'Unknown';
@@ -23,7 +23,7 @@ export class HeaderRadioComponent {
         nextDj: HeaderRadioComponent.UNKNOWN
     };
 
-    constructor (
+    constructor(
         private authService: AuthService,
         private dialogService: DialogService,
         private continuesInformationService: ContinuesInformationService,
@@ -43,7 +43,7 @@ export class HeaderRadioComponent {
         });
     }
 
-    openRequest (): void {
+    openRequest(): void {
         this.dialogService.onComponentInstance.pipe(take(1)).subscribe(async ref => {
             this.dialogService.onAction.pipe(take(1)).subscribe(async button => {
                 if (button.action === 'request') {
@@ -53,17 +53,17 @@ export class HeaderRadioComponent {
             });
         });
         const buttons = [
-            new DialogButton({
+            {
                 label: 'Cancel',
                 action: 'cancel',
                 isClosing: true,
                 type: ButtonTypes.GRAY
-            }),
-            new DialogButton({
+            },
+            {
                 label: 'Request',
                 action: 'request',
                 type: ButtonTypes.BLUE
-            })
+            }
         ];
         const skippedActions = this.authService.isLoggedIn() ? [] : ['request'];
 
